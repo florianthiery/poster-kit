@@ -65,7 +65,10 @@ def list_themes() -> int:
         data = yaml.safe_load((THEMES / tid / "theme.yaml").read_text(encoding="utf-8")) or {}
         src = (data.get("source") or {}).get("name", "")
         fam = (data.get("typography") or {}).get("family", "")
+        vs = ", ".join(f"{k} ({(x or {}).get('label', '')})" for k, x in (data.get("variants") or {}).items())
         print(f"{tid:18s} {data.get('state', 'ready'):8s} {data.get('name', ''):30s} {fam:22s} {src}")
+        if vs:
+            print(f"{'':18s} variants: {vs}   (use --theme {tid}:<variant>)")
     return 0
 
 

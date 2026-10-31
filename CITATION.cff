@@ -11,7 +11,7 @@ authors:
     given-names: Florian
     orcid: "https://orcid.org/0000-0002-3246-3531"
 license: MIT
-version: "0.3.0"
+version: "0.4.0"
 date-released: "2026-10-31"
 repository-code: "https://github.com/florianthiery/poster-kit"
 keywords:

@@ -957,8 +957,8 @@ def fit_layout(cfg: dict) -> Layout:
 
 def theme_lines(th: dict) -> list[str]:
     src = th.get("source") or {}
-    lines = [f"theme: {th['id']} ({th['name']}), state {th['state']}"
-             + (f", extends {th['extends']}" if th.get("extends") else "")]
+    lines = [f"theme: {th['id']}" + (f", variant {th['variant']} ({th['variant_label']})" if th.get("variant") else "")
+             + f" ({th['name']}), state {th['state']}" + (f", extends {th['extends']}" if th.get("extends") else "")]
     if src:
         lines.append(f"  colours from: {src.get('name', '')} {src.get('url', '')} (licence {src.get('licence', 'unstated')})".rstrip())
     if th.get("font_family"):

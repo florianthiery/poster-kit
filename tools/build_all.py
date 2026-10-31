@@ -50,11 +50,11 @@ def main() -> int:
         if args.all_themes:
             out = dist / "themes"
             out.mkdir(parents=True, exist_ok=True)
-            for tid in T.available():
+            for tid in T.all_specs():
                 code = run(["--poster", pid, "--theme", tid])
                 if code == 0:
-                    shutil.copyfile(dist / "poster.pdf", out / f"poster-{tid}.pdf")
-                    shutil.copyfile(dist / "poster-preview.png", out / f"poster-{tid}.png")
+                    shutil.copyfile(dist / "poster.pdf", out / f"poster-{tid.replace(':', '-')}.pdf")
+                    shutil.copyfile(dist / "poster-preview.png", out / f"poster-{tid.replace(':', '-')}.png")
                     print(f"   {tid}: ok")
                 else:
                     print(f"   {tid}: FAILED")

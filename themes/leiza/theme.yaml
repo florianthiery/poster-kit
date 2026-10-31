@@ -1,19 +1,166 @@
-# Theme: LEIZA (Leibniz-Zentrum fuer Archaeologie).
-# PLACEHOLDER COLOURS: the typeface is final (Libre Franklin), the colours are inherited
-# from 'neutral' until the LEIZA values are supplied. While state is 'pending',
-# `python main.py --strict` fails, so a poster cannot be released with stand-in colours.
-# To finish: replace palette, tokens and source below (see themes/neutral/theme.yaml), set state: ready.
+# Theme: LEIZA (Leibniz-Zentrum für Archäologie), corporate design "Basiselemente, 4. Farben".
+#
+# One theme, three variants. LEIZA's rule: red is the general colour, blue stands for research at LEIZA,
+# yellow for transfer. A poster normally uses ONE of them as its leading colour, not all three together,
+# so the variants are looks of their own, not one palette with three accents:
+#
+#   red     general      theme: leiza:red     (the default)
+#   blue    research     theme: leiza:blue
+#   yellow  transfer     theme: leiza:yellow
+#
+# Choose in poster.yaml with `theme: leiza:blue`, or `theme: leiza` plus `theme_variant: blue`, or on the
+# command line: python main.py --theme leiza:blue.
+#
+# Secondary colours per the styleguide: black (100 %) for text, white for surfaces and for text on dark ground.
+# The yellow variant therefore has black cards bars and a plain header (black title on white, yellow rule):
+# white on yellow cannot be read.
 id: leiza
-name: "LEIZA (colours pending)"
-state: pending
-extends: neutral
+name: "LEIZA"
+state: ready
 
 source:
-  name: "none yet (placeholder colours inherited from the neutral theme)"
+  name: "LEIZA Corporate Design, Basiselemente 4. Farben (Primärfarben und Abstufungen)"
   url: ""
-  licence: ""
-  note: "LEIZA colours to be added."
+  licence: "LEIZA brand colours: use according to LEIZA's corporate design rules"
+  note: >-
+    Colours measured from the styleguide swatches. The hex values in the styleguide's table differ from the
+    swatches for blue (#223466 vs #4E628B) and yellow (#FDB21A vs #FAB600); the swatch values are used, so that the
+    tints and shades, which are only given as swatches, fit together. Red agrees (#E84248). The grey 'leiza-grey'
+    is not part of the styleguide: it is a neutral for captions, because the styleguide knows only black and white.
 
+# ---------------------------------------------------------------------------
+# Palette: the styleguide's names. D1..D4 are the darker steps, 90..10 the tints (percent of the primary colour).
+# ---------------------------------------------------------------------------
+palette:
+  white: "#FFFFFF"
+  black: "#000000"
+  leiza-grey: "#4A4A4A"            # derived, see note
+  leiza-rot-d4: "#A13031"
+  leiza-rot-d3: "#B33537"
+  leiza-rot-d2: "#C53A3D"
+  leiza-rot-d1: "#D73D43"
+  leiza-rot: "#E84248"
+  leiza-rot-90: "#EB5957"
+  leiza-rot-70: "#F08479"
+  leiza-rot-50: "#F5AB9F"
+  leiza-rot-30: "#FACFC5"
+  leiza-rot-10: "#FDEFEC"
+  leiza-blau-d4: "#29354D"
+  leiza-blau-d3: "#2F3C57"
+  leiza-blau-d2: "#3B4A6A"
+  leiza-blau-d1: "#45567B"
+  leiza-blau: "#4E628B"
+  leiza-blau-90: "#5D6E95"
+  leiza-blau-70: "#7C8AAC"
+  leiza-blau-50: "#9FA8C4"
+  leiza-blau-30: "#C3C8DB"
+  leiza-blau-10: "#EAECF3"
+  leiza-gelb-d4: "#D18E00"
+  leiza-gelb-d3: "#DB9800"
+  leiza-gelb-d2: "#E6A200"
+  leiza-gelb-d1: "#F0AC00"
+  leiza-gelb: "#FAB600"
+  leiza-gelb-90: "#FCBD1E"
+  leiza-gelb-70: "#FDCB5F"
+  leiza-gelb-50: "#FEDB92"
+  leiza-gelb-30: "#FFE9C0"
+  leiza-gelb-10: "#FFF8EB"
+
+# Tokens shared by all variants; each variant sets the rest.
+tokens:
+  on_primary: white
+  ink: black
+  muted: leiza-grey
+  paper: white
+  on_highlight: white
+
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: primary}
+
+roles:
+  problem: primary
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+status:
+  done:    {fill: primary,        stroke: primary,        text: on_primary}
+  planned: {fill: paper,          stroke: primary,        text: ink, dash: true}
+  concept: {fill: secondary_tint, stroke: secondary_line, text: ink, dash: true}
+
+variant: red                       # used when neither the poster nor the command line names one
+
+variants:
+  # ----------------------------------------------------------------------- red: general
+  red:
+    label: "general"
+    tokens:
+      primary: leiza-rot-d2          # header band, table head, card bars (white on it: 5.2:1)
+      secondary: leiza-rot           # the brand red: rule, secondary card bars
+      on_secondary: white
+      secondary_tint: leiza-rot-10
+      secondary_line: leiza-rot
+      card: leiza-rot-10
+      tint: leiza-rot-30
+      line: leiza-rot-30
+      link: leiza-rot-d3
+      header_sub: leiza-rot-10
+      header_accent: leiza-rot-30
+      connector: primary
+      on_connector: white
+      highlight: black
+  # ----------------------------------------------------------------------- blue: research
+  blue:
+    label: "research"
+    tokens:
+      primary: leiza-blau            # the brand blue (white on it: 6.1:1)
+      secondary: leiza-blau-d2
+      on_secondary: white
+      secondary_tint: leiza-blau-10
+      secondary_line: leiza-blau-d2
+      card: leiza-blau-10
+      tint: leiza-blau-30
+      line: leiza-blau-50
+      link: leiza-blau-d2
+      header_sub: leiza-blau-10
+      header_accent: leiza-blau-30
+      connector: primary
+      on_connector: white
+      highlight: black
+  # ----------------------------------------------------------------------- yellow: transfer
+  yellow:
+    label: "transfer"
+    tokens:
+      primary: black                 # yellow cannot carry white text, so the dark parts are black
+      secondary: leiza-gelb          # rule under the header, secondary card bars (black text on it: 11.8:1)
+      on_secondary: black
+      secondary_tint: leiza-gelb-10
+      secondary_line: leiza-gelb-d4
+      card: leiza-gelb-10
+      tint: leiza-gelb-30
+      line: leiza-gelb-50
+      link: black
+      header_sub: leiza-grey
+      header_accent: leiza-grey
+      connector: primary
+      on_connector: white
+      highlight: leiza-gelb-d3
+      on_highlight: black
+    shape:
+      header_style: plain            # black title on white, yellow rule
+
+# ---------------------------------------------------------------------------
+# Typography: Libre Franklin (static instances cut from the variable font, see fonts/libre-franklin/SOURCES.md).
+# ---------------------------------------------------------------------------
 typography:
   family: "Libre Franklin"
   fonts:
@@ -23,3 +170,38 @@ typography:
     bold_italic: fonts/libre-franklin/LibreFranklin-BoldItalic.ttf
     heading: fonts/libre-franklin/LibreFranklin-Bold.ttf
     mono: fonts/dejavu/DejaVuSansMono.ttf            # Libre Franklin has no monospace companion
+  sizes:
+    heading_pt: 54
+    title_pt_max: 130
+    title_pt_min: 90
+    title_lines: 2
+    subtitle_pt: 56
+    authors_pt: 50
+    affil_pt: 36
+    min_pt: 24
+  autofit:
+    min_pt: 28
+    max_pt: 46
+    step_pt: 0.5
+    max_slack_ratio: 0.12
+  scale:
+    small: 0.82
+    table: 0.88
+    stat_value: 2.6
+    subheading: 1.12
+    leading: 1.28
+
+shape:
+  header_style: band
+  header_rule: 14
+  card_radius: 30
+  card_line: 3
+  card_pad_pt: 28
+  box_radius: 22
+  box_line: 5
+  dash: [22, 14]
+  arrow_line: 7
+  badge_line: 4
+  logo_radius: 20
+  logo_line: 4
+  item_gap: 0.9

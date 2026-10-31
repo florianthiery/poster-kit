@@ -82,7 +82,8 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 | Block-Tags | `role:` je Block; das Theme bildet Rollen auf Akzente ab; `accent:` erzwingt einen Stil | 2026-10-09 |
 | Schriftbibliothek | `fonts/<familie>/` im Repo-Wurzelverzeichnis statt Schriften im Theme-Ordner (Fira Sans wird von zwei Themes genutzt, DejaVu Mono als Rückfall) | 2026-10-09 |
 | Schriften je Theme | squirrel: Fira Sans; N4O: PT Sans; LEIZA: Libre Franklin; chublets: Fira Sans; neutral: DejaVu | 2026-10-09 (chublets: Vorschlag, passt zu chublets-visuals) |
-| LEIZA-Farben | später; Theme steht auf `state: pending`, `--strict` schlägt fehl | 2026-10-09 |
+| LEIZA-Farben | Styleguide „Basiselemente 4. Farben“: Rot `#E84248` (allgemein), Blau `#4E628B` (Forschung), Gelb `#FAB600` (Transfer), jeweils mit Abstufungen D1–D4 und 90–10 %; Hex-Werte aus den Farbflächen gemessen (Tabelle weicht bei Blau und Gelb ab) | 2026-10-31 (Blau bestätigt) |
+| Theme-Varianten | Ein Theme kann `variants:` haben; `theme: leiza:blue`, `theme_variant:` oder `--theme leiza:blue`; LEIZA: Rot, Blau, Gelb als je eigene Leitfarbe, nicht gemischt; Gelb mit schlichtem Titel und schwarzen Balken, weil Weiß auf Gelb nicht lesbar ist | 2026-10-31 |
 | N4O-Farben | `#043358`, `#005f8e` aus squirrel-colours | 2026-10-09 |
 | squirrel-colours | Repository gehört Florian; Lizenz CC BY oder CC0, noch nicht festgelegt | Vorschlag 2026-10-09 |
 | Kontrast | unter 3:1 Fehler; Text unter 4,5:1 Warnung; große Überschriften zwischen 3 und 4,5 Hinweis; Formen ab 3:1 in Ordnung | 2026-10-09 |
@@ -124,9 +125,9 @@ Entfällt: das Repo veröffentlicht kein RDF.
 | S2 | Layout-Engine: Karten, Autofit, Flow, Tabelle, Stats, QR, Logos | poster-kit | S1 | erledigt 2026-10-09 |
 | S3 | Theme-System: Ordner, Palette/Tokens/Rollen, Schriftbibliothek, Kontrast-Check, `--theme`, `--new-theme` | poster-kit | S2 | erledigt 2026-10-09 |
 | S4 | Fünf Themes und Demo-Poster mit allen Möglichkeiten, `GUIDE.md` | poster-kit | S3 | erledigt 2026-10-09 |
-| S5 | CHNT31-Poster nach `posters/chnt31/` migrieren (Theme `chublets`, `brief.yaml`, eigenes PRIMER) | poster-kit | S11 | offen |
+| S5 | CHNT31-Poster: fdox (Standard-Theme `neutral`) und chublets (`chublets`) als `posters/<id>/` | poster-kit | S11 | in eigenem Chat |
 | S11 | Module `people` und `supporters`; Poster-Ordner, `--new-poster`, `--blocks`, Poster-PRIMER; `brief.yaml` mit `{{ brief.… }}`; `WORKFLOW.md`, `INTERVIEW.md`, `tools/build_all.py`; Titel dynamisch; Header ohne Logos; Fußzeile entfernt | poster-kit | S4 | erledigt 2026-10-31 |
-| S6 | LEIZA-Farben eintragen, Theme auf `ready` | poster-kit | – | offen |
+| S6 | LEIZA-Farben eintragen, Theme auf `ready`; Theme-Varianten | poster-kit | – | erledigt 2026-10-31 |
 | S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
 | S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
 | S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
@@ -160,9 +161,11 @@ Alle fünf Themes bauen. Basisgröße 28,5 pt bei `neutral`, `chublets`, `resear
 
 **Ziel:** `themes/leiza/theme.yaml` hat eigene Palette und Tokens, `state: ready`.
 
-**Uploads:** Hex-Werte oder Link zum Styleguide.
+**Abnahme:** Alle drei Varianten bauen das Demo ohne Fehler; Kontrastbericht ohne Fehler und ohne Warnung (Hinweise für große Überschriften sind in Ordnung); zweimal bauen ergibt identische Bytes.
 
-**Abnahme:** `python main.py --theme leiza --strict` läuft durch, soweit nur noch die Demo-Platzhalter bleiben; Kontrastbericht ohne Fehler.
+### Erledigt 2026-10-31
+
+Palette mit allen 30 Stufen (Rot, Blau, Gelb je D4–D1, Basis, 90–10 %) aus den Farbflächen des Styleguides, dazu ein abgeleitetes Grau für Bildunterschriften. Varianten `red`, `blue`, `yellow` (siehe A4). Rot: Balken `#C53A3D` (Weiß 5,2:1), Akzent die Markenfarbe; Blau: Balken die Markenfarbe `#4E628B` (Weiß 6,1:1); Gelb: schwarze Balken, gelbe Akzente, schlichter Titel. Hinweise (keine Warnungen): Weiß auf Markenrot 3,96:1 und die Ereigniszeile im Kopf 3,66:1, beides große Schrift.
 
 ## S11 – Module, Poster-Ordner, Brief
 
@@ -187,8 +190,9 @@ Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt be
 ## Teil D – Offene Punkte
 
 - **D1** Lizenz von squirrel-colours festlegen (CC BY oder CC0) und als `LICENSE` ins Repository legen; danach `source.licence` in den Themes `research-squirrel` und `nfdi4objects` anpassen.
-- **D2** LEIZA: Farben und ggf. Logo-Vorgaben (siehe S6).
+- **D2** LEIZA: Logo-Vorgaben (Schutzraum, Mindestgröße) fehlen noch; die Farben stehen (S6). Blau und Gelb: Styleguide-Tabelle und Farbflächen weichen ab, die Flächenwerte sind gewählt (Blau bestätigt, Gelb nach demselben Prinzip).
 - **D3** Wird chublets mit Fira Sans bestätigt? Bisher Vorschlag.
+- **D12** Das CHNT31-Poster (zwei Poster: fdox mit dem Standard-Theme `neutral`, chublets mit `chublets`) entsteht in einem eigenen Chat als `posters/<id>/`; die Migration der alten Engine ist damit dort, nicht hier.
 - **D4** Formatvorgabe der jeweiligen Veranstaltung prüfen (A0 hoch? quer? Maximalgröße?) – pro Fork.
 - **D5** Lizenz der Posterinhalte (Texte, Grafiken); Code steht unter MIT.
 - **D6** Kein PDF/X-Export und keine Beschnittzugabe; falls eine Druckerei beides verlangt, wäre das ein eigener Schritt.

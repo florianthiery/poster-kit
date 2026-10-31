@@ -38,7 +38,7 @@ Commands for Windows `cmd` (build, push to GitHub, work on a poster): [WORKFLOW.
 | `chublets` | purple, gold | Fira Sans |
 | `research-squirrel` | [squirrel-colours](https://github.com/Research-Squirrel-Engineers/squirrel-colours) | Fira Sans |
 | `nfdi4objects` | N4O blues | PT Sans |
-| `leiza` | placeholder, pending | Libre Franklin |
+| `leiza` | LEIZA corporate design; variants `leiza:red` (general), `leiza:blue` (research), `leiza:yellow` (transfer) | Libre Franklin |
 
 `python main.py --list-themes` lists them; `python main.py --new-theme mylab` creates one.
 

@@ -101,18 +101,60 @@ def load_chain(theme_id: str, seen: tuple[str, ...] = ()) -> dict:
     return raw
 
 
+def variants_of(theme_id: str) -> dict:
+    """The variants a theme defines: {name: label}. Empty if it has none."""
+    try:
+        raw = load_chain(theme_id)
+    except ThemeError:
+        return {}
+    return {k: (v or {}).get("label", "") for k, v in (raw.get("variants") or {}).items()}
+
+
+def all_specs() -> list[str]:
+    """Every buildable theme spec: 'neutral', and 'leiza:red', 'leiza:blue' ... for themes with variants."""
+    out = []
+    for tid in available():
+        vs = variants_of(tid)
+        out += [f"{tid}:{v}" for v in vs] if vs else [tid]
+    return out
+
+
+def apply_variant(raw: dict, variant: str | None) -> dict:
+    """Fold one variant of a theme (its own tokens, accents, roles, status ...) into the theme."""
+    variants = raw.get("variants") or {}
+    out = {k: v for k, v in raw.items() if k not in ("variants", "variant")}
+    name = variant or raw.get("variant")
+    if variant and not variants:
+        raise ThemeError(f"theme '{raw.get('id')}' has no variants, but '{variant}' was asked for")
+    if variants:
+        if name not in variants:
+            raise ThemeError(f"theme '{raw.get('id')}' has no variant '{name}'; it has: {', '.join(variants)}")
+        out = deep_merge(out, {k: v for k, v in (variants[name] or {}).items() if k != "label"})
+        out["variant"] = name
+        out["variant_label"] = (variants[name] or {}).get("label", "")
+    return out
+
+
 def resolve(cfg: dict, cli_theme: str | None = None) -> dict:
     """Return the fully resolved theme for a poster config.
 
     Order of precedence: --theme on the command line, then ``theme:`` in
-    poster.yaml (an id, or a complete inline theme), then ``theme_overrides:``.
+    poster.yaml (an id, 'id:variant', or a complete inline theme), then ``theme_overrides:``.
+    A theme with variants (one look per leading colour, say) takes the variant from the
+    ``id:variant`` suffix, from ``theme_variant:`` in poster.yaml, or from its own default.
     """
     spec = cli_theme or cfg.get("theme")
     if spec is None:
         raise ThemeError("poster.yaml has no 'theme:' key; set it to one of: " + ", ".join(available()))
+    variant = None
+    if isinstance(spec, str) and ":" in spec:
+        spec, variant = spec.split(":", 1)
+    elif isinstance(spec, str) and (cli_theme is None or cli_theme == cfg.get("theme")):
+        variant = cfg.get("theme_variant")
     raw = spec if isinstance(spec, dict) else load_chain(str(spec))
     if not isinstance(spec, dict):
         raw.setdefault("id", str(spec))
+    raw = apply_variant(raw, variant)
     raw = deep_merge(raw, cfg.get("theme_overrides") or {})
     return _finalise(raw)
 
@@ -208,6 +250,7 @@ def _finalise(raw: dict) -> dict:
 
     return {
         "id": tid, "name": raw.get("name", tid), "state": raw.get("state", "ready"),
+        "variant": raw.get("variant"), "variant_label": raw.get("variant_label", ""),
         "extends": raw.get("extends"), "source": raw.get("source") or {},
         "palette": palette, "tokens": tokens, "accents": accents, "roles": roles,
         "status_styles": status, "fonts": fonts, "font_family": typo.get("family", ""),

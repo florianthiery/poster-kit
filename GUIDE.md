@@ -370,7 +370,7 @@ A theme says how the poster looks. It lives in `themes/<id>/theme.yaml`. `themes
 | `chublets` | chublets purple and gold | Fira Sans | ready |
 | `research-squirrel` | squirrel-colours | Fira Sans | ready |
 | `nfdi4objects` | N4O blues from squirrel-colours | PT Sans | ready |
-| `leiza` | placeholder (inherits `neutral`) | Libre Franklin | pending |
+| `leiza` | LEIZA corporate design, three variants: `red` (general), `blue` (research), `yellow` (transfer) | Libre Franklin | ready |
 
 `python main.py --list-themes` prints them.
 
@@ -445,11 +445,29 @@ This copies `themes/neutral/` to `themes/mylab/` and marks it `state: pending`. 
 4. Run `python main.py --theme mylab` and read the contrast messages.
 5. Set `state: ready`.
 
-To change only a few things of an existing theme, write a short theme with `extends: neutral` and list only the differences; `themes/leiza/theme.yaml` does this. A theme is a folder so that logos or notes can sit beside the YAML.
+To change only a few things of an existing theme, write a short theme with `extends: neutral` and list only the differences. A theme is a folder so that logos or notes can sit beside the YAML.
 
 ### State: pending
 
-A theme with `state: pending` builds, but `--strict` fails, so a poster with stand-in colours cannot be released by mistake. `leiza` is pending until its colours are supplied.
+A theme with `state: pending` builds, but `--strict` fails, so a poster with stand-in colours cannot be released by mistake. A copy made with `--new-theme` starts as pending; set `state: ready` when the palette is final.
+
+### Variants
+
+Some brands do not have one look but several, each led by one colour. LEIZA is the example: red is the general colour, blue stands for research, yellow for transfer, and a poster normally uses one of them, not all three together. A theme can therefore define `variants:`; each variant overrides tokens, accents, roles, status styles or shape of the theme:
+
+```yaml
+variant: red                       # the default when nobody names one
+variants:
+  red:
+    label: "general"
+    tokens: {primary: leiza-rot-d2, secondary: leiza-rot, ...}
+  yellow:
+    label: "transfer"
+    tokens: {primary: black, secondary: leiza-gelb, on_secondary: black, ...}
+    shape: {header_style: plain}   # white text on yellow cannot be read, so this look has a plain header
+```
+
+Choose one with `theme: leiza:blue` in `poster.yaml`, or `theme: leiza` plus `theme_variant: blue`, or on the command line with `--theme leiza:blue`. `python main.py --list-themes` lists the variants, and `tools/build_all.py --all-themes` builds every one of them. Everything in a theme is checked per variant: the contrast check runs on the variant that is built.
 
 ## Fonts
 

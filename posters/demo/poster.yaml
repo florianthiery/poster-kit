@@ -9,7 +9,7 @@ meta:
   keywords: "poster, template, example"
   status: draft                    # bookkeeping only: --strict refuses "draft", so set it to final for the release build
 
-theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza | your own
+theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza:red | leiza:blue | leiza:yellow | your own
 # theme_overrides:                 # optional: change single theme values for this poster only
 #   shape: {header_style: plain}   # e.g. dark title on the page instead of a coloured band
 #   typography: {autofit: {max_pt: 40}}
