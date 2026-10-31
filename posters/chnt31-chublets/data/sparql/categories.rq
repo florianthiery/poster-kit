@@ -1,0 +1,14 @@
+PREFIX chb:  <https://n4o-rse.github.io/chublets-wikibase-demo/entity/>
+PREFIX chbt: <https://n4o-rse.github.io/chublets-wikibase-demo/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?category (COUNT(DISTINCT ?item) AS ?chublets)
+WHERE {
+  ?item chbt:P2 chb:Q106 ;
+        chbt:P2 ?class .
+  VALUES ?class { chb:Q102 chb:Q103 chb:Q104 }
+  ?class rdfs:label ?category .
+  FILTER(LANG(?category) = "en")
+}
+GROUP BY ?category
+ORDER BY DESC(?chublets)

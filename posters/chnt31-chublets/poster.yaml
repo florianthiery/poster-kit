@@ -1,0 +1,148 @@
+# poster.yaml of the CHNT31 chublets poster. Facts come from brief.yaml; texts from content/*.md.
+# Formally modelled on chnt31-fdox: one backbone as a flow, zoom cards, real SPARQL with results.
+
+meta:
+  title: "{{ brief.poster.title_plain }}"
+  short_title: "{{ brief.poster.short_title }}"
+  author: "{{ brief.authors.0.name }}"
+  subject: "{{ brief.event.name }} {{ brief.event.track }}"
+  keywords: "research software, Linked Data, Wikibase, Wikidata, open-archaeo, CodeMeta, SPARQL, cultural heritage"
+  status: draft                    # set to final for the release build (--strict refuses draft)
+
+theme: chublets
+
+theme_overrides:
+  typography:
+    autofit:
+      max_pt: 30
+
+page:
+  size: A0
+  orientation: portrait
+  margin_mm: 14
+  gap_mm: 8
+
+header:
+  event: "{{ brief.event.name }} · {{ brief.event.track }} · Poster"
+  title: "{{ brief.poster.title }}"
+  title_lines: 1
+  title_pt_max: 90
+  title_pt_min: 60
+  authors_pt: 36
+  affil_pt: 26
+  subtitle_pt: 52
+  subtitle_bold: true
+  logos:
+    - {name: "chublets", src: img/logos/chublets-raven.png}
+  logos_valign: center
+  logos_w_mm: 140
+  logo_h_mm: 140
+  subtitle: "{{ brief.poster.subtitle }}"
+  authors: "{{ brief.authors }}"
+  affiliations: "{{ brief.affiliations }}"
+
+blocks:
+  hook:
+    title: "1 · Software hides in plain sight"
+    role: problem
+    why: "States the problem in two sentences: research software for heritage is scattered and thinly described."
+    type: text
+    file: content/01_why.md
+
+  idea:
+    title: "The idea: chublets"
+    role: aim
+    why: "Defines a chublet in one sentence and says what chublets.software is: the hub (author: it exists)."
+    type: text
+    file: content/02_idea.md
+
+  journey:
+    title: "The life of one chublet: from a list to a marketplace"
+    role: method
+    why: "The backbone of the poster: six stations in order; all exist, the Federation Wikibase as a prototype."
+    type: flow
+    per_row: 6
+    steps:
+      - {label: "open-archaeo", sub: "{{ brief.numbers.0.value }} software entries", status: done}
+      - {label: "Prepare", sub: "OpenRefine and Python, one vocabulary", status: done}
+      - {label: "Wikidata", sub: "chublet class, WikiProject, seed items", status: done}
+      - {label: "Static demo", sub: "wikibase-static: pages, RDF, SPARQL", status: done}
+      - {label: "Federation Wikibase", sub: "chublets-wikibase.de, prototype", status: done}
+      - {label: "chublets.software", sub: "the hub: a FAIR software marketplace", status: done}
+
+  figures:
+    why: "One card for the six graphics from chublets-visuals: how it is modelled, the crosswalk behind it, the architecture."
+    role: method
+    parts:
+      - type: image_row
+        max_height_mm: 260
+        items:
+          - {src: img/chublet-item.png}
+          - {src: img/class-tree.png}
+      - type: image_row
+        max_height_mm: 190
+        items:
+          - {src: img/chublets-wikibase-datamodel.png}
+          - {src: img/model-evidence-base.png}
+      - type: image_row
+        max_height_mm: 140
+        items:
+          - {src: img/static-vs-federation.png}
+          - {src: img/chublets-four-step-pattern.png}
+
+  links:
+    title: "Explore"
+    valign: center
+    role: resources
+    why: "Where the reader goes next: the demo and the Wikibase."
+    type: qr
+    size_mm: 70
+    items: "{{ brief.links }}"
+
+  team:
+    title: "People"
+    role: context
+    why: "Puts names to faces once the photographs and consent are in (until then initials)."
+    type: people
+    valign: center
+    per_row: 2
+    size_mm: 30
+    items: "{{ brief.people }}"
+
+  supporters:
+    title: "Behind the work"
+    role: resources
+    why: "Names funder, infrastructure and networks with their logos (usage terms to be checked, PRIMER D4)."
+    type: supporters
+    valign: center
+    columns: 1
+    height_mm: 34
+    style: plain
+    groups: "{{ brief.supporters }}"
+
+  references:
+    title: "References"
+    role: references
+    why: "Lists the two repositories the poster describes and the sources of the data model."
+    type: text
+    file: content/09_references.md
+    scale: 0.8
+
+layout:
+  bands:
+    - weight: 0
+      columns:
+        - {width: 1, blocks: [hook]}
+        - {width: 1.25, blocks: [idea]}
+    - weight: 0
+      columns:
+        - {blocks: [journey]}
+    - weight: 1
+      columns:
+        - {blocks: [figures]}
+    - weight: 0
+      columns:
+        - {width: 1.2, blocks: [team]}
+        - {width: 1.35, blocks: [links]}
+        - {width: 1.1, blocks: [supporters]}
+        - {width: 1.6, blocks: [references]}

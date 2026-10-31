@@ -1,0 +1,85 @@
+# brief.yaml: the facts of poster chnt31-chublets, in one place.
+# Started in a conversation (see INTERVIEW.md at the repository root), then kept up to date.
+# poster.yaml reads these values with {{ brief.<path> }}; content/*.md can do the same.
+
+status: draft                      # interview -> draft -> confirmed (the build warns until it is 'confirmed')
+
+event:
+  name: "CHNT31"
+  track: "Digital Creative Award"  # same track as chnt31-fdox (author, 2026-10-31)
+  place: "TODO city"               # not known yet; chnt31-fdox has the same gap (PRIMER D1)
+  dates: "TODO dates"
+  url: "https://www.chnt.at/"      # as in chnt31-fdox (author, 2026-10-31)
+  format: "A0 portrait"            # confirmed by the author on 2026-10-31; the organiser's rule was not checked
+  print_deadline: "not needed"     # author, 2026-10-31: "that does not matter"
+
+poster:
+  title: "Code is Data, Too"       # WORKING TITLE, the submitted title follows
+  title_plain: "Code is Data, Too: From open-archaeo via Wikidata to chublets.software"
+  short_title: "chublets.software"
+  subtitle: "From open-archaeo via Wikidata to chublets.software: a FAIR software marketplace for cultural heritage"
+  key_message: "Open research software for cultural heritage would become findable, citable and queryable as Linked Data in a chublets Wikibase."   # proposal by Claude, accepted by the author 2026-10-31
+  audience: "Cultural heritage and archaeoinformatics community and semantic-web-minded readers, also readers without semantic web background"
+  call_to_action: "Browse the chublets; add or improve your own software; talk to us at the poster"
+  language: "British English"
+
+authors:                           # order confirmed by the author on 2026-10-31 ("genau so"); affil = number of the affiliation line below
+  - {name: "Florian Thiery", affil: "1"}
+  - {name: "Ronny Gey", affil: "2"}
+  - {name: "Leif Lobinsky", affil: "3"}
+  - {name: "Lutz K. Schubert", affil: "4"}
+
+affiliations:                      # one line per author, institutions separated by commas (author's wish, round 2)
+  - "Leibniz-Zentrum für Archäologie (LEIZA), Mainz, Germany, Research Squirrel Engineers Network, de-RSE e.V."   # Thiery
+  - "find.software, Helmholtz Centre for Environmental Research (UFZ), Leipzig, Germany"                          # Gey
+  - "Wikimedia Deutschland, Berlin, Germany"                                                                     # Lobinsky
+  - "University of Cologne, Cologne, Germany, CAA e.V."                                                          # Schubert
+
+people:                            # photos only with consent; the author will supply the photos (2026-10-31)
+  - {name: "Florian Thiery", photo: img/people/florian-thiery.png}
+  - {name: "Ronny Gey", photo: img/people/ronny-gey.png}
+  - {name: "Leif Lobinsky", photo: img/people/leif-lobinsky.png}
+  - {name: "Lutz K. Schubert", photo: img/people/lutz-k-schubert.png, focus: [0.5, 0.4]}
+
+supporters:                        # two logos, two logos, then the three funders/infrastructure; logo files supplied by the author or copied from chnt31-fdox
+  - align: center
+    height_mm: 28
+    items:
+      - {name: "LEIZA", src: img/logos/leiza.png}
+      - {name: "Research Squirrel Engineers", src: img/logos/research-squirrel-engineers.png}
+  - align: center
+    height_mm: 28
+    items:
+      - {name: "CAA e.V.", src: img/logos/caa-germany.png}
+      - {name: "Wikimedia Deutschland", src: img/logos/wikimedia-deutschland.png}
+  - align: center
+    height_mm: 16
+    items:
+      - {name: "DFG", src: img/logos/dfg.png}
+      - {name: "NFDI", src: img/logos/nfdi.png}
+      - {name: "NFDI4Objects", src: img/logos/nfdi4objects.png}
+
+links:                             # QR codes chosen by the author on 2026-10-31; reachability not checked from the sandbox
+  - {url: "https://n4o-rse.github.io/chublets-wikibase-demo/", label: "Browse the chublets"}
+  - {url: "https://chublets-wikibase.de", label: "chublets Wikibase"}
+
+numbers:                           # every number on the poster, with its source
+  - {value: "416", label: "open-archaeo software entries", source: "sum of data/sparql/categories-result.csv (248 + 94 + 74); SPARQL via rdflib on dist/n4o-rse.github.io-chublets-wikibase-demo.ttl of n4o-rse/chublets-wikibase-demo (commit 90a4e39a, data as of 2026-10-25); README of that repository says the same", queried: "2026-10-31"}
+  - {value: "168", label: "properties in the model", source: "docs/data/table-model-statistics.csv of chublets-software/chublets-visuals (commit f408631, 2026-10-25): 10 kernel + 149 initial + 9 review; same figure in the graphic static-vs-federation", queried: "2026-10-31"}
+
+notes: |
+  2026-10-31: The Federation Wikibase is NOT a second poster; it belongs on this poster (author's decision).
+  Status of chublets-wikibase.de: author chose "prototype runs" (solid) on 2026-10-31, after the PRIMER of wikibase-static
+  listed it as filled (980 entries, 7,012 statements, push of 2026-10-25). Not checked live: the sandbox cannot reach it.
+  No number from that push is printed on the poster.
+  2026-10-31 (round 2): chublets.software EXISTS (author: "da existiert ja"); the "concept" wording and the dashed station are gone.
+  The two SPARQL cards were taken off the poster for more graphics (author, round 2); the files stay in data/sparql/.
+  The poster formally follows chnt31-fdox (author, 2026-10-31).
+  Example chublet: SPARQLing Unicorn QGIS Plugin (Wikidata Q74005133; Q360 in the static demo), asked for by the author.
+
+references:                        # printed in the references block; all taken from the READMEs of the two repositories
+  - "Thiery, F. wikibase-static: static, read-only HTML demonstrators for Wikibase instances (version 0.19.0). https://github.com/n4o-rse/wikibase-static"
+  - "chublets-wikibase-demo: static demonstration of the planned chublets.software Wikibase data model. https://github.com/n4o-rse/chublets-wikibase-demo"
+  - "open-archaeo: https://github.com/n4o-rse/open-archaeo"
+  - "find.software: https://find-software.org/"          # added by the author, round 6
+  - "Crosswalks of Research Software Metadata Schemas to CodeMeta (ConnOSS), v1.2.0, CC BY 4.0. https://doi.org/10.5281/zenodo.21935688"

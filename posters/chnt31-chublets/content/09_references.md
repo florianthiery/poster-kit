@@ -1,0 +1,5 @@
+- Thiery, F. *wikibase-static*, version 0.19.0. [n4o-rse/wikibase-static](https://github.com/n4o-rse/wikibase-static)
+- *chublets-wikibase-demo*. [n4o-rse/chublets-wikibase-demo](https://github.com/n4o-rse/chublets-wikibase-demo)
+- *open-archaeo*. [n4o-rse/open-archaeo](https://github.com/n4o-rse/open-archaeo)
+- ConnOSS crosswalks to CodeMeta, v1.2.0, CC BY 4.0. [doi:10.5281/zenodo.21935688](https://doi.org/10.5281/zenodo.21935688)
+- *find.software*. [find-software.org](https://find-software.org/)

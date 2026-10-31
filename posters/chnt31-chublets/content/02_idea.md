@@ -1,0 +1,1 @@
+A **chublet** is a small, documented nugget of research software, described as Linked Data in one shared schema. **chublets.software** is the Cultural Heritage Hub for chublets: a FAIR software marketplace for cultural heritage.

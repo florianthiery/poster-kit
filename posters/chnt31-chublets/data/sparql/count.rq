@@ -1,0 +1,5 @@
+PREFIX chb:  <https://n4o-rse.github.io/chublets-wikibase-demo/entity/>
+PREFIX chbt: <https://n4o-rse.github.io/chublets-wikibase-demo/prop/direct/>
+
+SELECT (COUNT(DISTINCT ?item) AS ?chublets)
+WHERE { ?item chbt:P2 chb:Q106 }
