@@ -466,6 +466,14 @@ roles:
   references: neutral
 ```
 
+A block with several parts can set `center_last: true`: the last part (typically a figure) is centred vertically in the space left under the text. In the header, `subtitle_pt` overrides the theme's subtitle size too, and `subtitle_bold: true` sets it in bold.
+
+In the header, `authors_pt` and `affil_pt` override the theme's author and affiliation sizes for one poster; the affiliation numbers are set as small superscripts.
+
+In the header, `logos_valign: center` centres the logo stack vertically against the text (default: top).
+
+A block can also set `valign: center` to centre its content vertically in the card (useful for `people` and `supporters` when the band is taller than the content).
+
 This is the point of the indirection: re-theming a poster changes how every `method` card looks without touching `poster.yaml`. The shipped themes map these roles: `problem`, `context`, `aim`, `method`, `result`, `discussion`, `outlook`, `invitation`, `resources`, `references`. Add your own roles in a theme, or force a style on one block with `accent:`. A role the theme does not know falls back to `primary` and raises a warning.
 
 ### Status styles

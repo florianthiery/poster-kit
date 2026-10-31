@@ -14,38 +14,45 @@ event:
   print_deadline: "TODO yyyy-mm-dd"
 
 poster:
-  title: "From Pocket to SPARQL:<br>How a Smartphone Scan of an Ogham Stone<br>Learned to Speak Linked Data"
+  title: "From Pocket to SPARQL"
   title_plain: "From Pocket to SPARQL: How a Smartphone Scan of an Ogham Stone Learned to Speak Linked Data"
   short_title: "FDOx: From Pocket to SPARQL"
-  subtitle: "FDOx: FAIR Digital Objects for 3D cultural heritage"
+  subtitle: "How a Smartphone Scan of an Ogham Stone Learned to Speak Linked Data"
   key_message: "A smartphone scan becomes a citable, preservable and queryable FAIR Digital Object."
   audience: "Cultural heritage and digital documentation community; readers beyond the semantic web community"
   language: "British English"
 
 authors:                           # header; affil = number(s) of the affiliation below
-  - {name: "Louise Tharandt", affil: "1"}     # order as selected in the interview; to be confirmed (PRIMER D1)
-  - {name: "Florian Thiery", affil: "2"}
+  - {name: "Florian Thiery", affil: "1,2"}    # first author (confirmed by the author 2026-10-31)
+  - {name: "Louise Tharandt", affil: "3"}
 
 affiliations:
-  - "Humboldt-Universität zu Berlin, Berlin, Germany"
   - "Leibniz-Zentrum für Archäologie (LEIZA), Mainz, Germany"
+  - "Research Squirrel Engineers Network"
+  - "Humboldt-Universität zu Berlin, Berlin, Germany"
 
 people:                            # people module: photos and names, no institution; order as in the header
-  - {name: "Louise Tharandt", photo: img/people/louise-tharandt.png, focus: [0.5, 0.42], zoom: 1.15}
   - {name: "Florian Thiery", photo: img/people/florian-thiery.png}
+  - {name: "Louise Tharandt", photo: img/people/louise-tharandt.png, focus: [0.5, 0.42], zoom: 1.15}
 
-supporters:                        # supporters module: labelled groups of logos (names only until the logo files are supplied)
-  - label: "Project, institute and networks"
+supporters:                        # supporters module; the logo files carry their own "Funded by" / "In cooperation with" lines
+  - align: center
+    height_mm: 36
     items:
-      - {name: "FDOx-Squirrel"}
-      - {name: "LEIZA"}
-      - {name: "NFDI4Objects"}
-      - {name: "Research Squirrel Engineers"}
+      - {name: "LEIZA", src: img/logos/leiza.png}
+      - {name: "Research Squirrel Engineers", src: img/logos/research-squirrel-engineers.png}
+  - align: center
+    height_mm: 24
+    items:
+      - {name: "DFG", src: img/logos/dfg.png}
+      - {name: "NFDI", src: img/logos/nfdi.png}
+      - {name: "NFDI4Objects", src: img/logos/nfdi4objects.png}
 
 links:                             # QR codes
-  - {url: "https://fdox-squirrel.github.io/fdo-squirrel-registry/", label: "FDOx<br>registry"}
-  - {url: "https://github.com/FDOx-squirrel", label: "Open-source<br>code"}
-  - {url: "https://doi.org/10.5281/zenodo.18724635", label: "Ogham stone<br>on Zenodo"}
+  - {url: "https://fdox-squirrel.github.io/fdo-squirrel-registry/", label: "FDOx registry"}
+  - {url: "https://github.com/FDOx-squirrel", label: "Open-source code"}
+  - {url: "https://doi.org/10.5281/zenodo.18441544", label: "FDOx paper"}
+  - {url: "https://doi.org/10.5281/zenodo.18724635", label: "Ogham stone"}
 
 numbers:                           # every number on the poster, with its source
   - {value: "8", label: "FDOxs in the registry", source: "FDOx registry bundle dist/fdo-registry.ttl, release 2026-09-03, fdo-squirrel-registry commit 253aee9; SPARQL via rdflib", queried: "2026-10-31"}

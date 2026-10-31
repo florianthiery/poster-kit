@@ -1049,7 +1049,12 @@ class Card:
         if self.title:
             self.head.drawOn(c, x + pad, y_top - self.head_h / 2 - self.head.height / 2)
         y = y_top - self.head_h - pad
-        for item in self.items:
+        if self.spec.get("valign") == "center":              # centre the content in the space below the heading
+            y -= max(0.0, (h - self.head_h - 2 * pad - self.content_h) / 2)
+        spare = max(0.0, h - self.head_h - 2 * pad - self.content_h)
+        for k, item in enumerate(self.items):
+            if self.spec.get("center_last") and k == len(self.items) - 1 and k > 0:
+                y -= spare / 2                               # centre the last part (a figure) in the space left under the text
             item.draw(c, x + pad, y)
             y -= item.height + ctx.item_gap
 
@@ -1093,14 +1098,17 @@ class Header:
             self.title_note = (f"title runs to {n_lines} lines at the minimum size ({pt} pt): the header grows and the body text "
                    f"gets less room; shorten the title, move words to the subtitle or lower title_pt_min")
         ctx.report.note_size(pt, "title")
-        names = ", ".join(f'{escape(a["name"])}<super>{a.get("affil", "")}</super>' for a in hd["authors"])
-        au = ctx.style("authors", sz["authors_pt"], font="PosterBold", colour=c_authors)
+        a_pt = float(hd.get("authors_pt", sz["authors_pt"]))
+        f_pt = float(hd.get("affil_pt", sz["affil_pt"]))
+        sup = lambda t, fs: f'<super rise="{fs * 0.32:.1f}" size="{fs * 0.6:.1f}">{t}</super>'
+        names = ", ".join(f'{escape(a["name"])}{sup(a.get("affil", ""), a_pt)}' for a in hd["authors"])
+        au = ctx.style("authors", a_pt, font="PosterBold", colour=c_authors)
         self.authors = Paragraph(names, au)
         self.authors.wrap(text_w, 1e7)
-        aff = "<br/>".join(f"<super>{i + 1}</super> {escape(a)}" for i, a in enumerate(hd["affiliations"]))
-        af = ParagraphStyle("affil", fontName="PosterBody", fontSize=sz["affil_pt"], leading=sz["affil_pt"] * 1.3,
+        aff = "<br/>".join(f"{sup(i + 1, f_pt)} {escape(a)}" for i, a in enumerate(hd["affiliations"]))
+        af = ParagraphStyle("affil", fontName="PosterBody", fontSize=f_pt, leading=f_pt * 1.3,
                             textColor=ctx.col[c_sub])
-        ctx.report.note_size(sz["affil_pt"], "affiliations")
+        ctx.report.note_size(f_pt, "affiliations")
         self.affil = Paragraph(aff, af); self.affil.wrap(text_w, 1e7)
         self.event = None
         if hd.get("event"):
@@ -1108,7 +1116,7 @@ class Header:
             self.event = ctx.para(hd["event"], ev, text_w)
         self.subtitle = None
         if hd.get("subtitle"):
-            sub = ctx.style("subtitle", sz["subtitle_pt"], colour=c_sub, lead=1.15)
+            sub = ctx.style("subtitle", float(hd.get("subtitle_pt", sz["subtitle_pt"])), font="PosterBold" if hd.get("subtitle_bold") else "PosterBody", colour=c_sub, lead=1.15)
             self.subtitle = ctx.para(hd["subtitle"], sub, text_w)
         self.text_w = text_w
         top_pad, bot_pad = margin * 0.7, margin * 0.6
@@ -1116,6 +1124,7 @@ class Header:
         left_h = (self.event.height + gap * 0.3 if self.event else 0) + self.title.height + sub_h + gap * 0.6 + self.authors.height + gap * 0.3 + self.affil.height
         stack_h = len(self.logos) * self.logo_h + max(len(self.logos) - 1, 0) * self.logo_gap
         self.top_pad = top_pad
+        self.logo_dy = max(0.0, (left_h - stack_h) / 2) if hd.get("logos_valign") == "center" else 0.0   # centre the logos in the header
         self.height = top_pad + max(left_h, stack_h) + bot_pad
         self.gap = gap
         self.page_w = page_w
@@ -1139,7 +1148,7 @@ class Header:
         if self.logos:
             style = ctx.style("logo-header", ctx.small, font="PosterBold", colour="primary", align=TA_CENTER, lead=1.15)
             lx = self.page_w - m - self.logo_w
-            ly = page_h - self.top_pad
+            ly = page_h - self.top_pad - self.logo_dy
             for it in self.logos:
                 ly -= self.logo_h
                 draw_logo(c, ctx, it, lx, ly, self.logo_w, self.logo_h, style)

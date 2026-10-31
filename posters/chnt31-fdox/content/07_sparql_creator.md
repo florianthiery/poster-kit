@@ -1,1 +1,0 @@
-`SELECT ?creator (COUNT(DISTINCT ?fdo) AS ?models)`<br>`WHERE { ?fdo a fdo:3DDataFDO ;`<br>`dct:creator ?agent .`<br>`?agent schema:name ?creator . }`<br>`GROUP BY ?creator`<br>`ORDER BY DESC(?models) ?creator`
