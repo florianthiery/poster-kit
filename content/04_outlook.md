@@ -1,4 +1,0 @@
-- Fork this repository for each poster
-- Pick a theme, or add your own with `--new-theme`
-- Replace the demo content block by block
-- Run `python main.py --strict` before printing

@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import poster_utils as U  # noqa: E402
 import theme as T  # noqa: E402
 
-PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos", "people", "supporters", "gallery", "timeline", "cite"}
+PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos", "people", "supporters", "gallery", "image_row", "timeline", "cite"}
 PAGE_SIZES = {"A0", "A1", "A2", "A3", "A4"}
 
 
@@ -75,6 +75,8 @@ def main() -> int:
                 errors.append(f"footer: unknown key '{k}' (allowed: height_mm, text, meta, licence, qr)")
         if not any(foot.get(k) for k in ("text", "meta", "licence", "qr")):
             errors.append("footer: give at least one of text, meta, licence, qr")
+    if cfg["header"].get("logos_valign", "top") not in ("top", "center"):
+        errors.append("header.logos_valign must be top or center")
     blocks = cfg["blocks"]
     primer = U.POSTER_DIR / "PRIMER.md"
     if not primer.is_file():
@@ -107,6 +109,8 @@ def main() -> int:
         if spec.get("role") and spec["role"] not in th["roles"] and not spec.get("accent"):
             U.warn(f"block '{bid}': role '{spec['role']}' is not mapped by theme '{th['id']}', "
                    f"falling back to accent 'primary' (mapped roles: {', '.join(th['roles'])})")
+        if spec.get("valign", "top") not in ("top", "center"):
+            errors.append(f"block '{bid}': valign must be top or center")
         for part in part_list(spec):
             ptype = part.get("type")
             if ptype not in PART_TYPES:
@@ -114,6 +118,12 @@ def main() -> int:
                 continue
             if ptype == "text" and "file" in part and not U.find(part["file"]).is_file():
                 errors.append(f"block '{bid}': content file missing: {part['file']}")
+            for ref in ([part["file"]] if ptype == "text" and "file" in part else []) + \
+                       ([part["src"]] if part.get("src") else []):
+                found = U.find(ref)
+                if found.is_file() and U.POSTER_DIR not in found.parents and ref.split("/")[0] in ("content", "img", "data"):
+                    U.warn(f"block '{bid}': {ref} is taken from the kit root, not from the poster folder "
+                           f"(a stale file there? the poster's own copy is missing)")
             if ptype == "image":
                 exists = U.find(part["src"]).is_file()
                 if not exists and not part.get("placeholder"):
@@ -154,6 +164,14 @@ def main() -> int:
                         errors.append(f"block '{bid}': a gallery picture has no 'src'")
                     elif not U.find(it["src"]).is_file():
                         U.warn(f"block '{bid}': gallery picture missing, a dashed box is drawn: {it['src']}")
+            if ptype == "image_row":
+                if not part.get("items"):
+                    errors.append(f"block '{bid}': image_row needs a non-empty 'items' list")
+                for it in part.get("items") or []:
+                    if not it.get("src"):
+                        errors.append(f"block '{bid}': an image_row picture has no 'src'")
+                    elif not U.find(it["src"]).is_file():
+                        U.warn(f"block '{bid}': image_row picture missing, a dashed box is drawn: {it['src']}")
             if ptype == "timeline":
                 if not part.get("items"):
                     errors.append(f"block '{bid}': timeline needs a non-empty 'items' list")

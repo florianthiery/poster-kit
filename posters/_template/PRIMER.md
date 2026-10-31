@@ -84,7 +84,13 @@ Tabelle aus `poster.yaml` (Feld `why`); Quellen und Abfragedaten trägst du hier
 
 | Nr. | Frage | Wer entscheidet | Stand |
 |---|---|---|---|
-| D1 | TODO | TODO | offen |
+| D1 | Ort, Datum und Druckfrist der Veranstaltung (`event.*` im Brief) | Autor | offen |
+| D2 | Einwilligung für Fotos von Personen auf dem Poster | Autor, Abgebildete | offen |
+| D3 | Nutzungsregeln der Logos (Förderer, Institute, Netzwerke), Vermerk in `shared/logos/README.md` oder `img/logos/README.md` | Autor | offen |
+| D4 | Lizenzen der Bilder und Grafiken, Namensnennung als Satz im Text, Vermerk in `img/README.md` | Autor | offen |
+| D5 | Sind Grafiken aus Folien oder Screenshots auf A0 lesbar (Schrift in der Grafik mindestens etwa 24 pt)? | Autor | offen |
+| D6 | Lizenz des Posters und `CITATION.cff` (Zitierzeile, DOI) | Autor | offen |
+| D7 | Formatvorgabe der Veranstaltung geprüft (Größe, Hoch-/Querformat) | Autor | offen |
 
 ---
 

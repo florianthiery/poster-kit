@@ -181,6 +181,11 @@ header:
   # title_pt_max: 130
   # title_pt_min: 70
   subtitle: "One line saying what the poster shows"
+  # subtitle_pt: 52                      # size and weight of the subtitle (theme default otherwise)
+  # subtitle_bold: true
+  # authors_pt: 36                       # sizes of the author line and of the affiliations
+  # affil_pt: 26
+  # logos_valign: center                 # logo stack centred against the text (default: top)
   authors:
     - {name: "Ada Example", affil: "1"}  # affil: the number(s) of the affiliation(s) below
   affiliations:
@@ -192,7 +197,9 @@ header:
     - {name: "Institute name"}                                  # without src: the name in a pill
 ```
 
-The title takes the largest size between `title_pt_min` and `title_pt_max` that fits in `title_lines` lines. `title_lines` is a preference: if the title still needs more lines at the minimum size, it simply wraps further, the header grows, the body text gets less room and the build warns. If the page is full even with the smallest body size, the title is reduced in steps (down to `title_pt_min`) and the body sizes are tried again; the build says so. The three keys can be set under `header:` in `poster.yaml` for one poster, without touching the theme. Logos are stacked on the right, each in a pill with the theme's secondary colour as outline.
+The title takes the largest size between `title_pt_min` and `title_pt_max` that fits in `title_lines` lines. `title_lines` is a preference: if the title still needs more lines at the minimum size, it simply wraps further, the header grows, the body text gets less room and the build warns. If the page is full even with the smallest body size, the title is reduced in steps (down to `title_pt_min`) and the body sizes are tried again; the build says so. The three keys can be set under `header:` in `poster.yaml` for one poster, without touching the theme. Logos are stacked on the right, each in a pill with the theme's secondary colour as outline; `logos_valign: center` centres the stack against the text, which looks better when one large logo sits next to a tall text column. `authors_pt`, `affil_pt` and `subtitle_pt` replace the theme's sizes for one poster (the themes are quite prominent; 36 and 26 pt are calmer on a crowded poster). Affiliation numbers are set as small raised numerals.
+
+A long abstract title does not belong in the title line: a short title in one large line plus the long one as a bold subtitle (`subtitle_pt: 52`, `subtitle_bold: true`) reads better and leaves the page more room than three title lines.
 
 ### blocks
 
@@ -206,8 +213,10 @@ A block is a card. Common keys:
 | `why` | One sentence: why this block exists and looks like this. Copied into `layout_report.txt`. Required by the validation (as a warning). |
 | `frame` | `false` draws no card and no title bar; the title becomes plain text in the primary colour. |
 | `scale` | Text size relative to the fitted body size (`0.8` for references, `1.15` for a key message) |
+| `valign` | `center` centres the content in the card below the heading (default: top). For `people` and `supporters` in a band that is taller than their content. |
+| `center_last` | `true`: in a block with several parts the last one (typically a figure) is centred in the space left under the text. |
 
-A block holds one **part** (text, table, flow, stats, image, qr, logos, people, supporters, gallery, timeline, cite), written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
+A block holds one **part** (text, table, flow, stats, image, image_row, qr, logos, people, supporters, gallery, timeline, cite), written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
 
 #### text
 
@@ -327,7 +336,7 @@ groups:
       - {name: "Partner without a logo file"}      # no src: the name is printed in a box
 ```
 
-For funders, partners, networks and hosts: labelled groups of logos. Logos are placed by their proportions, wrap to the next row when the row is full, and a missing file falls back to the name, so a first draft needs no logos at all. For a single row without labels, `items:` directly in the part is enough. The older `logos` part still works and draws equal-width pills; `supporters` is the one to use for real funder lines. Check the usage terms of every logo (funders usually publish them with rules) and note them next to the file in `shared/logos/README.md`.
+For funders, partners, networks and hosts: labelled groups of logos. Rows are filled greedily, which can give 4 + 1; `per_row: 3` (on the part or on one group) makes the rows even instead (5 logos become 3 + 2). For a fully controlled layout use one group per row, each with its own `height_mm` and `align: center`. Logos are placed by their proportions, wrap to the next row when the row is full, and a missing file falls back to the name, so a first draft needs no logos at all. For a single row without labels, `items:` directly in the part is enough. The older `logos` part still works and draws equal-width pills; `supporters` is the one to use for real funder lines. Check the usage terms of every logo (funders usually publish them with rules) and note them next to the file in `shared/logos/README.md`.
 
 #### gallery
 
@@ -342,7 +351,21 @@ items:
   - {src: img/site-b.jpg, caption: "Site B.", focus: [0.8, 0.4]}   # focus: crop centre, 0 to 1 from the top left
 ```
 
-Several pictures in a grid, a caption under each. A missing file is not an error: a dashed box with the file name is drawn (the build warns), so the layout can be judged before all pictures exist. For one large picture with a long caption use `image`.
+Several pictures in a grid, a caption under each. `fit: contain` shows the whole picture on the card's tint, which looks like white space at the sides; `matte: false` omits tint and frame. For two or three pictures that should sit side by side at one height, `image_row` is the better part. A missing file is not an error: a dashed box with the file name is drawn (the build warns), so the layout can be judged before all pictures exist. For one large picture with a long caption use `image`.
+
+#### image_row
+
+```yaml
+type: image_row
+max_height_mm: 60             # the row is never taller than this; height_mm sets an exact height
+gap_mm: 6                     # default: a little under one text line
+items:
+  - {src: img/before.jpg, caption: "Before."}
+  - {src: img/after.png}                    # captions are optional, also for single pictures
+  - {src: img/missing.png, ratio: 1.5}      # a missing file is a dashed box; ratio = width / height (default 4:3)
+```
+
+Pictures side by side at one common height, evenly spaced and never cropped. Without a height the row is as tall as it can be while filling the card width exactly; with `max_height_mm` or `height_mm` a shorter row is spread over equal slots, and a caption may use its whole slot. Raster and SVG can be mixed. Transparent PNGs keep their transparency, so a picture pair needs no pre-composed image.
 
 #### timeline
 
@@ -398,6 +421,15 @@ Bands run top to bottom, columns left to right. Each block must appear exactly o
 ### How the text size is fitted
 
 The engine tries the body size from the theme's `autofit.max_pt` down to `min_pt` in `step_pt` steps and keeps the first size at which the whole body fits on the page. The report names the size it chose. If nothing fits, the build stops and says by how many millimetres the content is too tall: shorten texts, remove a block, or change the layout. If the poster is nearly empty even at the largest size, you get a warning that it is sparse.
+
+Autofit fills every free millimetre: when a block gets shorter, the body text grows (28 to 29.5 pt, say) instead of leaving air. If you would rather give figures the room, raise their `max_height_mm`, or cap the text size for this poster:
+
+```yaml
+theme_overrides:
+  typography: {autofit: {max_pt: 30}}
+```
+
+The layout report notes when autofit has grown the text above its minimum.
 
 ## Writing text: the Markdown subset
 
@@ -465,14 +497,6 @@ roles:
   invitation: highlight
   references: neutral
 ```
-
-A block with several parts can set `center_last: true`: the last part (typically a figure) is centred vertically in the space left under the text. In the header, `subtitle_pt` overrides the theme's subtitle size too, and `subtitle_bold: true` sets it in bold.
-
-In the header, `authors_pt` and `affil_pt` override the theme's author and affiliation sizes for one poster; the affiliation numbers are set as small superscripts.
-
-In the header, `logos_valign: center` centres the logo stack vertically against the text (default: top).
-
-A block can also set `valign: center` to centre its content vertically in the card (useful for `people` and `supporters` when the band is taller than the content).
 
 This is the point of the indirection: re-theming a poster changes how every `method` card looks without touching `poster.yaml`. The shipped themes map these roles: `problem`, `context`, `aim`, `method`, `result`, `discussion`, `outlook`, `invitation`, `resources`, `references`. Add your own roles in a theme, or force a style on one block with `accent:`. A role the theme does not know falls back to `primary` and raises a warning.
 
@@ -576,6 +600,7 @@ Step-by-step instructions for Windows `cmd`, including Git and GitHub, are in [W
 | `python main.py --poster chnt31` | All steps for one poster |
 | `python main.py --list-posters` | List the posters |
 | `python main.py --new-poster chnt31 [--theme chublets] [--from-poster demo]` | Create a poster from the skeleton (or from another poster) |
+| `python tools/measure.py --poster ID [--pt N]` | Natural height of every band, column and card (where the height goes) |
 | `python tools/build_all.py [--poster ID] [--all-themes] [--strict] [--check-repro]` | Build every poster (and every theme) in one go; `--strict` only checks posters marked `status: final`; `--check-repro` builds twice and compares the PDFs |
 | `python main.py --poster chnt31 --blocks` | Block table as Markdown for the poster's PRIMER |
 | `python main.py --list` | List the steps |
@@ -612,6 +637,14 @@ Every step also runs on its own, for example `python py/step_render.py`. Two bui
 | A glyph is missing in the PDF | The font lacks it. Check `layout_report.txt` for the typeface and test with another theme. |
 | `theme 'x' not found` | The folder name must match `id:` and contain `theme.yaml`. |
 | Build is not byte-identical | A file you added is read from a place that changes (for example a generated image). Keep generated inputs deterministic. |
+
+**The build stops with "over by N mm".** Run `python tools/measure.py --poster <id>`: it prints the natural height of every band, column and card at the smallest text size and marks the tallest column of each band. Only the tallest column counts, so shortening a shorter neighbour gains nothing. The failed build also writes this table into `dist/layout_report.txt`, marked `FAILED`, so an old report cannot pass for the current one. The order of cuts that has worked: drop number tiles that a figure already shows, put the references into the bottom band, cap figure heights (`max_height_mm`), shorten texts, reduce margin and gap.
+
+**Figures taken from slides are small.** A slide PNG on A0 has text of about 10 pt. Redraw the figure for the poster, or use a native `flow` or `timeline`; at least crop the slide footer (step numbers, page numbers) so it does not collide with the poster's own numbering.
+
+**Logo files with a white border** look off-centre in a pill. Crop them (Pillow, alpha channel) before use. Logos that already say "Funded by" or "In cooperation with" need no group label.
+
+**Look at the preview, not only at `result: ok`.** Raised numerals, white space in a contained picture and awkward title breaks show up only in the image. Crop the header and the bands and look at each.
 
 ## Continuous integration
 

@@ -650,13 +650,22 @@ class SupGroup:
             self.boxes.append((it, pic, min(bw, width)))
         # wrap the boxes into rows
         self.rows, row, used = [], [], 0.0
-        for b in self.boxes:
-            if row and used + self.gap + b[2] > width + 1e-6:
-                self.rows.append(row); row, used = [], 0.0
-            used += (self.gap if row else 0) + b[2]
-            row.append(b)
-        if row:
-            self.rows.append(row)
+        per_row = spec.get("per_row", defaults.get("per_row"))
+        if per_row:                                  # even rows, e.g. 5 logos with per_row 3 -> 3 + 2
+            k = -(-len(self.boxes) // int(per_row))
+            q, extra = divmod(len(self.boxes), k)
+            i = 0
+            for r in range(k):
+                n = q + (1 if r < extra else 0)
+                self.rows.append(self.boxes[i:i + n]); i += n
+        else:
+            for b in self.boxes:
+                if row and used + self.gap + b[2] > width + 1e-6:
+                    self.rows.append(row); row, used = [], 0.0
+                used += (self.gap if row else 0) + b[2]
+                row.append(b)
+            if row:
+                self.rows.append(row)
         self.head_h = sum(p.height for p in (self.label, self.note) if p) + (ctx.base * 0.3 if (self.label or self.note) else 0)
         self.height = self.head_h + len(self.rows) * h + (len(self.rows) - 1) * self.gap
 
@@ -705,7 +714,7 @@ class SupportersItem:
         self.columns = max(1, min(int(spec.get("columns", 1)), n))
         self.gap = ctx.base * 1.4
         gw = (width - (self.columns - 1) * self.gap) / self.columns
-        defaults = {k: spec[k] for k in ("style", "align", "height_mm") if k in spec}
+        defaults = {k: spec[k] for k in ("style", "align", "height_mm", "per_row") if k in spec}
         self.groups = [SupGroup(g, ctx, gw, defaults) for g in groups]
         self.gw = gw
         self.grid = [self.groups[i:i + self.columns] for i in range(0, n, self.columns)]
@@ -742,13 +751,14 @@ def draw_picture_cover(c, pic, x: float, y: float, w: float, h: float, focus=(0.
 class GalleryItem:
     """A grid of pictures with a caption under each; a missing file is drawn as a dashed box.
 
-    columns, cell_height_mm, fit: cover (crop to fill, default) | contain (whole picture on a tint), also per picture;
+    columns, cell_height_mm, fit: cover (crop to fill, default) | contain (whole picture), also per picture; matte: false draws no tint or frame behind a picture;
     per picture: src, caption, fit, focus [x, y] for the crop centre.
     """
 
     def __init__(self, spec: dict, ctx: Ctx, width: float):
         self.ctx, self.width = ctx, width
         self.items = spec["items"]
+        self.matte = spec.get("matte", True)
         n = len(self.items)
         self.cols = max(1, min(int(spec.get("columns", 2)), n))
         self.gap = ctx.base * 0.6
@@ -773,8 +783,9 @@ class GalleryItem:
                 r = ctx.shape["box_radius"] * 0.5
                 c.saveState()
                 p = c.beginPath(); p.roundRect(cx, cy, self.cw, self.ch, r); c.clipPath(p, stroke=0, fill=0)
-                c.setFillColor(ctx.col["tint"]); c.rect(cx, cy, self.cw, self.ch, stroke=0, fill=1)
                 pic = self.pics[i]
+                if self.matte or not pic:
+                    c.setFillColor(ctx.col["tint"]); c.rect(cx, cy, self.cw, self.ch, stroke=0, fill=1)
                 if pic and self.items[i].get("fit", self.fit) == "contain":
                     draw_picture_fit(c, pic, cx, cy, self.cw, self.ch)
                 elif pic:
@@ -784,7 +795,8 @@ class GalleryItem:
                 c.setStrokeColor(ctx.col["line"]); c.setLineWidth(ctx.shape["card_line"])
                 if not pic:
                     c.setDash(ctx.shape["dash"][0] * 0.6, ctx.shape["dash"][1] * 0.6)
-                c.roundRect(cx, cy, self.cw, self.ch, r, stroke=1, fill=0)
+                if self.matte or not pic:
+                    c.roundRect(cx, cy, self.cw, self.ch, r, stroke=1, fill=0)
                 if not pic:
                     from reportlab.pdfbase.pdfmetrics import stringWidth
                     txt = Path(self.items[i].get("src") or "no file").name
@@ -796,6 +808,68 @@ class GalleryItem:
                 if self.caps[i]:
                     self.caps[i].drawOn(c, cx, cy - self.cap_gap - self.caps[i].height)
             y -= rh + self.row_gap
+
+
+class ImageRowItem:
+    """Pictures side by side at one common height, evenly spaced, never cropped.
+
+    items: {src, caption, ratio}; gap_mm; height_mm (exact, but never wider than the card) and max_height_mm.
+    Without height_mm the row is as tall as it can be while filling the card width. A missing file is drawn
+    as a dashed box with the given ratio (default 4:3).
+    """
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx, self.width, self.spec = ctx, width, spec
+        self.items = spec["items"]
+        n = len(self.items)
+        self.gap = spec["gap_mm"] * mm if spec.get("gap_mm") is not None else ctx.base * 0.8
+        self.pics = [load_picture(U.find(it["src"])) if it.get("src") else None for it in self.items]
+        self.ratios = [(picture_size(pic)[0] / picture_size(pic)[1]) if pic else float(it.get("ratio", 4 / 3))
+                       for pic, it in zip(self.pics, self.items)]
+        h = (width - self.gap * (n - 1)) / sum(self.ratios)          # fills the width exactly
+        if spec.get("height_mm"):
+            h = min(h, spec["height_mm"] * mm)
+        if spec.get("max_height_mm"):
+            h = min(h, spec["max_height_mm"] * mm)
+        self.h = h
+        self.ws = [r * h for r in self.ratios]
+        self.row_w = sum(self.ws) + self.gap * (n - 1)
+        # a row that is capped in height is narrower than the card: spread it over equal slots, and let a caption
+        # use its whole slot, so that short pictures do not force long captions into narrow columns
+        self.spread = self.row_w < width * 0.97
+        self.slot = width / n
+        cap = ctx.style("image-row-caption", ctx.small, colour="muted", lead=1.2, align=TA_CENTER)
+        self.cap_ws = [max(w, self.slot - self.gap) if self.spread else w for w in self.ws]
+        self.caps = [ctx.para(it["caption"], cap, cw) if it.get("caption") else None for it, cw in zip(self.items, self.cap_ws)]
+        self.cap_gap = ctx.base * 0.35
+        cap_h = max((c_.height for c_ in self.caps if c_), default=0.0)
+        self.height = self.h + ((self.cap_gap + cap_h) if cap_h else 0.0)
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        ctx = self.ctx
+        cx = x + (self.width - self.row_w) / 2
+        for i, w in enumerate(self.ws):
+            if self.spread:
+                cx = x + i * self.slot + (self.slot - w) / 2
+            cy = y_top - self.h
+            pic = self.pics[i]
+            if pic:
+                draw_picture_fit(c, pic, cx, cy, w, self.h)
+            else:
+                from reportlab.pdfbase.pdfmetrics import stringWidth
+                c.saveState()
+                c.setFillColor(ctx.col["tint"]); c.setStrokeColor(ctx.col["line"]); c.setLineWidth(ctx.shape["card_line"])
+                c.setDash(ctx.shape["dash"][0] * 0.6, ctx.shape["dash"][1] * 0.6)
+                c.rect(cx, cy, w, self.h, stroke=1, fill=1)
+                txt = Path(self.items[i].get("src") or "no file").name
+                while len(txt) > 4 and stringWidth(txt, "PosterBody", ctx.small) > w - ctx.base:
+                    txt = txt[:-2] + "\u2026"
+                c.setFillColor(ctx.col["muted"]); c.setFont("PosterBody", ctx.small)
+                c.drawCentredString(cx + w / 2, cy + self.h / 2 - ctx.small * 0.3, txt)
+                c.restoreState()
+            if self.caps[i]:
+                self.caps[i].drawOn(c, cx + (w - self.cap_ws[i]) / 2, cy - self.cap_gap - self.caps[i].height)
+            cx += w + self.gap
 
 
 class TimelineItem:
@@ -1005,7 +1079,7 @@ class Footer:
 ITEMS = {"text": TextItem, "table": TableItem, "flow": FlowItem, "image": ImageItem,
          "stats": StatsItem, "qr": QrItem, "logos": LogosItem,
          "people": PeopleItem, "supporters": SupportersItem,
-         "gallery": GalleryItem, "timeline": TimelineItem, "cite": CiteItem}
+         "gallery": GalleryItem, "image_row": ImageRowItem, "timeline": TimelineItem, "cite": CiteItem}
 
 
 # --------------------------------------------------------------------------
@@ -1195,6 +1269,21 @@ class Layout:
     def fits(self) -> bool:
         return self.slack >= 0
 
+    def measure_lines(self) -> list[str]:
+        """Natural heights per band and card: where the millimetres go when the page is full."""
+        lines = [f"header {self.header.height / mm:.0f} mm, body {self.avail / mm:.0f} mm available, "
+                 f"{self.natural / mm:.0f} mm natural, slack {self.slack / mm:.0f} mm (base {self.base:.1f} pt, "
+                 f"title {self.header.title_pt} pt)"]
+        for n, b in enumerate(self.bands, 1):
+            lines.append(f"band {n}: {b['natural'] / mm:.0f} mm natural (weight {b['weight']})")
+            for cw, cards in b["cols"]:
+                col = sum(cd.height for cd in cards) + self.gap * (len(cards) - 1)
+                mark = "  <- tallest column" if abs(col - b["natural"]) < 1e-6 else ""
+                lines.append(f"  column {cw / mm:.0f} mm wide, {col / mm:.0f} mm{mark}")
+                for cd in cards:
+                    lines.append(f"    {cd.id}: {cd.height / mm:.0f} mm")
+        return lines
+
     def draw(self, c) -> None:
         self.header.draw(c, self.page_h)
         total_w = sum(b["weight"] for b in self.bands)
@@ -1242,10 +1331,14 @@ def fit_layout(cfg: dict) -> Layout:
         if cap <= pt_min:
             break
         cap = max(pt_min, cap - 6)
-    lay = Layout(cfg, af["min_pt"])
+    lay = Layout(dict(cfg, header=dict(hd, title_pt_max=pt_min)), af["min_pt"])
+    write_failure_report(lay, pt_min)
+    for line in lay.measure_lines():
+        print("   " + line)
     raise SystemExit(
         f"ERROR: the content does not fit on the page even at {af['min_pt']} pt body and {pt_min} pt title "
-        f"(over by {-lay.slack / mm:.0f} mm). Shorten texts, drop a block or widen the layout."
+        f"(over by {-lay.slack / mm:.0f} mm). Shorten texts, drop a block or widen the layout; "
+        f"the table above shows where the height goes."
     )
 
 
@@ -1265,6 +1358,17 @@ def theme_lines(th: dict) -> list[str]:
     return lines
 
 
+def write_failure_report(lay: Layout, pt_min: int) -> None:
+    """A failed build must not leave the last good report standing: it would describe a poster that is not there."""
+    lines = [f"Layout report for {lay.cfg['meta']['short_title']} (build {U.RELEASE})",
+             "FAILED: the content does not fit on the page.",
+             f"Tried down to {lay.base:.0f} pt body and {pt_min} pt title; over by {-lay.slack / mm:.0f} mm.",
+             "The PDF in this folder, if any, is from an earlier build and does not match poster.yaml.", ""]
+    lines += lay.measure_lines()
+    U.ensure_dirs()
+    U.REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_report(lay: Layout, strict_warn: list[str]) -> None:
     cfg = lay.cfg
     af = cfg["theme"]["autofit"]
@@ -1275,6 +1379,12 @@ def write_report(lay: Layout, strict_warn: list[str]) -> None:
         f"header title size: {lay.header.title_pt} pt",
         *theme_lines(cfg["theme"]),
         f"body height: {lay.avail / mm:.0f} mm available, {lay.natural / mm:.0f} mm natural, slack {lay.slack / mm:.0f} mm",
+    ]
+    if lay.base > af["min_pt"] + 1e-9:
+        lines.append(f"note: autofit grew the body text to {lay.base:.1f} pt because there was room. To keep it smaller and give "
+                     f"figures the room instead, lower the cap (theme_overrides: typography: autofit: max_pt) or raise "
+                     f"max_height_mm of the figures.")
+    lines += [
         "",
         "Blocks (why each one looks the way it does):",
     ]

@@ -97,6 +97,7 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 | Header-Logos | Logos im Titelbereich sind optional und im Demo und Gerüst entfernt (doppelt zu Zugehörigkeiten und Förderer-Block) | 2026-10-31 |
 | Module | `people` (runde Fotos, Namen, optional Rolle, keine Institution) und `supporters` (beschriftete Logo-Gruppen); `logos` bleibt für Altbestand | 2026-10-31 |
 | Titel | `title_lines` ist Präferenz, keine Grenze; Titel schrumpft erst, wenn die Seite voll ist (bis `title_pt_min`) | 2026-10-31 |
+| Lernen aus dem ersten Poster | `chnt31-fdox` (2026-10-31, sieben Rückmelderunden) liefert: Kartenoptionen `valign`, `center_last`; Header-Größen `authors_pt`, `affil_pt`, `subtitle_pt`, `subtitle_bold`, `logos_valign`; kleine Hochzahlen; Teil `image_row`; `matte: false` für Galerien; `per_row` für `supporters`; `tools/measure.py`; Fehlerbericht mit Bandhöhen; Autofit-Hinweis im Bericht; Warnung bei Dateien, die aus dem Kit-Root statt aus dem Poster-Ordner kommen | 2026-10-31 |
 | CI | GitHub Action `build.yml`: Demo in allen Themes, Reproduzierbarkeit (`--check-repro`), `--strict` nur für Poster mit `status: final`; `.gitattributes` für Zeilenenden. Noch nicht auf GitHub gelaufen | 2026-10-31 |
 | Bausteine | `gallery` (Bildraster mit Beschriftung), `timeline` (senkrecht/waagerecht, Status-Stile), `cite` (Zitierzeile aus `CITATION.cff`), `footer` (optionale Leiste: QR, Text, Lizenz-Badge); Linter, Provenienz, Varianten, Daten aus Dateien warten auf konkrete Anwendungsfälle | 2026-10-31 |
 | Fußzeile | Keine DRAFT-Zeile mehr auf dem Poster; `status` ist nur Buchführung | 2026-10-31 |
@@ -131,6 +132,7 @@ Entfällt: das Repo veröffentlicht kein RDF.
 | S11 | Module `people` und `supporters`; Poster-Ordner, `--new-poster`, `--blocks`, Poster-PRIMER; `brief.yaml` mit `{{ brief.… }}`; `WORKFLOW.md`, `INTERVIEW.md`, `tools/build_all.py`; Titel dynamisch; Header ohne Logos; Fußzeile entfernt | poster-kit | S4 | erledigt 2026-10-31 |
 | S6 | LEIZA-Farben eintragen, Theme auf `ready`; Theme-Varianten | poster-kit | – | erledigt 2026-10-31 |
 | S12 | CI (Action, `.gitattributes`, `--check-repro`) und Bausteine `gallery`, `timeline`, `cite`, `footer` | poster-kit | S11 | erledigt 2026-10-31 |
+| S13 | Lernen aus chnt31-fdox in den Core: `image_row`, `measure.py`, Fehlerbericht, Autofit-Hinweis, Doku, Interview, Standard-Punkte in Teil D; Aufräumen (Reste im Root, `PATCH-README.md`, `pipeline_report.txt`) | poster-kit | S12 | erledigt 2026-10-31 |
 | S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
 | S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
 | S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
@@ -182,7 +184,7 @@ Palette mit allen 30 Stufen (Rot, Blau, Gelb je D4–D1, Basis, 90–10 %) aus d
 
 ### Ideen für weitere Bausteine (nicht gebaut)
 
-Gebaut in S12: Bildraster, Zeitleiste, Fußzeile mit Lizenz-Badge/QR, Zitierblock aus `CITATION.cff`. Offen: Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
+Gebaut in S12: Bildraster, Zeitleiste, Fußzeile mit Lizenz-Badge/QR, Zitierblock aus `CITATION.cff`; in S13 `image_row`. Offen: Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
 
 ## S7 bis S10
 
@@ -200,6 +202,9 @@ Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt be
 - **D5** Lizenz der Posterinhalte (Texte, Grafiken); Code steht unter MIT.
 - **D6** Kein PDF/X-Export und keine Beschnittzugabe; falls eine Druckerei beides verlangt, wäre das ein eigener Schritt.
 - **D7** `header_style: plain` ist implementiert und mit einem Override getestet, aber in keinem mitgelieferten Theme aktiv.
+- **D13** Standard-Punkte je Poster (stehen im Gerüst `posters/_template/PRIMER.md`, Teil D): Ort/Datum/Druckfrist, Foto-Einwilligung, Logo-Nutzungsregeln, Bildlizenzen, Lesbarkeit von Folien-Grafiken, Poster-Lizenz und `CITATION.cff`, Formatvorgabe.
+- **D14** Der Autofit füllt jeden freien Millimeter; eine Obergrenze je Poster geht über `theme_overrides: typography: autofit: max_pt` (im GUIDE beschrieben). Ob es einen eigenen Schalter braucht, zeigt sich am nächsten Poster.
+- **D15** Patch-ZIPs können nichts löschen; entfernte Dateien stehen in der `PATCH-README.md` mit `del`-Befehlen. Ein Werkzeug, das aus einem ZIP-Manifest löscht, wäre denkbar, bisher nicht nötig.
 - **D9** Fotos von Personen: Einwilligung klären, bevor ein Poster mit Porträts veröffentlicht wird.
 - **D10** Logos von Förderern und Instituten: Nutzungsregeln prüfen; Vermerk in `shared/logos/README.md`.
 - **D11** Soll es zusätzlich eine Kommandozeilen-Version des Interviews geben (`--interview`), falls ohne Claude gearbeitet wird?

@@ -27,13 +27,35 @@ des Posters.
 |---|---|---|
 | A Anlass | Veranstaltung, Ort, Datum, Format (A0 hoch/quer, A1), Abgabe- und Druckfrist, Sprache | `event`, `poster.language` |
 | B Kern | Arbeitstitel, Untertitel, Kernaussage in einem Satz, Zielgruppe, was die Lesenden danach tun sollen | `poster` |
-| C Menschen | Autorinnen und Autoren in Reihenfolge, Zugehörigkeiten, wer präsentiert, Fotos ja/nein (Einwilligung) | `authors`, `affiliations`, `people` |
-| D Förderer | Förderer mit Kennzeichen, Kooperationen, Netzwerke, Gastgeber; liegen Logos vor, dürfen sie verwendet werden | `supporters`, `shared/logos/` |
+| C Menschen | Autorinnen und Autoren **in der Reihenfolge, wie sie auf dem Poster stehen** (wörtlich zurückspiegeln und bestätigen lassen), Zugehörigkeiten einschließlich Netzwerke, wer präsentiert, Fotos ja/nein (Einwilligung) | `authors`, `affiliations`, `people` |
+| D Förderer | Förderer mit Kennzeichen, Kooperationen, Netzwerke, Gastgeber; liegen Logos vor (Datei, Format, Weißrand), dürfen sie verwendet werden; enthält ein Logo „Funded by“ schon selbst, braucht die Gruppe keine Überschrift | `supporters`, `shared/logos/` |
 | E Inhalt | Welche Bausteine (Problem, Methode/Ablauf, Zahlen, Tabelle, Abbildung, Ausblick, Einladung); vorhandene Abbildungen; Zahlen mit Quelle und Abfragedatum; Links für QR-Codes | Blöcke in `poster.yaml`, `numbers`, `links` |
 | F Aussehen | Theme, Titelband oder schlichter Titel, Titel in ein, zwei oder drei Zeilen | `theme`, `header` |
 
 Nach Runde E weiß Claude, welche Blöcke das Poster braucht; nach F, wie es aussieht. Danach folgt das
 Zurückspiegeln.
+
+## Früh klären, was sonst erst nach dem ersten Bau auffällt
+
+Aus dem ersten echten Poster (chnt31-fdox): Autorenfolge, Zugehörigkeiten, Fotos und Logos kamen erst nach dem
+ersten Bau und haben Runden gekostet. Sie gehören in die Runden C und D, vor dem ersten Bau. Ebenso:
+
+- **Haupt-Objekt oder Geschichte** des Posters (ein Objekt, eine Abfrage, eine Journey?): sie bestimmt das Rückgrat
+  (`flow`), alles andere hängt daran.
+- **Titel:** kurzer Titel plus Untertitel statt einer langen Titelzeile (siehe GUIDE, Header).
+- **Vorhandene Abbildungen:** Folien-PNGs sind auf A0 klein (Schrift in der Grafik etwa 10 pt); fragen, ob es
+  Originale gibt oder ob eigene Grafiken (`flow`, `timeline`) entstehen sollen.
+- **Echte Abfragen und Zahlen:** jede Abfrage vorher gegen die veröffentlichten Daten laufen lassen; das Ergebnis
+  landet als Datei (`data/…`) und als Tabelle auf dem Poster.
+- **Bilder ohne Bildunterschrift?** Wenn ja: Namensnennung (CC BY) als Satz in den Text legen, Lizenz in `img/README.md`.
+
+## Rückmelderunden
+
+Nach dem ersten Bau kommen meist mehrere Runden Änderungswünsche. Bewährter Ablauf: Änderung → Bau → **Vorschau
+ansehen** (Kopf und Bänder einzeln zuschneiden, nicht nur auf `result: ok` achten) → `--check-repro` → Patch-ZIP →
+Test gegen einen frischen Klon des GitHub-Stands. Solange nichts gepusht wurde, sind die ZIPs kumulativ („Runde N
+enthält die Runden 2 bis N-1“). Ein ZIP kann nichts löschen: ersetzte Dateien stehen in der `PATCH-README.md` unter
+„Zu löschen“ mit dem passenden `del`-Befehl (siehe WORKFLOW.md).
 
 ## Regeln
 
@@ -42,4 +64,6 @@ Zurückspiegeln.
 - Fotos von Personen nur mit deren Einverständnis; Logos nur, wenn die Nutzungsregeln des Eigentümers es erlauben
   (Vermerk in `shared/logos/README.md`).
 - Offene Entscheidungen, die den Inhalt ändern, kommen als Formular mit Kommentarfeld, nicht als Fließtextfrage.
+- Weicht eine Angabe (Schreibweise eines Namens, Zugehörigkeit) von dem ab, was Claude aus früheren Gesprächen weiß,
+  wird das angesprochen, nicht still eine Variante gewählt.
 - Antwortet jemand „weiß ich noch nicht“, bleibt `TODO` stehen und der Punkt kommt in Teil D des Posters.

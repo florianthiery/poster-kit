@@ -1,9 +1,0 @@
-== validate
-   WARNING: block 'photo': gallery picture missing, a dashed box is drawn: img/not-there-yet.png
-   OK: theme 'neutral', 13 blocks, 5 bands
-== render
-   wrote posters\demo\dist\poster.pdf  base 28.0 pt, title 130 pt, slack 6 mm
-== preview
-   wrote posters\demo\dist\poster-preview.png (1400 x 1980 px)
-== poster: demo
-== result: ok

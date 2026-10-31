@@ -54,13 +54,14 @@ poster-kit/
 ├── main.py            the only entry point
 ├── posters/
 │   ├── demo/          the demo poster: every option in place
+│   ├── chnt31-fdox/   a real poster (A0): one journey as a flow, zoom cards, real SPARQL queries and results
 │   ├── _template/     skeleton for --new-poster (not built unless asked)
 │   └── <id>/          one folder per poster: brief.yaml, poster.yaml, content/, img/, PRIMER.md, dist/
 ├── shared/logos/      logos several posters use (institutes, funders, networks)
 ├── themes/<id>/       theme.yaml per theme
 ├── fonts/<family>/    shared font library with licences
 ├── py/                engine: theme.py, poster_utils.py, one module per step
-└── tools/             build_all.py (all posters, all themes), font helper
+└── tools/             build_all.py (all posters, all themes), measure.py (where the height goes), font helper
 ```
 
 ## Licence

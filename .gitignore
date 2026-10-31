@@ -18,3 +18,9 @@ bundle.zip
 
 # Per-theme comparison builds (tools/build_all.py --all-themes) are regenerated on demand
 posters/*/dist/themes/
+
+# The hand-over note of a patch ZIP is read once and not part of the repository
+/PATCH-README.md
+
+# Contains timings, differs on every run
+posters/*/dist/pipeline_report.txt

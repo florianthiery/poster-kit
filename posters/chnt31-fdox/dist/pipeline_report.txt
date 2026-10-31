@@ -1,9 +1,0 @@
-== validate
-   NOTE: header event line: header_accent on primary = 4.33:1 (fine for large display text)
-   WARNING: meta.status is 'draft': set it to 'final' for the release build
-   WARNING: brief.yaml has 3 unresolved TODO(s), first: event.place, event.dates, event.print_deadline
-   OK: theme 'research-squirrel', 12 blocks, 5 bands
-   FAILED (--strict): 2 warning(s)
-!! step 'validate' failed (exit 1)
-== poster: chnt31-fdox
-== result: FAILED

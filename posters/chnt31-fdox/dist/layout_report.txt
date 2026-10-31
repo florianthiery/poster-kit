@@ -7,6 +7,7 @@ theme: research-squirrel (Research Squirrel Engineers), state ready
   typeface: Fira Sans
   contrast: 26 pairings checked, 1 below the recommended level, lowest 3.16 (arrows and badges on card)
 body height: 1004 mm available, 999 mm natural, slack 4 mm
+note: autofit grew the body text to 29.0 pt because there was room. To keep it smaller and give figures the room instead, lower the cap (theme_overrides: typography: autofit: max_pt) or raise max_height_mm of the figures.
 
 Blocks (why each one looks the way it does):
 - hook: 358 mm wide, 232 mm natural, 232 mm drawn

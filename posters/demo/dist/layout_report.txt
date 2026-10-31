@@ -6,7 +6,7 @@ theme: neutral (Neutral slate), state ready
   colours from: Tailwind CSS default palette (slate, blue, amber) https://tailwindcss.com/docs/colors (licence MIT)
   typeface: DejaVu Sans Condensed
   contrast: 26 pairings checked, 0 below the recommended level, lowest 6.41 (links on card)
-body height: 885 mm available, 878 mm natural, slack 6 mm
+body height: 885 mm available, 882 mm natural, slack 3 mm
 
 Blocks (why each one looks the way it does):
 - intro: 222 mm wide, 176 mm natural, 196 mm drawn
@@ -19,9 +19,9 @@ Blocks (why each one looks the way it does):
     why: The gallery part: pictures in a grid with captions; cover crops to fill, a missing file is a dashed box.
 - pipeline: 801 mm wide, 193 mm natural, 193 mm drawn
     why: A flow beats prose for sequences. per_row wraps long chains with elbow arrows; status is never colour alone.
-- mapping: 334 mm wide, 168 mm natural, 193 mm drawn
+- mapping: 334 mm wide, 190 mm natural, 193 mm drawn
     why: Tables show mappings and comparisons that prose hides.
-- figure: 247 mm wide, 183 mm natural, 193 mm drawn
+- figure: 247 mm wide, 175 mm natural, 193 mm drawn
     why: An SVG figure stays vector; the caption sits underneath. max_height_mm caps tall images.
 - team: 198 mm wide, 187 mm natural, 193 mm drawn
     why: The people module: cropped photos, names, optional role, no institution. A missing photo shows initials.
@@ -55,6 +55,7 @@ Smallest size used per style (pt):
   footer-meta: 24.0
   footer-text: 24.0
   gallery-caption: 24.0
+  image-row-caption: 24.0
   legend: 24.0
   person-name: 26.6
   person-role: 24.0

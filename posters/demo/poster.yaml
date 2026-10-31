@@ -36,7 +36,7 @@ header:
 
 # ---------------------------------------------------------------------------
 # Blocks. Each one: title, role (or accent), why, and one part or a list of parts.
-# Part types: text, table, flow, stats, image, qr, logos, people, supporters, gallery, timeline, cite.
+# Part types: text, table, flow, stats, image, qr, logos, people, supporters, gallery, image_row, timeline, cite.
 # ---------------------------------------------------------------------------
 blocks:
   intro:
@@ -81,7 +81,7 @@ blocks:
       - {label: "Seventh step", sub: "concept only", status: concept}
 
   mapping:
-    title: "Table"
+    title: "Table and picture row"
     role: result
     why: "Tables show mappings and comparisons that prose hides."
     parts:
@@ -93,8 +93,13 @@ blocks:
         rows:
           - ["`field_a`", "property one", "required"]
           - ["`field_b`", "property two", "**optional**"]
-          - ["`field_c`", "property three", "derived from *field_a*"]
-          - ["`field_d`", "property four", "see [GUIDE.md](https://example.org)"]
+          - ["`field_c`", "property three", "see [GUIDE.md](https://example.org)"]
+      - type: image_row            # pictures side by side at one height, never cropped
+        max_height_mm: 16
+        items:
+          - {src: img/sample-photo.png, caption: "Same height."}
+          - {src: img/sample-figure.svg, caption: "Raster and vector."}
+          - {src: img/sample-photo.png, caption: "Never cropped."}
 
   figure:
     title: "Images"
@@ -106,7 +111,7 @@ blocks:
       - type: image
         src: img/sample-figure.svg
         caption: "Figure 1. A sample SVG chart. Replace it with your own figure."
-        max_height_mm: 60
+        max_height_mm: 52
 
   photo:
     title: "Gallery"

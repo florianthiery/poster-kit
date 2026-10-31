@@ -189,8 +189,26 @@ and how to check it. Unpack it over the repository (existing files are replaced)
 powershell -NoProfile -Command "Expand-Archive -Path C:\Users\you\Downloads\patch.zip -DestinationPath . -Force"
 ```
 
-Then build (a), look at `git status` to see what the patch changed, and commit (b). Delete `PATCH-README.md` from the
-repository root once you have read it, or leave it out of the commit.
+Then build (a), look at `git status` to see what the patch changed, and commit (b). `PATCH-README.md` in the
+repository root is ignored by Git (see `.gitignore`); read it and delete it, or leave it.
+
+**A ZIP cannot delete files.** If a patch replaces files (an old query by a new one, say), its `PATCH-README.md` has a
+section "To delete" with the commands, for example:
+
+```cmd
+del posters\chnt31-fdox\data\sparql\creator.rq
+```
+
+```cmd
+git rm --cached -r --ignore-unmatch content img poster.yaml
+```
+
+**Cumulative patches.** As long as you have not pushed, a later patch contains the earlier ones ("round N includes
+rounds 2 to N-1"); an older ZIP need not be applied. Once pushed, the next patch continues from the pushed state.
+
+**One command file per poster.** For a poster, the session also hands over a `.cmd` file with the whole sequence:
+venv, `pip install`, unpack, build, `--check-repro`, `--strict`, `git add -A` (`dist\` is tracked), commit, push. Run it
+from the repository root.
 
 ## Checks on GitHub (Actions)
 
