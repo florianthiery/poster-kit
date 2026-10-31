@@ -207,7 +207,7 @@ A block is a card. Common keys:
 | `frame` | `false` draws no card and no title bar; the title becomes plain text in the primary colour. |
 | `scale` | Text size relative to the fitted body size (`0.8` for references, `1.15` for a key message) |
 
-A block holds one **part** (text, table, flow, stats, image, qr, logos, people, supporters), written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
+A block holds one **part** (text, table, flow, stats, image, qr, logos, people, supporters, gallery, timeline, cite), written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
 
 #### text
 
@@ -328,6 +328,59 @@ groups:
 ```
 
 For funders, partners, networks and hosts: labelled groups of logos. Logos are placed by their proportions, wrap to the next row when the row is full, and a missing file falls back to the name, so a first draft needs no logos at all. For a single row without labels, `items:` directly in the part is enough. The older `logos` part still works and draws equal-width pills; `supporters` is the one to use for real funder lines. Check the usage terms of every logo (funders usually publish them with rules) and note them next to the file in `shared/logos/README.md`.
+
+#### gallery
+
+```yaml
+type: gallery
+columns: 2                    # default 2
+cell_height_mm: 36            # default: 0.72 x the cell width
+fit: cover                    # cover (crop to fill) | contain (whole picture on a tint); a picture may set its own
+items:
+  - {src: img/site-a.jpg, caption: "Site A, 2025."}
+  - {src: img/plan.svg, caption: "Plan.", fit: contain}
+  - {src: img/site-b.jpg, caption: "Site B.", focus: [0.8, 0.4]}   # focus: crop centre, 0 to 1 from the top left
+```
+
+Several pictures in a grid, a caption under each. A missing file is not an error: a dashed box with the file name is drawn (the build warns), so the layout can be judged before all pictures exist. For one large picture with a long caption use `image`.
+
+#### timeline
+
+```yaml
+type: timeline
+orientation: vertical         # vertical (default, for narrow cards) | horizontal
+per_row: 4                    # horizontal only: points per row
+items:
+  - {when: "2026", label: "Prototype", sub: "first release", status: done}
+  - {when: "2027", label: "Pilot", status: planned}
+  - {when: "later", label: "Roll-out", status: concept}
+```
+
+Dated steps along a line. `status` takes the theme's status styles (as in `flow`): solid dot for done, dashed for planned and concept, so status never rests on colour alone. `when` and `sub` are optional.
+
+#### cite
+
+```yaml
+type: cite
+label: "How to cite"          # default
+# source: CITATION.cff        # default; the poster's own folder first, then the kit's
+# text: "Own reference line"  # overrides the generated line
+```
+
+A reference line built from `CITATION.cff` (authors, year, title, version, DOI or URL; a `preferred-citation` wins; more than six authors become "et al."). Put a `CITATION.cff` into `posters/<id>/` for the poster's own citation; without one the kit's is used. Typically a second part in the card with the QR codes.
+
+### footer
+
+```yaml
+footer:                       # optional, a top-level key next to header and page
+  height_mm: 24               # default 26
+  text: "{{ brief.event.name }}"            # bold line
+  meta: "DOI 10.xxxx/xxxxx"                 # second line, muted
+  licence: "CC BY 4.0"        # badge on the right
+  qr: https://example.org/poster            # QR code on the left
+```
+
+A strip at the bottom of the page: a thin rule, an optional QR code, one or two lines of text and a licence badge. Every key is optional, but at least one is needed. The body gives up the space, so text size and title adapt as usual. Without `footer:` nothing is drawn (there is no DRAFT line).
 
 ### layout
 
@@ -515,7 +568,7 @@ Step-by-step instructions for Windows `cmd`, including Git and GitHub, are in [W
 | `python main.py --poster chnt31` | All steps for one poster |
 | `python main.py --list-posters` | List the posters |
 | `python main.py --new-poster chnt31 [--theme chublets] [--from-poster demo]` | Create a poster from the skeleton (or from another poster) |
-| `python tools/build_all.py [--all-themes] [--strict]` | Build every poster (and every theme) in one go |
+| `python tools/build_all.py [--poster ID] [--all-themes] [--strict] [--check-repro]` | Build every poster (and every theme) in one go; `--strict` only checks posters marked `status: final`; `--check-repro` builds twice and compares the PDFs |
 | `python main.py --poster chnt31 --blocks` | Block table as Markdown for the poster's PRIMER |
 | `python main.py --list` | List the steps |
 | `python main.py --only render` | One step |
@@ -552,6 +605,10 @@ Every step also runs on its own, for example `python py/step_render.py`. Two bui
 | `theme 'x' not found` | The folder name must match `id:` and contain `theme.yaml`. |
 | Build is not byte-identical | A file you added is read from a place that changes (for example a generated image). Keep generated inputs deterministic. |
 
+## Continuous integration
+
+`.github/workflows/build.yml` builds on every push and pull request: the demo in every theme, a reproducibility check (two builds, identical PDFs), and a strict check of posters marked `status: final`. The PDFs and previews are attached to the run as an artifact. `.gitattributes` keeps line endings stable (LF in text files, binary for fonts, PDFs and images), so Windows checkouts do not show phantom changes.
+
 ## Extending the engine
 
 Add a block type in `py/step_render.py`: write a class with `__init__(self, spec, ctx, width)` that sets `self.height`, and `draw(self, c, x, y_top)`; register it in the `ITEMS` dictionary and add its name to `PART_TYPES` in `py/step_validate.py`. Use `ctx.col[...]` (tokens), `ctx.style(...)` and `ctx.para(...)` for colours and text, so the new block follows the theme. If a poster needs a change in the engine that other posters would want too, make it in the core: all posters in the repository get it.
@@ -567,4 +624,4 @@ Ideas that came up and were deliberately left out of this version:
 - A 12-column grid and layout presets instead of relative widths
 - Block types as plugins in `py/blocks/`
 - Content in several languages (`content/en/`, `content/de/`)
-- More block types, see the ideas in the PRIMER: image grid, timeline, contact strip with licence and DOI, an optional footer line, a citation block from `CITATION.cff`
+- More block types, see the ideas in the PRIMER: before/after image pair, glossary

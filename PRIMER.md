@@ -97,6 +97,8 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 | Header-Logos | Logos im Titelbereich sind optional und im Demo und Gerüst entfernt (doppelt zu Zugehörigkeiten und Förderer-Block) | 2026-10-31 |
 | Module | `people` (runde Fotos, Namen, optional Rolle, keine Institution) und `supporters` (beschriftete Logo-Gruppen); `logos` bleibt für Altbestand | 2026-10-31 |
 | Titel | `title_lines` ist Präferenz, keine Grenze; Titel schrumpft erst, wenn die Seite voll ist (bis `title_pt_min`) | 2026-10-31 |
+| CI | GitHub Action `build.yml`: Demo in allen Themes, Reproduzierbarkeit (`--check-repro`), `--strict` nur für Poster mit `status: final`; `.gitattributes` für Zeilenenden. Noch nicht auf GitHub gelaufen | 2026-10-31 |
+| Bausteine | `gallery` (Bildraster mit Beschriftung), `timeline` (senkrecht/waagerecht, Status-Stile), `cite` (Zitierzeile aus `CITATION.cff`), `footer` (optionale Leiste: QR, Text, Lizenz-Badge); Linter, Provenienz, Varianten, Daten aus Dateien warten auf konkrete Anwendungsfälle | 2026-10-31 |
 | Fußzeile | Keine DRAFT-Zeile mehr auf dem Poster; `status` ist nur Buchführung | 2026-10-31 |
 | Sprache der Doku | `GUIDE.md`, `README.md`, Poster: British English; `PRIMER.md`: Deutsch | 2026-10-09 |
 
@@ -128,6 +130,7 @@ Entfällt: das Repo veröffentlicht kein RDF.
 | S5 | CHNT31-Poster: fdox (Standard-Theme `neutral`) und chublets (`chublets`) als `posters/<id>/` | poster-kit | S11 | in eigenem Chat |
 | S11 | Module `people` und `supporters`; Poster-Ordner, `--new-poster`, `--blocks`, Poster-PRIMER; `brief.yaml` mit `{{ brief.… }}`; `WORKFLOW.md`, `INTERVIEW.md`, `tools/build_all.py`; Titel dynamisch; Header ohne Logos; Fußzeile entfernt | poster-kit | S4 | erledigt 2026-10-31 |
 | S6 | LEIZA-Farben eintragen, Theme auf `ready`; Theme-Varianten | poster-kit | – | erledigt 2026-10-31 |
+| S12 | CI (Action, `.gitattributes`, `--check-repro`) und Bausteine `gallery`, `timeline`, `cite`, `footer` | poster-kit | S11 | erledigt 2026-10-31 |
 | S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
 | S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
 | S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
@@ -179,7 +182,7 @@ Palette mit allen 30 Stufen (Rot, Blau, Gelb je D4–D1, Basis, 90–10 %) aus d
 
 ### Ideen für weitere Bausteine (nicht gebaut)
 
-Bildraster (n Bilder mit Beschriftung), Zeitleiste, Kontaktleiste mit Lizenz-Badge, DOI und QR (als optionale Fußzeile), Zitierblock aus `CITATION.cff`, Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
+Gebaut in S12: Bildraster, Zeitleiste, Fußzeile mit Lizenz-Badge/QR, Zitierblock aus `CITATION.cff`. Offen: Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
 
 ## S7 bis S10
 

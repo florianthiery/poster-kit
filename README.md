@@ -25,6 +25,7 @@ Open `posters/demo/dist/poster.pdf`, or `posters/demo/dist/poster-preview.png` f
 | Facts: event, title, authors, funders, numbers with sources | `posters/<id>/brief.yaml` (started in a conversation, see [INTERVIEW.md](INTERVIEW.md)) |
 | Colours, fonts, shapes | choose a theme: `theme:` in `poster.yaml`, or write one in `themes/` |
 | An image, a portrait | `posters/<id>/img/`, `img/people/`; an `image` or `people` part in a block |
+| Image grid, timeline, citation, footer strip | `gallery`, `timeline`, `cite` parts and a `footer:` key (see GUIDE.md) |
 | Funders, partners, logos | `shared/logos/` (once, for all posters) and a `supporters` part |
 | Why the poster looks as it does | `posters/<id>/PRIMER.md` |
 

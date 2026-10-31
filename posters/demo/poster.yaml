@@ -36,7 +36,7 @@ header:
 
 # ---------------------------------------------------------------------------
 # Blocks. Each one: title, role (or accent), why, and one part or a list of parts.
-# Part types: text, table, flow, stats, image, qr, logos, people, supporters.
+# Part types: text, table, flow, stats, image, qr, logos, people, supporters, gallery, timeline, cite.
 # ---------------------------------------------------------------------------
 blocks:
   intro:
@@ -106,21 +106,20 @@ blocks:
       - type: image
         src: img/sample-figure.svg
         caption: "Figure 1. A sample SVG chart. Replace it with your own figure."
-        max_height_mm: 75
-      - type: image
-        src: img/not-there-yet.png
-        placeholder: true          # no error while the file is missing; a dashed box is drawn
-        height_mm: 18
-        caption: "A placeholder: the file does not exist yet."
+        max_height_mm: 60
 
   photo:
-    title: "Raster image"
+    title: "Gallery"
     role: result
-    why: "PNG and JPG are embedded as they are, so supply enough pixels for the printed size."
-    type: image
-    src: img/sample-photo.png
-    caption: "Figure 2. A generated PNG (1600 x 900 px)."
-    max_height_mm: 70
+    why: "The gallery part: pictures in a grid with captions; cover crops to fill, a missing file is a dashed box."
+    type: gallery
+    columns: 2
+    cell_height_mm: 36
+    items:
+      - {src: img/sample-photo.png, caption: "A generated PNG, cropped to fill."}
+      - {src: img/sample-figure.svg, caption: "An SVG, kept as vector.", fit: contain}
+      - {src: img/sample-photo.png, caption: "Same file, other crop.", focus: [0.9, 0.5]}
+      - {src: img/not-there-yet.png, caption: "Placeholder: file missing."}
 
   quote:
     frame: false                   # no card, no title bar: for one key message
@@ -134,9 +133,12 @@ blocks:
   outlook:
     title: "Next steps"
     role: outlook
-    why: "The highlight card is for the call to action."
-    type: text
-    file: content/04_outlook.md
+    why: "A timeline for dated steps; status styles come from the theme."
+    type: timeline
+    items:
+      - {when: "Done", label: "Core and themes", sub: "build and checks", status: done}
+      - {when: "Next", label: "First real poster", sub: "from the brief", status: planned}
+      - {when: "Later", label: "Further variants", status: concept}
 
   team:
     title: "People"
@@ -158,6 +160,8 @@ blocks:
       - type: qr
         size_mm: 34
         items: "{{ brief.links }}"
+      - type: cite                 # built from CITATION.cff (this poster's folder first, then the kit's)
+        label: "How to cite"
 
   supporters:
     title: "Funding and partners"
@@ -177,6 +181,14 @@ blocks:
     file: content/06_references.md
     scale: 0.8
 
+# Optional strip at the bottom of every page: QR code, text, licence badge.
+footer:
+  height_mm: 20
+  text: "{{ brief.event.name }}"
+  meta: "Poster kit demo \u00b7 built from brief.yaml"
+  licence: "CC BY 4.0"
+  qr: https://github.com/florianthiery/poster-kit
+
 # ---------------------------------------------------------------------------
 # Layout: bands run top to bottom, columns left to right, blocks stack in a column.
 # width = relative column width. weight = share of the leftover height the band
@@ -195,7 +207,7 @@ layout:
         - {blocks: [pipeline]}
     - weight: 1
       columns:
-        - {width: 1.35, blocks: [mapping, quote]}
+        - {width: 1.35, blocks: [mapping]}
         - {width: 1, blocks: [figure]}
         - {width: 0.8, blocks: [team]}
     - weight: 0
@@ -205,4 +217,5 @@ layout:
         - {width: 1.3, blocks: [supporters]}
     - weight: 0
       columns:
-        - {blocks: [references]}
+        - {width: 2, blocks: [references]}
+        - {width: 1, blocks: [quote]}

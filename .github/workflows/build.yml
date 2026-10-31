@@ -1,0 +1,45 @@
+# Builds every poster on each push and pull request, so a broken poster, theme or engine change shows up
+# before anything is printed. The PDFs of the run can be downloaded from the run page ("Artifacts").
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  posters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"          # the version the pins in requirements.txt were proven on
+          cache: pip
+
+      - name: Install the pinned requirements
+        run: pip install -r requirements.txt
+
+      - name: Core check, the demo poster in every theme and variant
+        run: python tools/build_all.py --poster demo --all-themes
+
+      - name: Build every poster in its own theme, and check that a rebuild gives the same bytes
+        run: python tools/build_all.py --check-repro
+
+      - name: Release check (strict) for posters whose status is final
+        run: python tools/build_all.py --strict
+
+      - name: Keep the PDFs and previews of this run
+        uses: actions/upload-artifact@v4
+        with:
+          name: posters
+          path: |
+            posters/*/dist/poster.pdf
+            posters/*/dist/poster-preview.png
+            posters/*/dist/layout_report.txt
+          if-no-files-found: error

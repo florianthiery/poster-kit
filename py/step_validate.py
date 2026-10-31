@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import poster_utils as U  # noqa: E402
 import theme as T  # noqa: E402
 
-PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos", "people", "supporters"}
+PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos", "people", "supporters", "gallery", "timeline", "cite"}
 PAGE_SIZES = {"A0", "A1", "A2", "A3", "A4"}
 
 
@@ -68,6 +68,13 @@ def main() -> int:
             U.warn(f"brief.yaml has {len(todos)} unresolved TODO(s), first: {', '.join(todos[:4])}")
         if str(brief.get("status", "")) == "interview":
             U.warn("brief.yaml status is 'interview': confirm the facts and set it to 'confirmed'")
+    foot = cfg.get("footer")
+    if foot:
+        for k in foot:
+            if k not in ("height_mm", "text", "meta", "licence", "qr"):
+                errors.append(f"footer: unknown key '{k}' (allowed: height_mm, text, meta, licence, qr)")
+        if not any(foot.get(k) for k in ("text", "meta", "licence", "qr")):
+            errors.append("footer: give at least one of text, meta, licence, qr")
     blocks = cfg["blocks"]
     primer = U.POSTER_DIR / "PRIMER.md"
     if not primer.is_file():
@@ -137,6 +144,31 @@ def main() -> int:
                             errors.append(f"block '{bid}': a supporter has no 'name' (needed as fallback and alt text)")
                         elif it.get("src") and not U.find(it["src"]).is_file():
                             U.warn(f"block '{bid}': logo file missing, name will be drawn instead: {it['src']}")
+            if ptype == "gallery":
+                if not part.get("items"):
+                    errors.append(f"block '{bid}': gallery needs a non-empty 'items' list")
+                if part.get("fit", "cover") not in ("cover", "contain"):
+                    errors.append(f"block '{bid}': gallery.fit must be cover or contain")
+                for it in part.get("items") or []:
+                    if not it.get("src"):
+                        errors.append(f"block '{bid}': a gallery picture has no 'src'")
+                    elif not U.find(it["src"]).is_file():
+                        U.warn(f"block '{bid}': gallery picture missing, a dashed box is drawn: {it['src']}")
+            if ptype == "timeline":
+                if not part.get("items"):
+                    errors.append(f"block '{bid}': timeline needs a non-empty 'items' list")
+                if part.get("orientation", "vertical") not in ("vertical", "horizontal"):
+                    errors.append(f"block '{bid}': timeline.orientation must be vertical or horizontal")
+                for it in part.get("items") or []:
+                    if not it.get("label"):
+                        errors.append(f"block '{bid}': a timeline entry has no 'label'")
+                    elif it.get("status", "done") not in th["status_styles"]:
+                        errors.append(f"block '{bid}': timeline status '{it.get('status')}' is not a status style of theme "
+                                      f"'{th['id']}' (has: {', '.join(th['status_styles'])})")
+            if ptype == "cite" and not part.get("text"):
+                src = part.get("source", "CITATION.cff")
+                if not U.find(src).is_file():
+                    errors.append(f"block '{bid}': cite needs {src} (or a 'text:'); not found in the poster folder or the kit")
             if ptype == "flow":
                 for step in part["steps"]:
                     st = step.get("status", "done")

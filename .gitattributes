@@ -1,0 +1,16 @@
+# Line endings: text files are stored with LF and checked out as the platform wants them,
+# except where a tool needs LF (YAML, Python, Markdown). Binary files are never touched.
+* text=auto
+*.py   text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+*.md   text eol=lf
+*.cff  text eol=lf
+*.svg  text eol=lf
+*.ttf  binary
+*.otf  binary
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.zip  binary

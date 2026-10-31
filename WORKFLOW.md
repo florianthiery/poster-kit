@@ -192,6 +192,20 @@ powershell -NoProfile -Command "Expand-Archive -Path C:\Users\you\Downloads\patc
 Then build (a), look at `git status` to see what the patch changed, and commit (b). Delete `PATCH-README.md` from the
 repository root once you have read it, or leave it out of the commit.
 
+## Checks on GitHub (Actions)
+
+Every push and pull request runs `.github/workflows/build.yml`: it builds the demo in all themes, builds twice and compares the PDFs, and checks posters marked `status: final` strictly. Open the *Actions* tab of the repository; a green tick means the build works on a clean machine. The PDFs of the run can be downloaded from the run page (*Artifacts*).
+
+Once, after `.gitattributes` has been added, tell Git to normalise the line endings:
+
+```cmd
+git add --renormalize .
+```
+
+```cmd
+git commit -m "Normalise line endings"
+```
+
 ## Updating the core
 
 If you work in a fork and the original repository gained new features, add it as `upstream` once:

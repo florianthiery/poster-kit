@@ -721,9 +721,291 @@ class SupportersItem:
             y -= rh + self.vgap
 
 
+# --------------------------------------------------------------------------
+# Gallery, timeline, citation, footer
+# --------------------------------------------------------------------------
+def draw_picture_cover(c, pic, x: float, y: float, w: float, h: float, focus=(0.5, 0.5)) -> None:
+    """Fill the box with the picture, cropping what overhangs; focus (0..1, from the top left) picks the crop centre."""
+    pw, ph = picture_size(pic)
+    k = max(w / pw, h / ph)
+    fx, fy = focus
+    x_img = x - (pw * k - w) * fx
+    y_img = y + h + (ph * k - h) * fy - ph * k
+    if pic[0] == "svg":
+        import copy
+        d = copy.deepcopy(pic[1]); d.width *= k; d.height *= k; d.scale(k, k)
+        renderPDF.draw(d, c, x_img, y_img)
+    else:
+        c.drawImage(pic[1], x_img, y_img, pw * k, ph * k, mask="auto")
+
+
+class GalleryItem:
+    """A grid of pictures with a caption under each; a missing file is drawn as a dashed box.
+
+    columns, cell_height_mm, fit: cover (crop to fill, default) | contain (whole picture on a tint), also per picture;
+    per picture: src, caption, fit, focus [x, y] for the crop centre.
+    """
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx, self.width = ctx, width
+        self.items = spec["items"]
+        n = len(self.items)
+        self.cols = max(1, min(int(spec.get("columns", 2)), n))
+        self.gap = ctx.base * 0.6
+        self.cw = (width - (self.cols - 1) * self.gap) / self.cols
+        self.ch = spec["cell_height_mm"] * mm if spec.get("cell_height_mm") else self.cw * 0.72
+        self.fit = spec.get("fit", "cover")
+        cap = ctx.style("gallery-caption", ctx.small, colour="muted", lead=1.2)
+        self.pics = [load_picture(U.find(it["src"])) if it.get("src") else None for it in self.items]
+        self.caps = [ctx.para(it["caption"], cap, self.cw) if it.get("caption") else None for it in self.items]
+        self.cap_gap = ctx.base * 0.3
+        self.rows = [list(range(i, min(i + self.cols, n))) for i in range(0, n, self.cols)]
+        self.row_h = [self.ch + max((self.cap_gap + self.caps[i].height) if self.caps[i] else 0 for i in row) for row in self.rows]
+        self.row_gap = ctx.base * 0.6
+        self.height = sum(self.row_h) + self.row_gap * (len(self.rows) - 1)
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        ctx = self.ctx
+        y = y_top
+        for row, rh in zip(self.rows, self.row_h):
+            for k, i in enumerate(row):
+                cx, cy = x + k * (self.cw + self.gap), y - self.ch
+                r = ctx.shape["box_radius"] * 0.5
+                c.saveState()
+                p = c.beginPath(); p.roundRect(cx, cy, self.cw, self.ch, r); c.clipPath(p, stroke=0, fill=0)
+                c.setFillColor(ctx.col["tint"]); c.rect(cx, cy, self.cw, self.ch, stroke=0, fill=1)
+                pic = self.pics[i]
+                if pic and self.items[i].get("fit", self.fit) == "contain":
+                    draw_picture_fit(c, pic, cx, cy, self.cw, self.ch)
+                elif pic:
+                    draw_picture_cover(c, pic, cx, cy, self.cw, self.ch, tuple(self.items[i].get("focus") or (0.5, 0.5)))
+                c.restoreState()
+                c.saveState()
+                c.setStrokeColor(ctx.col["line"]); c.setLineWidth(ctx.shape["card_line"])
+                if not pic:
+                    c.setDash(ctx.shape["dash"][0] * 0.6, ctx.shape["dash"][1] * 0.6)
+                c.roundRect(cx, cy, self.cw, self.ch, r, stroke=1, fill=0)
+                if not pic:
+                    from reportlab.pdfbase.pdfmetrics import stringWidth
+                    txt = Path(self.items[i].get("src") or "no file").name
+                    while len(txt) > 4 and stringWidth(txt, "PosterBody", ctx.small) > self.cw - ctx.base:
+                        txt = txt[:-2] + "\u2026" if not txt.endswith("\u2026") else txt[:-2] + "\u2026"
+                    c.setFillColor(ctx.col["muted"]); c.setFont("PosterBody", ctx.small)
+                    c.drawCentredString(cx + self.cw / 2, cy + self.ch / 2 - ctx.small * 0.3, txt)
+                c.restoreState()
+                if self.caps[i]:
+                    self.caps[i].drawOn(c, cx, cy - self.cap_gap - self.caps[i].height)
+            y -= rh + self.row_gap
+
+
+class TimelineItem:
+    """Dated steps along a line. orientation: vertical (default, for narrow cards) | horizontal (per_row dots per row).
+
+    items: {when, label, sub, status}; status is one of the theme's flow status styles (done, planned, concept).
+    """
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx, self.width = ctx, width
+        self.items = spec["items"]
+        self.horizontal = spec.get("orientation", "vertical") == "horizontal"
+        self.r = ctx.base * 0.42
+        n = len(self.items)
+        al = TA_CENTER if self.horizontal else TA_LEFT
+        self.st_when = ctx.style("tl-when", ctx.small * 1.05, font="PosterBold", colour="primary", align=al, lead=1.15)
+        self.st_label = ctx.style("tl-label", ctx.base * 0.95, align=al, lead=1.2)
+        self.st_sub = ctx.style("tl-sub", ctx.small, colour="muted", align=al, lead=1.2)
+        self.gap = ctx.base * 0.7
+        if self.horizontal:
+            self.per_row = max(1, min(int(spec.get("per_row", min(n, 4))), n))
+            self.cw = width / self.per_row
+            tw = self.cw - ctx.base * 0.6
+        else:
+            self.per_row = 1
+            self.col_w = self.r * 2 + ctx.base * 0.9
+            tw = width - self.col_w
+        self.cells = []
+        for it in self.items:
+            parts = []
+            if it.get("when"):
+                parts.append(ctx.para(str(it["when"]), self.st_when, tw))
+            parts.append(ctx.para(it["label"], self.st_label, tw))
+            if it.get("sub"):
+                parts.append(ctx.para(it["sub"], self.st_sub, tw))
+            self.cells.append(parts)
+        self.cell_h = [sum(p.height for p in parts) for parts in self.cells]
+        if self.horizontal:
+            self.rows = [list(range(i, min(i + self.per_row, n))) for i in range(0, n, self.per_row)]
+            self.row_h = [self.r * 2 + ctx.base * 0.4 + max(self.cell_h[i] for i in row) for row in self.rows]
+            self.height = sum(self.row_h) + self.gap * (len(self.rows) - 1)
+        else:
+            self.height = sum(self.cell_h) + self.gap * (n - 1)
+
+    def _dot(self, c, cx: float, cy: float, status: str) -> None:
+        ctx = self.ctx
+        sty = ctx.theme["status_styles"].get(status or "done") or ctx.theme["status_styles"]["done"]
+        c.saveState()
+        c.setFillColor(ctx.col[sty["fill"]]); c.setStrokeColor(ctx.col[sty["stroke"]]); c.setLineWidth(ctx.shape["badge_line"])
+        if sty.get("dash"):
+            c.setDash(ctx.shape["badge_line"] * 2.2, ctx.shape["badge_line"] * 1.6)
+        c.circle(cx, cy, self.r, stroke=1, fill=1)
+        c.restoreState()
+
+    def _line(self, c, x0, y0, x1, y1) -> None:
+        c.saveState()
+        c.setStrokeColor(self.ctx.col["connector"]); c.setLineWidth(self.ctx.shape["arrow_line"] * 0.5)
+        c.line(x0, y0, x1, y1)
+        c.restoreState()
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        if self.horizontal:
+            y = y_top
+            for row, rh in zip(self.rows, self.row_h):
+                cy = y - self.r
+                centres = [x + k * self.cw + self.cw / 2 for k in range(len(row))]
+                if len(row) > 1:
+                    self._line(c, centres[0], cy, centres[-1], cy)
+                for k, i in enumerate(row):
+                    self._dot(c, centres[k], cy, self.items[i].get("status"))
+                    ty = y - self.r * 2 - self.ctx.base * 0.4
+                    for p in self.cells[i]:
+                        p.drawOn(c, centres[k] - self.cw / 2 + self.ctx.base * 0.3, ty - p.height)
+                        ty -= p.height
+                y -= rh + self.gap
+            return
+        y = y_top
+        first = None
+        prev = None
+        for i, parts in enumerate(self.cells):
+            when_h = parts[0].height if self.items[i].get("when") else 0
+            cy = y - (when_h or parts[0].height) / 2
+            cx = x + self.r
+            if prev is not None:
+                self._line(c, cx, prev, cx, cy)
+            self._dot(c, cx, cy, self.items[i].get("status"))
+            prev = cy
+            ty = y
+            for p in parts:
+                p.drawOn(c, x + self.col_w, ty - p.height)
+                ty -= p.height
+            y -= self.cell_h[i] + self.gap
+
+
+def _initials(given: str) -> str:
+    return " ".join("-".join(p[0] + "." for p in tok.split("-") if p) for tok in given.split())
+
+
+def build_citation(spec: dict) -> str:
+    """A reference line from a CITATION.cff: authors (year). *Title* (Version). Container. DOI or URL."""
+    path = U.find(spec.get("source", "CITATION.cff"))
+    if not path.is_file():
+        return f"TODO: no {spec.get('source', 'CITATION.cff')} found"
+    import yaml
+    cff = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    pc = cff.get("preferred-citation") or cff
+    names = []
+    for a in pc.get("authors") or cff.get("authors") or []:
+        if a.get("family-names"):
+            names.append(f"{a['family-names']}, {_initials(a.get('given-names', ''))}".rstrip(", "))
+        elif a.get("name"):
+            names.append(a["name"])
+    authors = (names[0] if len(names) == 1 else f"{names[0]} & {names[1]}" if len(names) == 2
+               else ", ".join(names[:-1]) + f", & {names[-1]}" if 2 < len(names) <= 6
+               else f"{names[0]} et al.") if names else ""
+    year = str(pc.get("year") or str(pc.get("date-released") or cff.get("date-released") or "")[:4])
+    out = (authors + " " if authors else "") + (f"({year}). " if year else "") + f"*{pc.get('title', cff.get('title', ''))}*"
+    if pc is cff and cff.get("version"):
+        out += f" (Version {cff['version']})"
+    out += "."
+    container = pc.get("journal") or pc.get("collection-title")
+    if container:
+        out += f" {container}."
+    doi = pc.get("doi") or cff.get("doi")
+    link = f"https://doi.org/{doi}" if doi else (pc.get("url") or cff.get("url") or cff.get("repository-code"))
+    if link:
+        out += f" [{link}]({link})"
+    return out
+
+
+class CiteItem:
+    """'How to cite': a reference line built from CITATION.cff (the poster's own file first, then the kit's)."""
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx = ctx
+        lab = ctx.style("cite-label", ctx.small, font="PosterBold", colour="muted", lead=1.15)
+        body = ctx.style("cite", ctx.small, lead=1.25)
+        self.label = ctx.para(spec.get("label", "How to cite"), lab, width)
+        self.body = ctx.para(spec.get("text") or build_citation(spec), body, width)
+        self.gap = ctx.base * 0.25
+        self.height = self.label.height + self.gap + self.body.height
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        self.label.drawOn(c, x, y_top - self.label.height)
+        self.body.drawOn(c, x, y_top - self.label.height - self.gap - self.body.height)
+
+
+class Footer:
+    """Optional strip at the bottom of the page: QR code, a line or two of text, a licence badge.
+
+    footer: {height_mm, text, meta, licence, qr: {url} | url}; text and meta take inline Markdown.
+    """
+
+    def __init__(self, cfg: dict, ctx: Ctx, page_w: float, margin: float):
+        from reportlab.pdfbase.pdfmetrics import stringWidth
+        f = cfg["footer"]
+        self.ctx, self.margin, self.page_w = ctx, margin, page_w
+        self.h = f.get("height_mm", 26) * mm
+        self.gap = ctx.base * 0.9
+        w = page_w - 2 * margin
+        q = f.get("qr")
+        self.qr_url = (q.get("url") if isinstance(q, dict) else q) if q else None
+        self.qs = self.h * 0.86 if self.qr_url else 0.0
+        self.badge = f.get("licence")
+        self.fs = ctx.small
+        self.badge_w = (stringWidth(self.badge, "PosterBold", self.fs) + 2 * ctx.base * 0.7) if self.badge else 0.0
+        tw = w - (self.qs + self.gap if self.qr_url else 0) - (self.badge_w + self.gap if self.badge else 0)
+        self.paras = []
+        if f.get("text"):
+            self.paras.append(ctx.para(f["text"], ctx.style("footer-text", ctx.small, font="PosterBold", lead=1.2), tw))
+        if f.get("meta"):
+            self.paras.append(ctx.para(f["meta"], ctx.style("footer-meta", ctx.small, colour="muted", lead=1.2), tw))
+        self.text_h = sum(p.height for p in self.paras)
+        self.too_tall = self.text_h > self.h
+        self.tw = tw
+
+    def draw(self, c) -> None:
+        ctx = self.ctx
+        x0, y0 = self.margin, self.margin
+        c.saveState()
+        c.setStrokeColor(ctx.col["line"]); c.setLineWidth(ctx.shape["card_line"])
+        c.line(x0, y0 + self.h, self.page_w - self.margin, y0 + self.h)
+        c.restoreState()
+        x = x0
+        if self.qr_url:
+            widget = QrCodeWidget(self.qr_url, barLevel="M")
+            bx0, by0, bx1, by1 = widget.getBounds()
+            d = Drawing(self.qs, self.qs, transform=[self.qs / (bx1 - bx0), 0, 0, self.qs / (by1 - by0), 0, 0])
+            d.add(widget)
+            renderPDF.draw(d, c, x, y0 + (self.h - self.qs) / 2)
+            x += self.qs + self.gap
+        ty = y0 + (self.h + self.text_h) / 2
+        for p in self.paras:
+            p.drawOn(c, x, ty - p.height)
+            ty -= p.height
+        if self.badge:
+            bx = self.page_w - self.margin - self.badge_w
+            bh = self.fs * 2.0
+            c.saveState()
+            c.setStrokeColor(ctx.col["secondary"]); c.setLineWidth(ctx.shape["logo_line"]); c.setFillColor(ctx.col["paper"])
+            c.roundRect(bx, y0 + (self.h - bh) / 2, self.badge_w, bh, ctx.shape["logo_radius"], stroke=1, fill=1)
+            c.setFillColor(ctx.col["primary"]); c.setFont("PosterBold", self.fs)
+            c.drawCentredString(bx + self.badge_w / 2, y0 + self.h / 2 - self.fs * 0.33, self.badge)
+            c.restoreState()
+
+
 ITEMS = {"text": TextItem, "table": TableItem, "flow": FlowItem, "image": ImageItem,
          "stats": StatsItem, "qr": QrItem, "logos": LogosItem,
-         "people": PeopleItem, "supporters": SupportersItem}
+         "people": PeopleItem, "supporters": SupportersItem,
+         "gallery": GalleryItem, "timeline": TimelineItem, "cite": CiteItem}
 
 
 # --------------------------------------------------------------------------
@@ -882,7 +1164,8 @@ class Layout:
         self.base = base_pt
         self.header = Header(cfg, self.ctx, w, self.margin, self.gap)
         self.body_top = h - self.header.height - self.header.rule - self.gap
-        self.body_bottom = self.margin
+        self.footer = Footer(cfg, self.ctx, w, self.margin) if cfg.get("footer") else None
+        self.body_bottom = self.margin + ((self.footer.h + self.gap) if self.footer else 0)
         self.avail = self.body_top - self.body_bottom
         inner_w = w - 2 * self.margin
         self.bands = []
@@ -922,6 +1205,8 @@ class Layout:
                     cy -= ch + self.gap
                 x += cw + self.gap
             y -= b["height"] + self.gap
+        if self.footer:
+            self.footer.draw(c)
 
 
 def fit_layout(cfg: dict) -> Layout:
