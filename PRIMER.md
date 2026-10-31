@@ -1,8 +1,8 @@
-# PRIMER – poster-template
+# PRIMER – poster-kit
 
-Arbeitsplan für das neutrale Poster-Repository. Es wird für jedes Poster geforkt (z. B. `chnt31-poster`). Wird zu Beginn jedes Chats komplett hochgeladen und am Ende zurückgeschrieben. Teil A gilt immer, Teil B ist die Übersicht, Teil C sind die Schritte, Teil D sind offene Punkte.
+Arbeitsplan für den Kern des Poster-Kits (Engine, Themes, Schriften, geteilte Logos). Einzelne Poster liegen als Ordner in `posters/<id>/` im selben Repository und haben je ein eigenes `PRIMER.md` (Vorlage: `posters/_template/PRIMER.md`); dieses hier gehört keinem Poster. Teil A gilt immer, Teil B ist die Übersicht, Teil C sind die Schritte, Teil D sind offene Punkte.
 
-**Für Forks:** Struktur behalten, Inhalt ersetzen. A1 (Befunde), A4 (Beschlusslage), Teil B bis D beschreiben dann *dieses* Poster. Die Beschlüsse zu Engine, Themes und Schriften gelten weiter und stehen in der Template-Version dieser Datei; im Fork nur dann ändern, wenn das Poster davon abweicht, und das mit Datum festhalten.
+**Für ein Poster:** Beschlüsse zu Engine, Themes und Schriften gelten für alle Poster und stehen hier. Weicht ein Poster davon ab, steht das mit Datum in dessen PRIMER (Teil A4).
 
 ---
 
@@ -12,14 +12,15 @@ Arbeitsplan für das neutrale Poster-Repository. Es wird für jedes Poster gefor
 
 | Was | Wo | Rolle |
 |---|---|---|
-| Poster-Definition | `poster.yaml` | Struktur, Blöcke, Layout; Demo-Inhalt im Template |
-| Texte | `content/*.md` | Englisch (British), Markdown-Teilmenge |
-| Bilder, Logos | `img/`, `img/logos/` | Eingaben; Beispieldateien sind erzeugte Platzhalter |
+| Poster | `posters/<id>/` | je Poster: `brief.yaml` (Fakten), `poster.yaml` (Struktur), `content/`, `img/`, `PRIMER.md`, `dist/` |
+| Demo und Gerüst | `posters/demo/`, `posters/_template/` | Demo zeigt jede Option; `_template` ist das Gerüst für `--new-poster` |
+| Geteilte Logos | `shared/logos/` | Institute, Förderer, Netzwerke; Nutzungsrechte je Datei in der README dort |
 | Themes | `themes/<id>/theme.yaml` | Farben (Palette → Tokens), Rollen, Kartenstile, Schriften, Formen |
 | Schriftbibliothek | `fonts/<familie>/` | geteilt von allen Themes, mit Lizenz und `SOURCES.md` |
 | Engine | `main.py`, `py/` | `theme.py`, `poster_utils.py`, `step_validate.py`, `step_render.py`, `step_preview.py` |
 | Erklärung | `GUIDE.md` | jede Option, Themes, Prüfungen, Fork-Ablauf (Englisch) |
-| Ausgabe | `dist/` | erzeugt, nicht von Hand ändern |
+| Ausgabe | `posters/<id>/dist/` | erzeugt, nicht von Hand ändern |
+| Ablauf | `WORKFLOW.md`, `INTERVIEW.md` | Windows-cmd-Befehle (bauen, GitHub); Interview zum Start eines Posters |
 
 **Befunde** (geprüft 2026-10-09, beim Bau):
 
@@ -89,6 +90,13 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 | Statuskodierung | durchgezogen/gestrichelt plus Nummernmarke; weitere Stati im Theme möglich | 2026-10-09 |
 | Release-Prüfung | `--strict`: Warnungen werden Fehler, auch `status: draft` und `state: pending` | 2026-10-09 |
 | Lieferung | Neues Repo als ZIP inklusive `dist/`; Änderungen an einem hochgeladenen Repo als Patch-ZIP | 2026-10-09 |
+| Poster als Ordner | Poster entstehen in `posters/<id>/` im Kern-Repository statt als Fork; Pfade werden erst im Poster-Ordner, dann im Repo-Wurzelverzeichnis gesucht; poster-eigene Themes unter `posters/<id>/themes/` | 2026-10-31 |
+| Poster-PRIMER | Jedes Poster hat ein eigenes deutsches `PRIMER.md` (Teil A Anlass/Zielbild/Beschlüsse, B Schritte P0–P5, C Blöcke mit Quellen, D offen, Änderungsprotokoll); `--blocks` erzeugt die Blocktabelle | 2026-10-31 |
+| Brief | `posters/<id>/brief.yaml` ist die eine Quelle aller Fakten; `poster.yaml` und `content/*.md` lesen sie per `{{ brief.… }}`; Start per Interview (`INTERVIEW.md`), Status `interview` → `draft` → `confirmed` | 2026-10-31 |
+| Header-Logos | Logos im Titelbereich sind optional und im Demo und Gerüst entfernt (doppelt zu Zugehörigkeiten und Förderer-Block) | 2026-10-31 |
+| Module | `people` (runde Fotos, Namen, optional Rolle, keine Institution) und `supporters` (beschriftete Logo-Gruppen); `logos` bleibt für Altbestand | 2026-10-31 |
+| Titel | `title_lines` ist Präferenz, keine Grenze; Titel schrumpft erst, wenn die Seite voll ist (bis `title_pt_min`) | 2026-10-31 |
+| Fußzeile | Keine DRAFT-Zeile mehr auf dem Poster; `status` ist nur Buchführung | 2026-10-31 |
 | Sprache der Doku | `GUIDE.md`, `README.md`, Poster: British English; `PRIMER.md`: Deutsch | 2026-10-09 |
 
 ### A5 Was in welchem Chat hochgeladen wird
@@ -96,7 +104,7 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 `PRIMER.md` plus ein Bundle der Quellen, ohne erzeugte Dateien und ohne ungenutzte Schriftfamilien:
 
 ```cmd
-powershell -NoProfile -Command "Compress-Archive -Path py,content,img,themes,fonts,tools,poster.yaml,main.py,PRIMER.md,GUIDE.md,requirements.txt -DestinationPath bundle.zip -Force"
+powershell -NoProfile -Command "Compress-Archive -Path py,posters,shared,themes,fonts,tools,main.py,PRIMER.md,GUIDE.md,WORKFLOW.md,INTERVIEW.md,requirements.txt -DestinationPath bundle.zip -Force"
 ```
 
 Nicht hochladen: `.venv/`, `.git/`, `dist/`, `bundle.zip`. Die Schriftbibliothek ist rund 8 MB; wer nur ein Theme nutzt, löscht die anderen Ordner vorher.
@@ -111,17 +119,18 @@ Entfällt: das Repo veröffentlicht kein RDF.
 
 | ID | Schritt | Repo | hängt ab von | Status |
 |---|---|---|---|---|
-| S0 | Festlegungen: Format, Werkzeug, Eingabeformat, Palette | poster-template | – | erledigt 2026-10-09 |
-| S1 | Skeleton: `main.py`, `poster_utils.py`, Lizenz, Pins (aus `chnt31-poster`) | poster-template | S0 | erledigt 2026-10-09 |
-| S2 | Layout-Engine: Karten, Autofit, Flow, Tabelle, Stats, QR, Logos | poster-template | S1 | erledigt 2026-10-09 |
-| S3 | Theme-System: Ordner, Palette/Tokens/Rollen, Schriftbibliothek, Kontrast-Check, `--theme`, `--new-theme` | poster-template | S2 | erledigt 2026-10-09 |
-| S4 | Fünf Themes und Demo-Poster mit allen Möglichkeiten, `GUIDE.md` | poster-template | S3 | erledigt 2026-10-09 |
-| S5 | CHNT31-Poster als Fork auf die Template-Engine | chnt31-poster | S4 | siehe Fork-PRIMER |
-| S6 | LEIZA-Farben eintragen, Theme auf `ready` | poster-template | – | offen |
-| S7 | Zahlen und Autoren aus Daten (`{{ stats.* }}`, `CITATION.cff`) | poster-template | S4 | offen |
-| S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-template | S4 | offen |
-| S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-template | S4 | offen |
-| S10 | Raster und Layout-Presets, Block-Plugins, Mehrsprachigkeit | poster-template | S4 | offen |
+| S0 | Festlegungen: Format, Werkzeug, Eingabeformat, Palette | poster-kit | – | erledigt 2026-10-09 |
+| S1 | Skeleton: `main.py`, `poster_utils.py`, Lizenz, Pins (aus `chnt31-poster`) | poster-kit | S0 | erledigt 2026-10-09 |
+| S2 | Layout-Engine: Karten, Autofit, Flow, Tabelle, Stats, QR, Logos | poster-kit | S1 | erledigt 2026-10-09 |
+| S3 | Theme-System: Ordner, Palette/Tokens/Rollen, Schriftbibliothek, Kontrast-Check, `--theme`, `--new-theme` | poster-kit | S2 | erledigt 2026-10-09 |
+| S4 | Fünf Themes und Demo-Poster mit allen Möglichkeiten, `GUIDE.md` | poster-kit | S3 | erledigt 2026-10-09 |
+| S5 | CHNT31-Poster nach `posters/chnt31/` migrieren (Theme `chublets`, `brief.yaml`, eigenes PRIMER) | poster-kit | S11 | offen |
+| S11 | Module `people` und `supporters`; Poster-Ordner, `--new-poster`, `--blocks`, Poster-PRIMER; `brief.yaml` mit `{{ brief.… }}`; `WORKFLOW.md`, `INTERVIEW.md`, `tools/build_all.py`; Titel dynamisch; Header ohne Logos; Fußzeile entfernt | poster-kit | S4 | erledigt 2026-10-31 |
+| S6 | LEIZA-Farben eintragen, Theme auf `ready` | poster-kit | – | offen |
+| S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
+| S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
+| S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
+| S10 | Raster und Layout-Presets, Block-Plugins, Mehrsprachigkeit | poster-kit | S4 | offen |
 
 S6 ist unabhängig von allem anderen. S7 und S8 hängen nur an S4 und können in beliebiger Reihenfolge laufen. S9 braucht ein eigenes Layout je Variante und kommt deshalb nach S7 und S8.
 
@@ -155,6 +164,20 @@ Alle fünf Themes bauen. Basisgröße 28,5 pt bei `neutral`, `chublets`, `resear
 
 **Abnahme:** `python main.py --theme leiza --strict` läuft durch, soweit nur noch die Demo-Platzhalter bleiben; Kontrastbericht ohne Fehler.
 
+## S11 – Module, Poster-Ordner, Brief
+
+**Ziel:** Mehrere Poster im selben Repository; Fakten an einer Stelle; Personen und Förderer als Bausteine.
+
+**Abnahme:** `--list-posters`, `--new-poster`, `--blocks`; alle Themes bauen `demo` ohne Fehler; zwei Läufe identisch; frisch entpackt im venv baut es; `--poster` fehlt bei mehreren Postern → Fehler mit Liste; `{{ brief.x }}` auf fehlenden Schlüssel → Fehler mit Namen.
+
+### Erledigt 2026-10-31
+
+`PeopleItem` (Zuschnitt mit `focus`/`zoom`, Initialen als Rückfall) und `SupportersItem` (Seitenverhältnis, Umbruch, Namenskästchen ohne Logo, `columns`). Demo auf den Brief umgestellt, Header-Logos entfernt. Beim Bau mussten Zahlenkacheln (`stats`) einzeilig werden: die Größe richtet sich jetzt nach dem breitesten Wert.
+
+### Ideen für weitere Bausteine (nicht gebaut)
+
+Bildraster (n Bilder mit Beschriftung), Zeitleiste, Kontaktleiste mit Lizenz-Badge, DOI und QR (als optionale Fußzeile), Zitierblock aus `CITATION.cff`, Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
+
 ## S7 bis S10
 
 Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt bekommt beim Start Ziel, Uploads und Abnahme.
@@ -170,4 +193,7 @@ Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt be
 - **D5** Lizenz der Posterinhalte (Texte, Grafiken); Code steht unter MIT.
 - **D6** Kein PDF/X-Export und keine Beschnittzugabe; falls eine Druckerei beides verlangt, wäre das ein eigener Schritt.
 - **D7** `header_style: plain` ist implementiert und mit einem Override getestet, aber in keinem mitgelieferten Theme aktiv.
+- **D9** Fotos von Personen: Einwilligung klären, bevor ein Poster mit Porträts veröffentlicht wird.
+- **D10** Logos von Förderern und Instituten: Nutzungsregeln prüfen; Vermerk in `shared/logos/README.md`.
+- **D11** Soll es zusätzlich eine Kommandozeilen-Version des Interviews geben (`--interview`), falls ohne Claude gearbeitet wird?
 - **D8** Die squirrel-Palette gegen die PDF `Squirrles Colors.pdf` abgleichen; bisher nur die README-Werte.

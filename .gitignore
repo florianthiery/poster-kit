@@ -15,3 +15,6 @@ bundle.zip
 
 # --- Note ---
 # dist/ is NOT ignored: it holds the versioned poster PDF and its layout report.
+
+# Per-theme comparison builds (tools/build_all.py --all-themes) are regenerated on demand
+posters/*/dist/themes/

@@ -1,8 +1,8 @@
-# poster-template
+# poster-kit
 
 A neutral repository for conference posters. Texts live in Markdown, structure in one YAML file, colours and typefaces in swappable **themes**. One command renders a vector PDF (A0 to A4, fonts embedded) and fits the text size to the page, so a changed sentence costs one re-run.
 
-Fork it for each poster. The demo poster that ships with it shows every feature and explains itself.
+Every poster is a folder in `posters/`, next to the shared core (engine, themes, fonts, logos). The demo poster shows every feature and explains itself; `python main.py --new-poster <id>` starts your own.
 
 ## Quick start
 
@@ -14,19 +14,21 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Open `dist/poster.pdf`, or `dist/poster-preview.png` for a quick look. Try another look with `python main.py --theme chublets`.
+Open `posters/demo/dist/poster.pdf`, or `posters/demo/dist/poster-preview.png` for a quick look. Try another look with `python main.py --theme chublets`. Start a poster of your own with `python main.py --new-poster chnt31 --theme chublets`; once there is more than one poster, say which one: `python main.py --poster chnt31`.
 
 ## Where to change what
 
 | To change | Edit |
 |---|---|
-| A text | `content/*.md` |
-| Which blocks, in which order and columns | `poster.yaml` |
-| Title, authors, logos | `poster.yaml`, section `header` |
+| A text | `posters/<id>/content/*.md` |
+| Which blocks, in which order and columns | `posters/<id>/poster.yaml` |
+| Facts: event, title, authors, funders, numbers with sources | `posters/<id>/brief.yaml` (started in a conversation, see [INTERVIEW.md](INTERVIEW.md)) |
 | Colours, fonts, shapes | choose a theme: `theme:` in `poster.yaml`, or write one in `themes/` |
-| An image | put it into `img/`, add an `image` part to a block |
+| An image, a portrait | `posters/<id>/img/`, `img/people/`; an `image` or `people` part in a block |
+| Funders, partners, logos | `shared/logos/` (once, for all posters) and a `supporters` part |
+| Why the poster looks as it does | `posters/<id>/PRIMER.md` |
 
-[GUIDE.md](GUIDE.md) explains every option, the themes, the checks and the fork workflow.
+Commands for Windows `cmd` (build, push to GitHub, work on a poster): [WORKFLOW.md](WORKFLOW.md). [GUIDE.md](GUIDE.md) explains every option, the block types, the themes, the checks and how posters live in this repository.
 
 ## Themes
 
@@ -43,18 +45,21 @@ Open `dist/poster.pdf`, or `dist/poster-preview.png` for a quick look. Try anoth
 ## Layout of the repository
 
 ```
-poster-template/
+poster-kit/
 ├── GUIDE.md           everything the repository can do
-├── PRIMER.md          work plan and decisions (German)
+├── PRIMER.md          work plan of the core (German)
+├── WORKFLOW.md        Windows cmd: build, push to GitHub, work on a poster
+├── INTERVIEW.md       how a poster starts in a conversation (German)
 ├── main.py            the only entry point
-├── poster.yaml        what is on the poster (demo content)
-├── content/           texts (input)
-├── img/               images and logos (input)
-├── themes/<id>/       theme.yaml per theme (input)
-├── fonts/<family>/    shared font library with licences (input)
+├── posters/
+│   ├── demo/          the demo poster: every option in place
+│   ├── _template/     skeleton for --new-poster (not built unless asked)
+│   └── <id>/          one folder per poster: brief.yaml, poster.yaml, content/, img/, PRIMER.md, dist/
+├── shared/logos/      logos several posters use (institutes, funders, networks)
+├── themes/<id>/       theme.yaml per theme
+├── fonts/<family>/    shared font library with licences
 ├── py/                engine: theme.py, poster_utils.py, one module per step
-├── tools/             one-off helpers (static font instances)
-└── dist/              poster.pdf, preview, reports (generated)
+└── tools/             build_all.py (all posters, all themes), font helper
 ```
 
 ## Licence
@@ -71,16 +76,13 @@ The engine, themes and documentation were drafted with Claude (Anthropic) and re
 py -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt && python main.py
 ```
 
-For the drop-in folder, use `poster-kit\requirements.txt` and `python poster-kit\main.py`.
+## Using it inside an existing repository
 
-## Drop-in use inside an existing repository
-
-The whole kit is one folder, `poster-kit/`, and every path in it is relative to itself. Unzip it into the root of a repository you already have (for example a fork of the poster's project) and nothing outside the folder is touched:
+Clone or download this repository and copy it as one folder into the repository that should hold the posters (or fork it and develop the posters here, which is the intended way). Everything in the kit is relative to itself, so a subfolder works unchanged:
 
 ```
-unzip poster-kit.zip
-pip install -r poster-kit/requirements.txt
-python poster-kit/main.py --theme chublets
+python poster-kit/main.py --new-poster chnt31
+python poster-kit/main.py --poster chnt31
 ```
 
-Then replace the demo content inside `poster-kit/` (`poster.yaml`, `content/`, `img/`). `poster-kit/dist/` holds the output. Updating the engine later means replacing everything in the folder except your own `poster.yaml`, `content/`, `img/` and any theme you added under `themes/`.
+To update the core later, replace everything in the folder except `posters/`, `shared/` and any theme you added under `themes/`.

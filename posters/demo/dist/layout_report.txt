@@ -1,0 +1,66 @@
+Layout report for Poster template (build 2026-10-09)
+page: A0 portrait (841 x 1189 mm)
+base text size chosen by autofit: 28.0 pt (range 28-46)
+header title size: 112 pt
+theme: neutral (Neutral slate), state ready
+  colours from: Tailwind CSS default palette (slate, blue, amber) https://tailwindcss.com/docs/colors (licence MIT)
+  typeface: DejaVu Sans Condensed
+  contrast: 26 pairings checked, 0 below the recommended level, lowest 6.41 (links on card)
+body height: 930 mm available, 928 mm natural, slack 2 mm
+
+Blocks (why each one looks the way it does):
+- intro: 222 mm wide, 176 mm natural, 196 mm drawn
+    why: Text part from a Markdown file; shows the supported Markdown subset.
+- numbers: 182 mm wide, 146 mm natural, 196 mm drawn
+    why: Two parts in one card: a short inline text and large numbers, which read from two metres away.
+- howto: 202 mm wide, 196 mm natural, 196 mm drawn
+    why: Shows sub-headings in a text file and the accent override.
+- photo: 162 mm wide, 168 mm natural, 196 mm drawn
+    why: PNG and JPG are embedded as they are, so supply enough pixels for the printed size.
+- pipeline: 801 mm wide, 193 mm natural, 193 mm drawn
+    why: A flow beats prose for sequences. per_row wraps long chains with elbow arrows; status is never colour alone.
+- mapping: 334 mm wide, 168 mm natural, 169 mm drawn
+    why: Tables show mappings and comparisons that prose hides.
+- quote: 334 mm wide, 81 mm natural, 82 mm drawn
+    why: An unframed block keeps one sentence from disappearing among the cards.
+- figure: 247 mm wide, 239 mm natural, 262 mm drawn
+    why: An SVG figure stays vector; the caption sits underneath. max_height_mm caps tall images.
+- team: 198 mm wide, 187 mm natural, 262 mm drawn
+    why: The people module: cropped photos, names, optional role, no institution. A missing photo shows initials.
+- outlook: 236 mm wide, 128 mm natural, 160 mm drawn
+    why: The highlight card is for the call to action.
+- links: 236 mm wide, 110 mm natural, 160 mm drawn
+    why: QR codes in one row, label underneath; partner logos as a second part.
+- supporters: 307 mm wide, 160 mm natural, 160 mm drawn
+    why: The supporters module: labelled groups of logos. Without a logo file, the name is drawn in a box.
+- references: 801 mm wide, 74 mm natural, 74 mm drawn
+    why: Small type is fine here; references are for the follow-up reader.
+
+Smallest size used per style (pt):
+  affiliations: 36.0
+  authors: 50.0
+  body: 24.0
+  bullet: 24.0
+  caption: 24.0
+  card-heading: 54.0
+  event: 36.0
+  flow-label-concept: 28.0
+  flow-label-done: 28.0
+  flow-label-planned: 28.0
+  flow-sub-concept: 24.0
+  flow-sub-done: 24.0
+  flow-sub-planned: 24.0
+  legend: 24.0
+  person-name: 26.6
+  person-role: 24.0
+  qr-label: 24.0
+  stat-label: 24.0
+  stat-value: 63.6
+  subheading: 26.9
+  subtitle: 56.0
+  supporter-label: 24.0
+  supporter-name: 24.0
+  supporter-note: 24.0
+  table-cell: 24.6
+  table-head: 24.6
+  title: 112.0

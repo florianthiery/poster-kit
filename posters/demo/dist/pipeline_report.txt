@@ -1,0 +1,10 @@
+== validate
+   WARNING: block 'figure': image missing, placeholder will be drawn: img/not-there-yet.png
+   OK: theme 'neutral', 13 blocks, 5 bands
+== render
+   WARNING: title reduced to fit the page (112 pt instead of up to 130 pt)
+   wrote posters\demo\dist\poster.pdf  base 28.0 pt, title 112 pt, slack 2 mm
+== preview
+   wrote posters\demo\dist\poster-preview.png (1400 x 1980 px)
+== poster: demo
+== result: ok

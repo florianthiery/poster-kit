@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640">
+  <rect x="0" y="0" width="1200" height="640" fill="#FFFFFF"/>
+  <g stroke="#CBD5E1" stroke-width="2">
+    <line x1="120" y1="520" x2="1140" y2="520"/>
+    <line x1="120" y1="400" x2="1140" y2="400"/>
+    <line x1="120" y1="280" x2="1140" y2="280"/>
+    <line x1="120" y1="160" x2="1140" y2="160"/>
+  </g>
+  <g fill="#1D4ED8">
+    <rect x="190" y="360" width="120" height="160"/>
+    <rect x="390" y="300" width="120" height="220"/>
+    <rect x="590" y="220" width="120" height="300"/>
+    <rect x="790" y="180" width="120" height="340"/>
+    <rect x="990" y="120" width="120" height="400"/>
+  </g>
+  <polyline points="250,340 450,280 650,200 850,160 1050,100" fill="none" stroke="#FBBF24" stroke-width="10"/>
+  <g fill="#FBBF24" stroke="#1E293B" stroke-width="3">
+    <circle cx="250" cy="340" r="14"/><circle cx="450" cy="280" r="14"/><circle cx="650" cy="200" r="14"/>
+    <circle cx="850" cy="160" r="14"/><circle cx="1050" cy="100" r="14"/>
+  </g>
+  <line x1="120" y1="80" x2="120" y2="520" stroke="#1E293B" stroke-width="4"/>
+  <line x1="120" y1="520" x2="1140" y2="520" stroke="#1E293B" stroke-width="4"/>
+</svg>

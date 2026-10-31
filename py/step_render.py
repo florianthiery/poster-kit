@@ -349,9 +349,14 @@ class StatsItem:
         n = len(items)
         self.gap = ctx.base * 0.8
         self.tw = (width - (n - 1) * self.gap) / n
-        val = ctx.style("stat-value", ctx.base * ctx.scale["stat_value"], font="PosterHead", colour="primary", align=TA_CENTER, lead=1.05)
+        from reportlab.pdfbase.pdfmetrics import stringWidth
+        # one size for all values: the largest at which the widest value still sits on one line
+        vpt = ctx.base * ctx.scale["stat_value"]
+        widest = max(stringWidth(re.sub(r"<[^>]+>", "", str(i["value"])), "PosterHead", 100) / 100 for i in items)
+        vpt = min(vpt, self.tw * 0.96 / widest) if widest else vpt
+        val = ctx.style("stat-value", vpt, font="PosterHead", colour="primary", align=TA_CENTER, lead=1.05)
         lab = ctx.style("stat-label", ctx.small, colour="ink", align=TA_CENTER, lead=1.2)
-        self.cells = [(ctx.para(i["value"], val, self.tw), ctx.para(i["label"], lab, self.tw)) for i in items]
+        self.cells = [(ctx.para(str(i["value"]), val, self.tw), ctx.para(i["label"], lab, self.tw)) for i in items]
         self.height = max(v.height + l.height for v, l in self.cells) + ctx.base * 0.3
 
     def draw(self, c, x: float, y_top: float) -> None:
@@ -392,7 +397,7 @@ class QrItem:
 class ImageItem:
     def __init__(self, spec: dict, ctx: Ctx, width: float):
         self.ctx, self.width, self.spec = ctx, width, spec
-        path = U.ROOT / spec["src"]
+        path = U.find(spec["src"])
         self.path = path
         self.missing = not path.is_file()
         self.draw_w = width
@@ -443,14 +448,14 @@ def draw_logo(c, ctx: Ctx, item: dict, x: float, y: float, w: float, h: float, s
     c.roundRect(x, y, w, h, ctx.shape["logo_radius"], stroke=1, fill=1)
     c.restoreState()
     src = item.get("src")
-    if src and (U.ROOT / src).is_file() and src.lower().endswith(".svg"):
+    if src and U.find(src).is_file() and src.lower().endswith(".svg"):
         from svglib.svglib import svg2rlg
-        d = svg2rlg(str(U.ROOT / src))
+        d = svg2rlg(str(U.find(src)))
         s = min((w - 40) / d.width, (h - 30) / d.height)
         d.width *= s; d.height *= s; d.scale(s, s)
         renderPDF.draw(d, c, x + (w - d.width) / 2, y + (h - d.height) / 2)
-    elif src and (U.ROOT / src).is_file():
-        reader = ImageReader(str(U.ROOT / src))
+    elif src and U.find(src).is_file():
+        reader = ImageReader(str(U.find(src)))
         iw, ih = reader.getSize()
         s = min((w - 40) / iw, (h - 30) / ih)
         c.drawImage(reader, x + (w - iw * s) / 2, y + (h - ih * s) / 2, iw * s, ih * s, mask="auto")
@@ -474,8 +479,251 @@ class LogosItem:
             draw_logo(c, self.ctx, it, x + k * (self.w + self.gap), y_top - self.h, self.w, self.h, self.style)
 
 
+# --------------------------------------------------------------------------
+# People (photos with names) and supporters (funders, partners, logos)
+# --------------------------------------------------------------------------
+def initials(name: str) -> str:
+    """First letters of the first and last name part; titles such as 'Dr.' are skipped."""
+    parts = [p for p in re.split(r"\s+", name.strip()) if p and not p.endswith(".")]
+    if not parts:
+        return "?"
+    return (parts[0][0] + (parts[-1][0] if len(parts) > 1 else "")).upper()
+
+
+def load_picture(path: Path):
+    """('svg', drawing) | ('raster', reader) | None; size is (width, height) in the file's own units."""
+    if not path.is_file():
+        return None
+    if path.suffix.lower() == ".svg":
+        from svglib.svglib import svg2rlg
+        d = svg2rlg(str(path))
+        return ("svg", d) if d is not None else None
+    return ("raster", ImageReader(str(path)))
+
+
+def picture_size(pic) -> tuple[float, float]:
+    return (pic[1].width, pic[1].height) if pic[0] == "svg" else pic[1].getSize()
+
+
+def draw_picture_fit(c, pic, x: float, y: float, w: float, h: float) -> None:
+    """Draw a picture centred in the box, keeping its proportions (contain)."""
+    pw, ph = picture_size(pic)
+    s = min(w / pw, h / ph)
+    ox, oy = x + (w - pw * s) / 2, y + (h - ph * s) / 2
+    if pic[0] == "svg":
+        # svglib drawings are mutable: scale a copy so the same file can be drawn twice
+        import copy
+        d = copy.deepcopy(pic[1])
+        d.width *= s; d.height *= s; d.scale(s, s)
+        renderPDF.draw(d, c, ox, oy)
+    else:
+        c.drawImage(pic[1], ox, oy, pw * s, ph * s, mask="auto")
+
+
+class PeopleItem:
+    """People with a cropped photo (circle by default) and the name underneath; no institution.
+
+    Missing photo: a tinted disc with the initials, so the card works before the photos exist.
+    """
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx, self.width, self.spec = ctx, width, spec
+        self.people = spec["items"]
+        n = len(self.people)
+        self.per_row = max(1, min(int(spec.get("per_row", min(n, 4))), n))
+        self.gap = ctx.base * 0.8
+        self.cell_w = (width - (self.per_row - 1) * self.gap) / self.per_row
+        want = spec.get("size_mm")
+        self.d = min(want * mm if want else self.cell_w * 0.86, self.cell_w * 0.96, 70 * mm)
+        self.shape = spec.get("shape", "circle")
+        self.ring = spec.get("ring", True)
+        self.show_names = spec.get("show_names", True)
+        nm = ctx.style("person-name", ctx.base * 0.95, font="PosterBold", align=TA_CENTER, lead=1.15)
+        rl = ctx.style("person-role", ctx.small, colour="muted", align=TA_CENTER, lead=1.15)
+        self.pics = [load_picture(U.find(p["photo"])) if p.get("photo") else None for p in self.people]
+        self.names = [ctx.para(p["name"], nm, self.cell_w) if self.show_names else None for p in self.people]
+        self.roles = [ctx.para(p["role"], rl, self.cell_w) if (p.get("role") and self.show_names) else None
+                      for p in self.people]
+        self.label_gap = ctx.base * 0.45
+        self.rows = [list(range(i, min(i + self.per_row, n))) for i in range(0, n, self.per_row)]
+        self.row_h = []
+        for row in self.rows:
+            lab = 0.0
+            for i in row:
+                h = (self.names[i].height if self.names[i] else 0) + (self.roles[i].height if self.roles[i] else 0)
+                lab = max(lab, h)
+            self.row_h.append(self.d + ((self.label_gap + lab) if lab else 0))
+        self.row_gap = ctx.base * 0.9
+        self.height = sum(self.row_h) + self.row_gap * (len(self.rows) - 1)
+
+    def _clip(self, c, cx: float, cy: float) -> None:
+        p = c.beginPath()
+        r = self.d / 2
+        if self.shape == "circle":
+            p.circle(cx, cy, r)
+        else:
+            p.roundRect(cx - r, cy - r, self.d, self.d, self.d * (0.12 if self.shape == "rounded" else 0))
+        c.clipPath(p, stroke=0, fill=0)
+
+    def _photo(self, c, pic, person: dict, cx: float, cy: float) -> None:
+        pw, ph = picture_size(pic)
+        zoom = max(float(person.get("zoom", 1.0)), 1.0)
+        fx, fy = (person.get("focus") or [0.5, 0.4])      # 0..1 from the top-left of the image
+        side = min(pw, ph) / zoom
+        left, top = (pw - side) * fx, (ph - side) * fy      # crop square, measured from the top-left
+        k = self.d / side
+        x_img = cx - self.d / 2 - left * k
+        y_img = cy + self.d / 2 + top * k - ph * k          # bottom edge of the whole image in PDF space
+        if pic[0] == "svg":
+            import copy
+            dr = copy.deepcopy(pic[1]); dr.width *= k; dr.height *= k; dr.scale(k, k)
+            renderPDF.draw(dr, c, x_img, y_img)
+        else:
+            c.drawImage(pic[1], x_img, y_img, pw * k, ph * k, mask="auto")
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        ctx = self.ctx
+        y = y_top
+        for row, rh in zip(self.rows, self.row_h):
+            used = len(row) * self.cell_w + (len(row) - 1) * self.gap
+            x0 = x + (self.width - used) / 2                   # an incomplete last row is centred
+            for k, i in enumerate(row):
+                cx = x0 + k * (self.cell_w + self.gap) + self.cell_w / 2
+                cy = y - self.d / 2
+                c.saveState()
+                self._clip(c, cx, cy)
+                if self.pics[i]:
+                    self._photo(c, self.pics[i], self.people[i], cx, cy)
+                else:
+                    c.setFillColor(ctx.col["tint"]); c.rect(cx - self.d / 2, cy - self.d / 2, self.d, self.d, stroke=0, fill=1)
+                    c.setFillColor(ctx.col["primary"]); c.setFont("PosterHead", self.d * 0.36)
+                    c.drawCentredString(cx, cy - self.d * 0.12, initials(self.people[i]["name"]))
+                c.restoreState()
+                if self.ring:
+                    c.saveState()
+                    c.setStrokeColor(ctx.col["secondary"]); c.setLineWidth(ctx.shape["badge_line"] * 1.4)
+                    r = self.d / 2
+                    if self.shape == "circle":
+                        c.circle(cx, cy, r, stroke=1, fill=0)
+                    else:
+                        c.roundRect(cx - r, cy - r, self.d, self.d, self.d * (0.12 if self.shape == "rounded" else 0), stroke=1, fill=0)
+                    c.restoreState()
+                ty = y - self.d - self.label_gap
+                if self.names[i]:
+                    self.names[i].drawOn(c, cx - self.cell_w / 2, ty - self.names[i].height)
+                    ty -= self.names[i].height
+                if self.roles[i]:
+                    self.roles[i].drawOn(c, cx - self.cell_w / 2, ty - self.roles[i].height)
+            y -= rh + self.row_gap
+
+
+class SupGroup:
+    """One labelled row of logos (funder, partner, network ...)."""
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float, defaults: dict):
+        from reportlab.pdfbase.pdfmetrics import stringWidth
+        self.ctx, self.width = ctx, width
+        self.style = spec.get("style", defaults.get("style", "panel"))      # panel | pill | plain
+        self.align = spec.get("align", defaults.get("align", "left"))
+        h = spec.get("height_mm", defaults.get("height_mm", 22)) * mm
+        self.h = h
+        self.gap = ctx.base * 0.7
+        self.padx = 0.0 if self.style == "plain" else h * 0.16
+        self.pady = 0.0 if self.style == "plain" else h * 0.12
+        self.items = spec["items"]
+        self.label = self.note = None
+        if spec.get("label"):
+            self.label = ctx.para(spec["label"], ctx.style("supporter-label", ctx.small, font="PosterBold",
+                                                           colour="muted", lead=1.15), width)
+        if spec.get("note"):
+            self.note = ctx.para(spec["note"], ctx.style("supporter-note", ctx.small, colour="muted", lead=1.15), width)
+        self.fs = ctx.small
+        ctx.report.note_size(self.fs, "supporter-name")
+        self.boxes = []          # (item, picture, box width)
+        for it in self.items:
+            pic = load_picture(U.find(it["src"])) if it.get("src") else None
+            if pic:
+                pw, ph = picture_size(pic)
+                bw = (h - 2 * self.pady) * min(max(pw / ph, 0.5), 6.0) + 2 * self.padx
+            else:
+                bw = stringWidth(it["name"], "PosterBold", self.fs) + 2 * max(self.padx, h * 0.2)
+            self.boxes.append((it, pic, min(bw, width)))
+        # wrap the boxes into rows
+        self.rows, row, used = [], [], 0.0
+        for b in self.boxes:
+            if row and used + self.gap + b[2] > width + 1e-6:
+                self.rows.append(row); row, used = [], 0.0
+            used += (self.gap if row else 0) + b[2]
+            row.append(b)
+        if row:
+            self.rows.append(row)
+        self.head_h = sum(p.height for p in (self.label, self.note) if p) + (ctx.base * 0.3 if (self.label or self.note) else 0)
+        self.height = self.head_h + len(self.rows) * h + (len(self.rows) - 1) * self.gap
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        ctx = self.ctx
+        y = y_top
+        for p in (self.label, self.note):
+            if p:
+                p.drawOn(c, x, y - p.height); y -= p.height
+        y = y_top - self.head_h
+        for row in self.rows:
+            used = sum(b[2] for b in row) + (len(row) - 1) * self.gap
+            bx = x + ((self.width - used) / 2 if self.align == "center" else 0)
+            for it, pic, bw in row:
+                by = y - self.h
+                c.saveState()
+                if self.style == "panel":
+                    c.setFillColor(ctx.col["paper"]); c.setStrokeColor(ctx.col["line"]); c.setLineWidth(ctx.shape["card_line"])
+                    c.roundRect(bx, by, bw, self.h, ctx.shape["logo_radius"], stroke=1, fill=1)
+                elif self.style == "pill":
+                    c.setFillColor(ctx.col["paper"]); c.setStrokeColor(ctx.col["secondary"]); c.setLineWidth(ctx.shape["logo_line"])
+                    c.roundRect(bx, by, bw, self.h, ctx.shape["logo_radius"], stroke=1, fill=1)
+                c.restoreState()
+                if pic:
+                    draw_picture_fit(c, pic, bx + self.padx, by + self.pady, bw - 2 * self.padx, self.h - 2 * self.pady)
+                else:
+                    c.saveState()
+                    c.setFillColor(ctx.col["primary"]); c.setFont("PosterBold", self.fs)
+                    c.drawCentredString(bx + bw / 2, by + self.h / 2 - self.fs * 0.33, it["name"])
+                    c.restoreState()
+                bx += bw + self.gap
+            y -= self.h + self.gap
+
+
+class SupportersItem:
+    """Funders, partners and networks: groups of logos with a label ('Funded by', 'In cooperation with').
+
+    groups: list of {label, note, items: [{name, src}], style, height_mm, align}; `columns` puts
+    that many groups side by side. Without `src` the name is printed in a pill.
+    """
+
+    def __init__(self, spec: dict, ctx: Ctx, width: float):
+        self.ctx, self.width = ctx, width
+        groups = spec.get("groups") or [{"items": spec["items"]}]
+        n = len(groups)
+        self.columns = max(1, min(int(spec.get("columns", 1)), n))
+        self.gap = ctx.base * 1.4
+        gw = (width - (self.columns - 1) * self.gap) / self.columns
+        defaults = {k: spec[k] for k in ("style", "align", "height_mm") if k in spec}
+        self.groups = [SupGroup(g, ctx, gw, defaults) for g in groups]
+        self.gw = gw
+        self.grid = [self.groups[i:i + self.columns] for i in range(0, n, self.columns)]
+        self.row_h = [max(g.height for g in row) for row in self.grid]
+        self.vgap = ctx.base * 1.0
+        self.height = sum(self.row_h) + self.vgap * (len(self.grid) - 1)
+
+    def draw(self, c, x: float, y_top: float) -> None:
+        y = y_top
+        for row, rh in zip(self.grid, self.row_h):
+            for k, g in enumerate(row):
+                g.draw(c, x + k * (self.gw + self.gap), y)
+            y -= rh + self.vgap
+
+
 ITEMS = {"text": TextItem, "table": TableItem, "flow": FlowItem, "image": ImageItem,
-         "stats": StatsItem, "qr": QrItem, "logos": LogosItem}
+         "stats": StatsItem, "qr": QrItem, "logos": LogosItem,
+         "people": PeopleItem, "supporters": SupportersItem}
 
 
 # --------------------------------------------------------------------------

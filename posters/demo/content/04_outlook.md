@@ -1,0 +1,4 @@
+- Start a poster with `--new-poster`
+- Pick a theme, or add your own with `--new-theme`
+- Put the facts in `brief.yaml`
+- Run `--strict` before printing

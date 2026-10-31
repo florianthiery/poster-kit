@@ -1,0 +1,46 @@
+# brief.yaml: the facts of poster {{id}}, in one place.
+# Started in a conversation (see INTERVIEW.md at the repository root), then kept up to date.
+# poster.yaml reads these values with {{ brief.<path> }}; content/*.md can do the same.
+
+status: interview                  # interview -> draft -> confirmed (the build warns until it is 'confirmed')
+
+event:
+  name: "TODO conference or event"
+  place: "TODO city"
+  dates: "TODO dates"
+  url: "TODO https://..."
+  format: "A0 portrait"
+  print_deadline: "TODO yyyy-mm-dd"
+
+poster:
+  title: "TODO Poster title"            # <br> breaks the line
+  title_plain: "TODO Poster title"      # the same without <br>, for the PDF metadata
+  short_title: "TODO short title"
+  subtitle: "TODO one line saying what the poster shows"
+  key_message: "TODO the one sentence a reader should take home"
+  audience: "TODO who reads it"
+  language: "British English"
+
+authors:                           # header; affil = number(s) of the affiliation below
+  - {name: "TODO Author One", affil: "1"}
+
+affiliations:
+  - "TODO Institution, City"
+
+people:                            # people module: photos and names, no institution
+  - {name: "TODO Author One"}
+
+supporters:                        # supporters module: labelled groups of logos
+  - label: "Funded by"
+    items:
+      - {name: "TODO Funder"}
+  - label: "In cooperation with"
+    items:
+      - {name: "TODO Partner"}
+
+links:                             # QR codes
+  - {url: "https://example.org", label: "TODO<br>Project"}
+
+numbers: []                        # {value, label, source, queried}: every number on the poster, with its source
+
+notes: ""                          # anything else that came up in the conversation

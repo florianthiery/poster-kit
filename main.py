@@ -10,6 +10,10 @@
     python main.py --theme nfdi4objects  build with another theme than poster.yaml names
     python main.py --list-themes         print the available themes and exit
     python main.py --new-theme mylab     create themes/mylab/ from a base theme (--base, default neutral)
+    python main.py --poster demo         build posters/demo/ (needed when there is more than one poster)
+    python main.py --list-posters        print the posters and exit
+    python main.py --new-poster chnt31   create posters/chnt31/ from posters/_template (--from-poster demo to copy another)
+    python main.py --poster demo --blocks   print the block table (id, role, why) as Markdown for the poster's PRIMER.md
 
 Each step is a module in py/ that also runs standalone, for example
 ``python py/step_render.py``. Steps run as child processes, so --list and
@@ -29,7 +33,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 PY = ROOT / "py"
 THEMES = ROOT / "themes"
-REPORT = ROOT / "dist" / "pipeline_report.txt"
 
 STEPS = [
     ("validate", "step_validate.py", "check poster.yaml, the theme (incl. contrast) and the files they point to"),
@@ -87,6 +90,69 @@ def new_theme(tid: str, base: str) -> int:
     return 0
 
 
+def poster_ids() -> list[str]:
+    root = ROOT / "posters"
+    return sorted(p.name for p in root.iterdir() if p.is_dir() and not p.name.startswith("_") and (p / "poster.yaml").is_file()) if root.is_dir() else []
+
+
+def list_posters() -> int:
+    sys.path.insert(0, str(PY))
+    import yaml
+
+    ids = poster_ids()
+    for pid in ids:
+        data = yaml.safe_load((ROOT / "posters" / pid / "poster.yaml").read_text(encoding="utf-8")) or {}
+        has_primer = "PRIMER.md" if (ROOT / "posters" / pid / "PRIMER.md").is_file() else "(no PRIMER.md)"
+        title = (data.get("meta") or {}).get("short_title", "")
+        print(f"{pid:22s} {str(data.get('theme', '')):18s} {data.get('meta', {}).get('status', ''):7s} {has_primer:15s} {title}")
+    if not ids:
+        print("no posters yet: python main.py --new-poster <id>")
+    return 0
+
+
+def new_poster(pid: str, source: str, theme: str | None) -> int:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", pid):
+        raise SystemExit("poster id: lower-case letters, digits and hyphens only")
+    src, dst = ROOT / "posters" / source, ROOT / "posters" / pid
+    if not (src / "poster.yaml").is_file():
+        raise SystemExit(f"poster '{source}' not found in posters/")
+    if dst.exists():
+        raise SystemExit(f"posters/{pid} already exists")
+    shutil.copytree(src, dst, ignore=shutil.ignore_patterns("dist", "__pycache__"))
+    for name in ("PRIMER.md", "poster.yaml", "brief.yaml"):
+        f = dst / name
+        if f.is_file():
+            f.write_text(f.read_text(encoding="utf-8").replace("{{id}}", pid), encoding="utf-8")
+    if theme:
+        f = dst / "poster.yaml"
+        text = f.read_text(encoding="utf-8")
+        text = re.sub(r"(?m)^theme:\s*\S+", f"theme: {theme}", text, count=1)
+        f.write_text(text, encoding="utf-8")
+    if not (dst / "PRIMER.md").is_file():
+        (dst / "PRIMER.md").write_text((ROOT / "posters" / "_template" / "PRIMER.md").read_text(encoding="utf-8").replace("{{id}}", pid), encoding="utf-8")
+    print(f"created posters/{pid}/ from '{source}'.")
+    print("next: open posters/%s/PRIMER.md (Teil A1: Anlass), edit poster.yaml and content/, then run:" % pid)
+    print(f"  python main.py --poster {pid}")
+    return 0
+
+
+def print_blocks(pid: str | None) -> int:
+    sys.path.insert(0, str(PY))
+    import poster_utils as U
+    import yaml
+
+    U.select_poster(pid)
+    cfg = yaml.safe_load(U.CONFIG.read_text(encoding="utf-8"))
+    print("| Block | Rolle | Titel | Warum | Quelle / Stand |")
+    print("|---|---|---|---|---|")
+    order = [b for band in cfg["layout"]["bands"] for col in band["columns"] for b in col["blocks"]]
+    for bid in order:
+        b = cfg["blocks"][bid]
+        cell = lambda s: str(s or "").replace("|", "/").replace("\n", " ")
+        print(f"| `{bid}` | {cell(b.get('role') or b.get('accent'))} | {cell(b.get('title'))} | {cell(b.get('why'))} | |")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Build the poster PDF.")
     ap.add_argument("--list", action="store_true")
@@ -99,6 +165,11 @@ def main() -> int:
     ap.add_argument("--list-themes", action="store_true")
     ap.add_argument("--new-theme", metavar="ID")
     ap.add_argument("--base", default="neutral", help="base theme for --new-theme")
+    ap.add_argument("--poster", help="poster id: the folder in posters/ to build")
+    ap.add_argument("--list-posters", action="store_true")
+    ap.add_argument("--new-poster", metavar="ID")
+    ap.add_argument("--from-poster", default="_template", help="poster to copy for --new-poster (default: _template)")
+    ap.add_argument("--blocks", action="store_true", help="print the block table for the poster's PRIMER.md")
     args = ap.parse_args()
 
     if args.list:
@@ -107,10 +178,20 @@ def main() -> int:
         return 0
     if args.list_themes:
         return list_themes()
+    if args.list_posters:
+        return list_posters()
+    if args.new_poster:
+        return new_poster(args.new_poster, args.from_poster, args.theme)
+    if args.blocks:
+        return print_blocks(args.poster)
     if args.new_theme:
         return new_theme(args.new_theme, args.base)
     chosen = select(args)
-    extra = (["--strict"] if args.strict else []) + (["--theme", args.theme] if args.theme else [])
+    sys.path.insert(0, str(PY))
+    import poster_utils as U
+
+    pid = U.select_poster(args.poster)          # fails early with the list of posters if it is ambiguous
+    extra = (["--strict"] if args.strict else []) + (["--theme", args.theme] if args.theme else []) + ["--poster", pid]
     if args.dry_run:
         for name, script, _ in chosen:
             print(f"would run: {name} (py/{script})" + (" " + " ".join(extra) if extra else ""))
@@ -142,7 +223,9 @@ def main() -> int:
     say("== timing")
     for name, t in timings:
         say(f"   {name:10s} {t:6.2f} s  {100 * t / total:4.0f} %")
+    say(f"== poster: {pid}")
     say("== result: FAILED" if failed else "== result: ok")
+    REPORT = U.DIST / "pipeline_report.txt"
     REPORT.parent.mkdir(exist_ok=True)
     # The report carries no timings so that two identical runs give identical bytes.
     stable = [l for l in log if not (l.startswith("   ") and l.rstrip().endswith("%") and " s " in l)]

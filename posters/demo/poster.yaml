@@ -1,0 +1,208 @@
+# poster.yaml: what is on the poster and where. How it looks is decided by the theme.
+# Every option is used somewhere below; GUIDE.md explains each of them.
+
+meta:
+  title: "{{ brief.poster.title_plain }}"      # PDF metadata
+  short_title: "{{ brief.poster.short_title }}"  # used in the report
+  author: "{{ brief.authors.0.name }}"
+  subject: "{{ brief.event.name }}"
+  keywords: "poster, template, example"
+  status: draft                    # bookkeeping only: --strict refuses "draft", so set it to final for the release build
+
+theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza | your own
+# theme_overrides:                 # optional: change single theme values for this poster only
+#   shape: {header_style: plain}   # e.g. dark title on the page instead of a coloured band
+#   typography: {autofit: {max_pt: 40}}
+
+page:
+  size: A0                         # A0 | A1 | A2 | A3 | A4
+  orientation: portrait            # portrait | landscape
+  margin_mm: 20
+  gap_mm: 11
+
+header:
+  event: "{{ brief.event.name }} \u00b7 Poster"   # facts come from brief.yaml; {{ brief.a.b }} works in any text here
+  title: "{{ brief.poster.title }}"                # <br> breaks the line; the size is fitted
+  # title_lines: 3   # more than two lines? set these (see GUIDE.md, Header); the body text adapts
+  # title_pt_min: 70
+  subtitle: "{{ brief.poster.subtitle }}"
+  authors: "{{ brief.authors }}"                   # a whole list can be taken over, too
+  affiliations: "{{ brief.affiliations }}"
+  # Logos in the header are optional and usually redundant with the affiliations and the supporters block:
+  # logos_w_mm: 120
+  # logo_h_mm: 26
+  # logos:
+  #   - {name: "Example logo", src: shared/logos/example-logo.svg}   # with src: the file; without: the name in a pill
+
+# ---------------------------------------------------------------------------
+# Blocks. Each one: title, role (or accent), why, and one part or a list of parts.
+# Part types: text, table, flow, stats, image, qr, logos, people, supporters.
+# ---------------------------------------------------------------------------
+blocks:
+  intro:
+    title: "Text and Markdown"
+    role: problem                  # the theme maps the role to a card style
+    why: "Text part from a Markdown file; shows the supported Markdown subset."
+    type: text
+    file: content/01_intro.md
+
+  numbers:
+    title: "Numbers"
+    role: context
+    why: "Two parts in one card: a short inline text and large numbers, which read from two metres away."
+    parts:
+      - type: text
+        text: "Parts are stacked in the order given. This card has a **text** part and a **stats** part."
+      - type: stats
+        items: "{{ brief.numbers }}"         # value and label are used; source and date stay in the brief
+
+  howto:
+    title: "How you work with it"
+    role: aim
+    accent: secondary              # an explicit accent wins over the role
+    why: "Shows sub-headings in a text file and the accent override."
+    type: text
+    file: content/02_howto.md
+
+  pipeline:
+    title: "Flow with status"
+    role: method
+    why: "A flow beats prose for sequences. per_row wraps long chains with elbow arrows; status is never colour alone."
+    type: flow
+    per_row: 4                     # boxes per row
+    legend: "Solid boxes: done. Dashed boxes with a pale fill: planned or concept. Status styles are defined by the theme."
+    steps:
+      - {label: "First step", sub: "short note", status: done}
+      - {label: "Second step", sub: "short note", status: done}
+      - {label: "Third step", sub: "short note", status: done}
+      - {label: "Fourth step", sub: "planned", status: planned}
+      - {label: "Fifth step", sub: "planned", status: planned}
+      - {label: "Sixth<br>step", sub: "concept only", status: concept}
+      - {label: "Seventh step", sub: "concept only", status: concept}
+
+  mapping:
+    title: "Table"
+    role: result
+    why: "Tables show mappings and comparisons that prose hides."
+    parts:
+      - type: text
+        text: "A table has a `header`, `rows` and optional `col_widths` (relative weights). Cells accept the same inline Markdown."
+      - type: table
+        header: ["Source", "Target", "Note"]
+        col_widths: [2, 3, 3]
+        rows:
+          - ["`field_a`", "property one", "required"]
+          - ["`field_b`", "property two", "**optional**"]
+          - ["`field_c`", "property three", "derived from *field_a*"]
+          - ["`field_d`", "property four", "see [GUIDE.md](https://example.org)"]
+
+  figure:
+    title: "Images"
+    role: discussion
+    why: "An SVG figure stays vector; the caption sits underneath. max_height_mm caps tall images."
+    parts:
+      - type: text
+        file: content/03_discussion.md
+      - type: image
+        src: img/sample-figure.svg
+        caption: "Figure 1. A sample SVG chart. Replace it with your own figure."
+        max_height_mm: 75
+      - type: image
+        src: img/not-there-yet.png
+        placeholder: true          # no error while the file is missing; a dashed box is drawn
+        height_mm: 18
+        caption: "A placeholder: the file does not exist yet."
+
+  photo:
+    title: "Raster image"
+    role: result
+    why: "PNG and JPG are embedded as they are, so supply enough pixels for the printed size."
+    type: image
+    src: img/sample-photo.png
+    caption: "Figure 2. A generated PNG (1600 x 900 px)."
+    max_height_mm: 70
+
+  quote:
+    frame: false                   # no card, no title bar: for one key message
+    title: "Key message"
+    role: aim
+    why: "An unframed block keeps one sentence from disappearing among the cards."
+    type: text
+    file: content/05_quote.md
+    scale: 1.15                    # text size relative to the fitted body size
+
+  outlook:
+    title: "Next steps"
+    role: outlook
+    why: "The highlight card is for the call to action."
+    type: text
+    file: content/04_outlook.md
+
+  team:
+    title: "People"
+    role: invitation
+    why: "The people module: cropped photos, names, optional role, no institution. A missing photo shows initials."
+    type: people
+    per_row: 2                     # people per row (default: up to 4); an incomplete last row is centred
+    shape: circle                  # circle | rounded | square
+    size_mm: 38                    # photo diameter; default fills the cell
+    # ring: false                  # no outline in the theme's secondary colour
+    # show_names: false            # photos only
+    items: "{{ brief.people }}"      # name, role, photo, focus (crop centre), zoom (tighter crop)
+
+  links:
+    title: "Explore"
+    role: resources
+    why: "QR codes in one row, label underneath; partner logos as a second part."
+    parts:
+      - type: qr
+        size_mm: 34
+        items: "{{ brief.links }}"
+
+  supporters:
+    title: "Funding and partners"
+    role: resources
+    why: "The supporters module: labelled groups of logos. Without a logo file, the name is drawn in a box."
+    type: supporters
+    columns: 2                     # groups side by side (here two, the third wraps below)
+    style: panel                   # panel | pill | plain (no box)
+    height_mm: 22
+    groups: "{{ brief.supporters }}"   # labelled groups of logos, see brief.yaml
+
+  references:
+    title: "References and acknowledgements"
+    role: references
+    why: "Small type is fine here; references are for the follow-up reader."
+    type: text
+    file: content/06_references.md
+    scale: 0.8
+
+# ---------------------------------------------------------------------------
+# Layout: bands run top to bottom, columns left to right, blocks stack in a column.
+# width = relative column width. weight = share of the leftover height the band
+# absorbs (0 = keep natural height).
+# ---------------------------------------------------------------------------
+layout:
+  bands:
+    - weight: 0
+      columns:
+        - {width: 1.1, blocks: [intro]}
+        - {width: 0.9, blocks: [numbers]}
+        - {width: 1, blocks: [howto]}
+        - {width: 0.8, blocks: [photo]}
+    - weight: 0
+      columns:
+        - {blocks: [pipeline]}
+    - weight: 1
+      columns:
+        - {width: 1.35, blocks: [mapping, quote]}
+        - {width: 1, blocks: [figure]}
+        - {width: 0.8, blocks: [team]}
+    - weight: 0
+      columns:
+        - {width: 1, blocks: [outlook]}
+        - {width: 1, blocks: [links]}
+        - {width: 1.3, blocks: [supporters]}
+    - weight: 0
+      columns:
+        - {blocks: [references]}

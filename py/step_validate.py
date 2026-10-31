@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import poster_utils as U  # noqa: E402
 import theme as T  # noqa: E402
 
-PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos"}
+PART_TYPES = {"text", "table", "flow", "image", "stats", "qr", "logos", "people", "supporters"}
 PAGE_SIZES = {"A0", "A1", "A2", "A3", "A4"}
 
 
@@ -50,7 +50,35 @@ def main() -> int:
     if args.strict and cfg["meta"].get("status") == "draft":
         U.warn("meta.status is 'draft': set it to 'final' for the release build")
 
+    brief = U.load_brief()
+    if brief:
+        todos = []
+
+        def scan(o, where=""):
+            if isinstance(o, dict):
+                for k, val in o.items():
+                    scan(val, f"{where}.{k}" if where else str(k))
+            elif isinstance(o, list):
+                for i, val in enumerate(o):
+                    scan(val, f"{where}.{i}")
+            elif isinstance(o, str) and "TODO" in o:
+                todos.append(where)
+        scan(brief)
+        if todos:
+            U.warn(f"brief.yaml has {len(todos)} unresolved TODO(s), first: {', '.join(todos[:4])}")
+        if str(brief.get("status", "")) == "interview":
+            U.warn("brief.yaml status is 'interview': confirm the facts and set it to 'confirmed'")
     blocks = cfg["blocks"]
+    primer = U.POSTER_DIR / "PRIMER.md"
+    if not primer.is_file():
+        U.warn(f"posters/{U.POSTER_ID}/PRIMER.md is missing: it records why the poster looks the way it does "
+               f"(template: posters/_template/PRIMER.md)")
+    else:
+        text = primer.read_text(encoding="utf-8")
+        missing = [bid for bid in blocks if f"`{bid}`" not in text]
+        if missing and U.POSTER_ID != "demo":
+            print(f"NOTE: PRIMER.md does not mention block(s) {', '.join(missing)}; "
+                  f"`python main.py --poster {U.POSTER_ID} --blocks` prints the table for Teil C")
     used: list[str] = []
     for band in cfg["layout"]["bands"]:
         for col in band["columns"]:
@@ -77,14 +105,38 @@ def main() -> int:
             if ptype not in PART_TYPES:
                 errors.append(f"block '{bid}': unknown part type {ptype!r}")
                 continue
-            if ptype == "text" and "file" in part and not (U.ROOT / part["file"]).is_file():
+            if ptype == "text" and "file" in part and not U.find(part["file"]).is_file():
                 errors.append(f"block '{bid}': content file missing: {part['file']}")
             if ptype == "image":
-                exists = (U.ROOT / part["src"]).is_file()
+                exists = U.find(part["src"]).is_file()
                 if not exists and not part.get("placeholder"):
                     errors.append(f"block '{bid}': image missing: {part['src']}")
                 if not exists and part.get("placeholder"):
                     U.warn(f"block '{bid}': image missing, placeholder will be drawn: {part['src']}")
+            if ptype == "people":
+                if not part.get("items"):
+                    errors.append(f"block '{bid}': people needs a non-empty 'items' list")
+                for who in part.get("items") or []:
+                    if not who.get("name"):
+                        errors.append(f"block '{bid}': a person has no 'name'")
+                    elif who.get("photo") and not U.find(who["photo"]).is_file():
+                        U.warn(f"block '{bid}': photo missing for {who['name']}, initials will be drawn: {who['photo']}")
+                    elif who.get("photo") and U.find(who["photo"]).suffix.lower() not in (".png", ".jpg", ".jpeg", ".svg"):
+                        errors.append(f"block '{bid}': photo of {who['name']} must be PNG, JPG or SVG: {who['photo']}")
+                if part.get("shape", "circle") not in ("circle", "rounded", "square"):
+                    errors.append(f"block '{bid}': people.shape must be circle, rounded or square")
+            if ptype == "supporters":
+                groups = part.get("groups") or ([{"items": part["items"]}] if part.get("items") else [])
+                if not groups:
+                    errors.append(f"block '{bid}': supporters needs 'groups' (or 'items')")
+                for g in groups:
+                    if g.get("style", part.get("style", "panel")) not in ("panel", "pill", "plain"):
+                        errors.append(f"block '{bid}': supporters.style must be panel, pill or plain")
+                    for it in g.get("items") or []:
+                        if not it.get("name"):
+                            errors.append(f"block '{bid}': a supporter has no 'name' (needed as fallback and alt text)")
+                        elif it.get("src") and not U.find(it["src"]).is_file():
+                            U.warn(f"block '{bid}': logo file missing, name will be drawn instead: {it['src']}")
             if ptype == "flow":
                 for step in part["steps"]:
                     st = step.get("status", "done")
@@ -93,7 +145,7 @@ def main() -> int:
                                       f"theme defines: {', '.join(th['status_styles'])}")
 
     for logo in cfg["header"].get("logos", []) or []:
-        if logo.get("src") and not (U.ROOT / logo["src"]).is_file():
+        if logo.get("src") and not U.find(logo["src"]).is_file():
             U.warn(f"logo file missing, name pill will be drawn instead: {logo['src']}")
 
     if errors:

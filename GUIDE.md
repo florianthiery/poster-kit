@@ -3,7 +3,8 @@
 Everything this repository can do, in one place. Read the quick start, then use the rest as a reference.
 
 - [Quick start](#quick-start)
-- [Forking for a new poster](#forking-for-a-new-poster)
+- [Posters in this repository](#posters-in-this-repository)
+- [The brief: one source for the facts](#the-brief-one-source-for-the-facts)
 - [How the pieces fit](#how-the-pieces-fit)
 - [poster.yaml](#posteryaml)
 - [Writing text: the Markdown subset](#writing-text-the-markdown-subset)
@@ -11,6 +12,7 @@ Everything this repository can do, in one place. Read the quick start, then use 
 - [Fonts](#fonts)
 - [The checks](#the-checks)
 - [Commands](#commands)
+- [Workflow on Windows](WORKFLOW.md)
 - [Printing](#printing)
 - [When something looks wrong](#when-something-looks-wrong)
 - [Extending the engine](#extending-the-engine)
@@ -26,7 +28,9 @@ pip install -r requirements.txt
 python main.py
 ```
 
-You get three files in `dist/`:
+(With one poster in `posters/`, as shipped, no further argument is needed. With several, say which: `python main.py --poster demo`.)
+
+You get three files in `posters/demo/dist/`:
 
 | File | What it is |
 |---|---|
@@ -34,39 +38,104 @@ You get three files in `dist/`:
 | `poster-preview.png` | A small raster preview for a quick look |
 | `layout_report.txt` | Base text size, size of every block, the `why:` note of every block, the theme and its contrast result |
 
-The demo poster explains itself: every block shows one feature, and `poster.yaml` and `content/` are the source of everything you see.
+The demo poster explains itself: every block shows one feature, and `posters/demo/poster.yaml` and `posters/demo/content/` are the source of everything you see.
 
-## Forking for a new poster
+## Posters in this repository
 
-(Prefer to keep the poster in a repository that already exists? See *Drop-in use inside an existing repository* in `README.md`: the kit is one self-contained folder.)
+The repository is the **core** (engine, themes, fonts, shared logos); every poster is a folder in `posters/`. You develop your posters here, next to the core, and improvements to the core are available to all of them at once.
 
+```
+posters/<id>/
+├── brief.yaml      the facts: event, title, authors, funders, numbers with sources
+├── poster.yaml     structure: blocks and layout (reads the brief)
+├── content/        texts (Markdown)
+├── img/            figures, photographs, portraits (img/people/)
+├── themes/         optional: a theme that belongs to this poster only
+├── PRIMER.md       why the poster looks the way it does (German work plan)
+└── dist/           poster.pdf, preview, reports (generated)
+```
 
-1. Fork or copy this repository. Name it after the poster (`chnt31-poster`, `deRSE27-workshop-poster`).
-2. In `poster.yaml` set `theme:`, `meta`, `page` and `header` (title, authors, affiliations, logos).
-3. Delete the demo blocks you do not need, rewrite the rest, and write your texts in `content/*.md`. Keep the `why:` notes honest; they are the memory of the layout.
-4. Put figures into `img/` and logos into `img/logos/`. Delete `img/sample-*` when you are done.
-5. Run `python main.py` and open `dist/poster-preview.png`. Repeat.
-6. Before printing: set `meta.status: final`, resolve every `TODO`, run `python main.py --strict`.
-7. Replace `PRIMER.md` (see [below](#primer)), `CITATION.cff` and the project name in `README.md`.
+### Start a new poster
 
-To keep the fork mergeable with this template, change only `poster.yaml`, `content/`, `img/`, `PRIMER.md`, `CITATION.cff`, `README.md` and any theme you add. Everything in `py/` and `main.py` is the engine and should stay as it is.
+```cmd
+python main.py --new-poster chnt31 --theme chublets
+```
 
-### PRIMER
+This copies `posters/_template/` (a small skeleton with a `brief.yaml` full of `TODO`, a `poster.yaml`, three text stubs and a blank `PRIMER.md`) to `posters/chnt31/`. To start from the demo instead, which has every option in place: `--from-poster demo`. Then:
 
-`PRIMER.md` is the German work plan of the repository: standing rules, the table of decisions with dates, the steps and the open points. In a fork it records why *this* poster looks the way it does. Keep the structure, replace the content.
+1. Fill in `posters/chnt31/brief.yaml`: event, title, authors, funders, links, numbers. The easiest way is a conversation in a Claude session that asks for it and writes the file; the protocol is in [INTERVIEW.md](INTERVIEW.md). Then `PRIMER.md` Teil A1 (event, deadline, format) and the goal.
+2. In `poster.yaml` set `page` and check `header` (it reads the brief).
+3. Write the texts in `content/*.md`; keep the `why:` of each block honest.
+4. Put figures into `img/`, portraits into `img/people/`; logos that other posters also use go into `shared/logos/`.
+5. Build with `python main.py --poster chnt31` and look at `posters/chnt31/dist/poster-preview.png`. Repeat.
+6. Before printing: `meta.status: final`, no `TODO` left, `python main.py --poster chnt31 --strict`.
+
+`python main.py --list-posters` shows what exists. Folders whose name starts with `_` (`_template`) are skeletons: they are not listed and not built unless you ask (`--poster _template`).
+
+### Where files are looked up
+
+Every path in `poster.yaml` (`file:`, `src:`, `photo:`, logo files) is looked up first inside the poster folder, then from the repository root. So `img/figure1.png` is `posters/chnt31/img/figure1.png`, and `shared/logos/leiza.svg` is the shared logo, the same from every poster. A file of the same name inside the poster folder wins, which lets one poster replace a shared logo.
+
+Themes work the same way: `posters/chnt31/themes/<id>/theme.yaml` is found before `themes/<id>/`. Use that for a look that belongs to one poster only; use `theme_overrides:` in `poster.yaml` for a few changed values; use `themes/` for a look that several posters share.
+
+### The poster PRIMER
+
+Each poster has its own `PRIMER.md`, in German like the other PRIMER files: Teil A (occasion, goal, rules, the table of decisions with dates, commands), Teil B (steps P0 to P5 with status), Teil C (every block: why it is there, where its numbers come from) and Teil D (open points), plus a change log. It is how a poster stays workable over many sessions: whoever continues reads Teil A and the open step, and changes nothing the PRIMER does not explain.
+
+`python main.py --poster chnt31 --blocks` prints the block table (id, role, title, `why`) as Markdown, ready to paste into Teil C; the build reminds you with a `NOTE` when a block does not appear in the PRIMER.
+
+The kit's own `PRIMER.md` in the repository root is the plan of the core and does not belong to any poster.
+
+### Keeping the core current
+
+Work on a poster only touches `posters/<id>/` (and `shared/` for logos). If you keep the poster work in a fork of this repository, pull the core from the original with `git pull upstream main`: the poster folders do not collide with core changes. If you want the engine in an existing repository instead, copy the whole kit into a subfolder; see *Using it inside an existing repository* in `README.md`.
+
+## The brief: one source for the facts
+
+`posters/<id>/brief.yaml` holds everything that is a *fact* about the poster: event, title, subtitle, key message, authors and affiliations, the people to show, funders and partners, QR links, and the numbers with their sources. `poster.yaml` holds what is *structure*: which blocks, in which order, how they look. The two are joined by references:
+
+```yaml
+# brief.yaml
+event: {name: "CHNT31"}
+poster: {title: "From list to graph"}
+authors:
+  - {name: "Ada Example", affil: "1"}
+numbers:
+  - {value: "123", label: "things counted", source: "example count", queried: "2025-12-01"}
+```
+
+```yaml
+# poster.yaml
+header:
+  event: "{{ brief.event.name }} · Poster"     # inside text: the value is inserted
+  title: "{{ brief.poster.title }}"
+  authors: "{{ brief.authors }}"               # a string that is only a reference takes over the whole list
+blocks:
+  numbers:
+    type: stats
+    items: "{{ brief.numbers }}"               # value and label are drawn; source and date stay in the brief
+```
+
+The same `{{ brief.poster.key_message }}` works in `content/*.md`. A path uses dots and list positions (`brief.authors.0.name`). A reference to something that is not in the brief is an error that names it. Only `{{ brief.… }}` is touched; other braces in your texts stay as they are.
+
+Why: a number or a name that appears twice is typed once, and a changed fact changes everywhere on the next build. The brief is also what a conversation produces first (see [INTERVIEW.md](INTERVIEW.md)): while `status: interview`, the build warns about every remaining `TODO`; set `confirmed` when the facts are agreed. The brief is optional: a poster without `brief.yaml` works as before.
 
 ## How the pieces fit
 
 | Layer | Files | Answers | Changes |
 |---|---|---|---|
-| Content | `content/*.md`, `img/` | What is written and shown? | every revision |
-| Structure | `poster.yaml` | Which blocks, in which order and columns? | per poster |
-| Look | `themes/<id>/theme.yaml`, `fonts/` | Colours, typefaces, shapes, card styles | per brand or event |
+| Facts | `posters/<id>/brief.yaml` | Who, where, which numbers, which funders? | when a fact changes |
+| Content | `posters/<id>/content/*.md`, `img/` | What is written and shown? | every revision |
+| Structure | `posters/<id>/poster.yaml` | Which blocks, in which order and columns? | per poster |
+| Memory | `posters/<id>/PRIMER.md` | Why is it like this, where do the numbers come from? | with every decision |
+| Look | `themes/<id>/theme.yaml`, `fonts/`, `shared/logos/` | Colours, typefaces, shapes, card styles | per brand or event |
 | Engine | `main.py`, `py/` | Draws the PDF | rarely |
 
 The build runs three steps: `validate` (checks the files and the theme), `render` (draws the PDF) and `preview` (makes the PNG).
 
 ## poster.yaml
+
+Paths in `poster.yaml` are relative to the poster folder and then to the repository root, see [Where files are looked up](#where-files-are-looked-up).
 
 Top-level keys: `meta`, `theme`, `theme_overrides`, `page`, `header`, `blocks`, `layout`.
 
@@ -119,7 +188,7 @@ header:
   logos_w_mm: 120
   logo_h_mm: 26
   logos:
-    - {name: "Example logo", src: img/logos/example-logo.svg}   # with src: the file (SVG, PNG, JPG)
+    - {name: "Example logo", src: shared/logos/example-logo.svg}   # with src: the file (SVG, PNG, JPG)
     - {name: "Institute name"}                                  # without src: the name in a pill
 ```
 
@@ -138,7 +207,7 @@ A block is a card. Common keys:
 | `frame` | `false` draws no card and no title bar; the title becomes plain text in the primary colour. |
 | `scale` | Text size relative to the fitted body size (`0.8` for references, `1.15` for a key message) |
 
-A block holds one **part**, written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
+A block holds one **part** (text, table, flow, stats, image, qr, logos, people, supporters), written directly in the block, or a list of parts under `parts:`. Parts are stacked in the order given.
 
 #### text
 
@@ -216,10 +285,49 @@ type: logos
 height_mm: 22
 items:
   - {name: "Partner one"}
-  - {name: "Partner two", src: img/logos/partner-two.png}
+  - {name: "Partner two", src: shared/logos/partner-two.png}
 ```
 
 A row of logo pills, for example partners in a card. The header logos work the same way.
+
+#### people
+
+```yaml
+type: people
+per_row: 4                    # people per row; default: up to 4. An incomplete last row is centred
+shape: circle                 # circle | rounded | square
+size_mm: 38                   # photo diameter; default: fills the cell (at most 70 mm)
+ring: true                    # outline in the theme's secondary colour; false for none
+show_names: true              # false: photos only
+items:
+  - {name: "Ada Example", role: "Presenting", photo: img/people/ada.jpg}
+  - {name: "Dr. Ben Sample", photo: img/people/ben.jpg, focus: [0.5, 0.25], zoom: 1.3}
+  - {name: "Chris Placeholder"}          # no photo: initials on a tinted disc
+```
+
+Names, an optional line under the name (`role`), no institution: the institutions are in the header. The photo is cropped to a square from the middle of the picture; `focus: [x, y]` (0 to 1, from the top left) moves the crop centre, which matters for portraits where the face sits in the upper third, and `zoom` (1 or more) crops tighter. PNG, JPG and SVG work. A missing photo is not an error: the person appears with initials (the build warns), so the card works before the photographs arrive. Use photographs with the consent of the people shown.
+
+#### supporters
+
+```yaml
+type: supporters
+columns: 2                    # groups side by side; default 1 (stacked)
+style: panel                  # panel (white box with a thin line) | pill (outlined in the secondary colour) | plain (no box)
+height_mm: 22                 # logo height; each logo keeps its proportions
+align: left                   # left | center
+groups:
+  - label: "Funded by"
+    note: "Grant no. 000000"                       # optional small line under the label
+    items:
+      - {name: "Example Funder", src: shared/logos/example-funder.svg}
+  - label: "In cooperation with"
+    style: pill                                    # a group may set its own style, height_mm and align
+    items:
+      - {name: "Example Network", src: shared/logos/example-network.svg}
+      - {name: "Partner without a logo file"}      # no src: the name is printed in a box
+```
+
+For funders, partners, networks and hosts: labelled groups of logos. Logos are placed by their proportions, wrap to the next row when the row is full, and a missing file falls back to the name, so a first draft needs no logos at all. For a single row without labels, `items:` directly in the part is enough. The older `logos` part still works and draws equal-width pills; `supporters` is the one to use for real funder lines. Check the usage terms of every logo (funders usually publish them with rules) and note them next to the file in `shared/logos/README.md`.
 
 ### layout
 
@@ -375,15 +483,22 @@ A fork that uses one theme can delete the other font folders. Keep `fonts/dejavu
 
 ### Contrast
 
-The check computes the WCAG contrast ratio of every pairing the engine draws: body text on page and card, table head, headings on card bars, flow box labels per status, the header band, links, arrows and badges. Thresholds: below 3:1 is an error for everything; text between 3:1 and 4.5:1 is a warning, display text in that range is a note, shapes need 3:1. The recommended 4.5:1 for text is stricter than WCAG asks of text this large; it is a safeguard for reading at a distance. `dist/layout_report.txt` records how many pairings were below the recommended level.
+The check computes the WCAG contrast ratio of every pairing the engine draws: body text on page and card, table head, headings on card bars, flow box labels per status, the header band, links, arrows and badges. Thresholds: below 3:1 is an error for everything; text between 3:1 and 4.5:1 is a warning, display text in that range is a note, shapes need 3:1. The recommended 4.5:1 for text is stricter than WCAG asks of text this large; it is a safeguard for reading at a distance. `dist/layout_report.txt` (in the poster folder) records how many pairings were below the recommended level.
 
 A real example from building the themes: chublets gold arrows on the lilac card came to 2.9:1 and were rejected, which is why the chublets theme sets `connector: primary`.
 
 ## Commands
 
+Step-by-step instructions for Windows `cmd`, including Git and GitHub, are in [WORKFLOW.md](WORKFLOW.md).
+
 | Command | What it does |
 |---|---|
-| `python main.py` | All steps |
+| `python main.py` | All steps for the only poster (or `$POSTER`) |
+| `python main.py --poster chnt31` | All steps for one poster |
+| `python main.py --list-posters` | List the posters |
+| `python main.py --new-poster chnt31 [--theme chublets] [--from-poster demo]` | Create a poster from the skeleton (or from another poster) |
+| `python tools/build_all.py [--all-themes] [--strict]` | Build every poster (and every theme) in one go |
+| `python main.py --poster chnt31 --blocks` | Block table as Markdown for the poster's PRIMER |
 | `python main.py --list` | List the steps |
 | `python main.py --only render` | One step |
 | `python main.py --from render` | This step and everything after |
@@ -410,6 +525,7 @@ Every step also runs on its own, for example `python py/step_render.py`. Two bui
 |---|---|
 | `ERROR: the content does not fit on the page even at 28 pt` | Too much text. Shorten, remove a block, or move a block to a less crowded column. |
 | Very long title is small | The size is fitted to `title_lines`. Set `header.title_lines: 3` (and lower `title_pt_min`) for a three-line title, or move the second half to `subtitle`. |
+| `ERROR: which poster?` | There is more than one poster: add `--poster <id>` (or set the environment variable `POSTER`). |
 | A word is cut in the middle of a flow box | The label is wider than its box. Add `<br>`, shorten it, or lower `per_row`. |
 | A card has a lot of empty space | Its column neighbour is much taller. Move content, change column `width`, or give the band `weight: 0`. |
 | `<br>` appears literally | You put it inside backticks; outside them it breaks the line. |
@@ -420,7 +536,7 @@ Every step also runs on its own, for example `python py/step_render.py`. Two bui
 
 ## Extending the engine
 
-Add a block type in `py/step_render.py`: write a class with `__init__(self, spec, ctx, width)` that sets `self.height`, and `draw(self, c, x, y_top)`; register it in the `ITEMS` dictionary and add its name to `PART_TYPES` in `py/step_validate.py`. Use `ctx.col[...]` (tokens), `ctx.style(...)` and `ctx.para(...)` for colours and text, so the new block follows the theme. If a fork needs a change in the engine that other posters would want too, make it in the template and merge it back into the forks.
+Add a block type in `py/step_render.py`: write a class with `__init__(self, spec, ctx, width)` that sets `self.height`, and `draw(self, c, x, y_top)`; register it in the `ITEMS` dictionary and add its name to `PART_TYPES` in `py/step_validate.py`. Use `ctx.col[...]` (tokens), `ctx.style(...)` and `ctx.para(...)` for colours and text, so the new block follows the theme. If a poster needs a change in the engine that other posters would want too, make it in the core: all posters in the repository get it.
 
 ## Not built yet
 
@@ -433,3 +549,4 @@ Ideas that came up and were deliberately left out of this version:
 - A 12-column grid and layout presets instead of relative widths
 - Block types as plugins in `py/blocks/`
 - Content in several languages (`content/en/`, `content/de/`)
+- More block types, see the ideas in the PRIMER: image grid, timeline, contact strip with licence and DOI, an optional footer line, a citation block from `CITATION.cff`

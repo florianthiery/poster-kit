@@ -19,6 +19,20 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 THEMES = ROOT / "themes"
+POSTER_DIR: Path | None = None      # set by poster_utils.select_poster: themes and fonts next to a poster count too
+
+
+def set_poster_dir(path: Path | None) -> None:
+    global POSTER_DIR
+    POSTER_DIR = path
+
+
+def theme_dirs() -> list[Path]:
+    """Poster-local themes first: a poster can carry its own theme, or shadow a shared one."""
+    dirs = [THEMES]
+    if POSTER_DIR is not None and (POSTER_DIR / "themes").is_dir():
+        dirs.insert(0, POSTER_DIR / "themes")
+    return dirs
 
 # Tokens every theme must define. Others are optional and may be added freely.
 REQUIRED_TOKENS = [
@@ -57,17 +71,16 @@ def deep_merge(base: dict, over: dict) -> dict:
 
 
 def available() -> list[str]:
-    if not THEMES.is_dir():
-        return []
-    return sorted(p.name for p in THEMES.iterdir()
-                  if p.is_dir() and not p.name.startswith("_") and (p / "theme.yaml").is_file())
+    names = {p.name for d in theme_dirs() if d.is_dir() for p in d.iterdir()
+             if p.is_dir() and not p.name.startswith("_") and (p / "theme.yaml").is_file()}
+    return sorted(names)
 
 
 def _read(theme_id: str) -> dict:
-    path = THEMES / theme_id / "theme.yaml"
-    if not path.is_file():
+    path = next((d / theme_id / "theme.yaml" for d in theme_dirs() if (d / theme_id / "theme.yaml").is_file()), None)
+    if path is None:
         raise ThemeError(f"theme '{theme_id}' not found; available: {', '.join(available()) or 'none'} "
-                         f"(looked for themes/{theme_id}/theme.yaml)")
+                         f"(looked for themes/{theme_id}/theme.yaml, also inside the poster folder)")
     with open(path, encoding="utf-8") as fh:
         data = yaml.safe_load(fh) or {}
     if data.get("id", theme_id) != theme_id:
@@ -170,7 +183,7 @@ def _finalise(raw: dict) -> dict:
         if not rel:
             err(f"typography.fonts.{key} is missing")
             continue
-        path = ROOT / rel
+        path = next((b / rel for b in ([POSTER_DIR] if POSTER_DIR else []) + [ROOT] if (b / rel).is_file()), ROOT / rel)
         if not path.is_file():
             err(f"typography.fonts.{key}: file not found: {rel}")
         fonts[key] = str(path)

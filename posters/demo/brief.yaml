@@ -1,0 +1,61 @@
+# brief.yaml: the facts of this poster, in one place.
+# poster.yaml reads them with {{ brief.<path> }}; content/*.md can too. Change a fact here, build again,
+# and it changes everywhere it is used. Structure and look stay in poster.yaml and the theme.
+
+status: confirmed                  # interview -> draft -> confirmed (the build warns while it is 'interview')
+
+event:
+  name: "EVENT 2026"
+  place: "Example City"
+  dates: "1 to 3 January 2026"
+  url: "https://example.org/event"
+  format: "A0 portrait"
+  print_deadline: "2025-12-15"
+
+poster:
+  title: "Poster title goes here<br>in one or two lines"
+  title_plain: "Poster title goes here in one or two lines"     # without <br>, for PDF metadata
+  short_title: "Poster template"
+  subtitle: "A subtitle that says what the poster shows"
+  key_message: "The one sentence a reader should take home."
+  audience: "Colleagues from neighbouring disciplines"
+  language: "British English"
+
+authors:                           # in the header; affil = number(s) of the affiliation below
+  - {name: "Ada Example", affil: "1"}
+  - {name: "Ben Sample", affil: "1,2"}
+  - {name: "Chris Placeholder", affil: "2"}
+
+affiliations:
+  - "Example Institute, Example City"
+  - "Another Laboratory, Another City"
+
+people:                            # the people module (photos and names, no institution)
+  - {name: "Ada Example", role: "Presenting", photo: img/people/sample-person-1.png}
+  - {name: "Dr. Ben Sample", photo: img/people/sample-person-2.png, focus: [0.5, 0.25], zoom: 1.3}
+  - {name: "Chris Placeholder", role: "Data"}
+  - {name: "Dana Draft"}
+
+supporters:                        # the supporters module
+  - label: "Funded by"
+    note: "Grant no. 000000"
+    items:
+      - {name: "Example Funder", src: shared/logos/example-funder.svg}
+  - label: "In cooperation with"
+    items:
+      - {name: "Example Network", src: shared/logos/example-network.svg}
+      - {name: "Partner without logo file"}
+  - label: "Hosted at"
+    style: pill
+    items:
+      - {name: "Example Institute", src: shared/logos/example-institute.svg}
+
+links:
+  - {url: "https://example.org", label: "Project<br>page"}
+  - {url: "https://example.org/code", label: "Source<br>code"}
+  - {url: "https://example.org/data", label: "Data"}
+
+numbers:                           # every number on the poster, with where it comes from
+  - {value: "123", label: "things counted", source: "example count", queried: "2025-12-01"}
+  - {value: "45", label: "of them interesting", source: "example count", queried: "2025-12-01"}
+  - {value: "6 %", label: "share that matters", source: "example count", queried: "2025-12-01"}

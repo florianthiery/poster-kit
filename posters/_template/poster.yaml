@@ -1,0 +1,102 @@
+# poster.yaml of a new poster. Replace every TODO, then delete what you do not need.
+# All options are shown in posters/demo/poster.yaml and explained in GUIDE.md.
+
+meta:
+  title: "{{ brief.poster.title_plain }}"
+  short_title: "{{ brief.poster.short_title }}"
+  author: "{{ brief.authors.0.name }}"
+  subject: "{{ brief.event.name }}"
+  keywords: "TODO, keywords"
+  status: draft                    # set to final for the release build (--strict refuses draft)
+
+theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza | your own
+
+page:
+  size: A0
+  orientation: portrait
+  margin_mm: 20
+  gap_mm: 11
+
+header:
+  event: "{{ brief.event.name }} \u00b7 Poster"
+  title: "{{ brief.poster.title }}"
+  subtitle: "{{ brief.poster.subtitle }}"
+  authors: "{{ brief.authors }}"
+  affiliations: "{{ brief.affiliations }}"
+  # logos: [{name: "Institution", src: shared/logos/institution.svg}]   # optional; usually redundant with the affiliations
+
+blocks:
+  question:
+    title: "TODO The question"
+    role: problem
+    why: "TODO why this block is on the poster and why here"
+    type: text
+    file: content/01_question.md
+
+  method:
+    title: "TODO How we did it"
+    role: method
+    why: "TODO"
+    type: flow
+    per_row: 3
+    steps:
+      - {label: "TODO Step one", sub: "TODO", status: done}
+      - {label: "TODO Step two", sub: "TODO", status: done}
+      - {label: "TODO Step three", sub: "TODO", status: planned}
+
+  results:
+    title: "TODO What we found"
+    role: result
+    why: "TODO"
+    parts:
+      - type: text
+        file: content/02_results.md
+      - type: image
+        src: img/TODO-figure.png
+        placeholder: true
+        height_mm: 70
+        caption: "TODO Figure 1. Caption."
+
+  conclusion:
+    title: "TODO What it means"
+    role: discussion
+    why: "TODO"
+    type: text
+    file: content/03_conclusion.md
+
+  team:
+    title: "People"
+    role: invitation
+    why: "TODO who is on the poster and why they appear with a photo"
+    type: people
+    items: "{{ brief.people }}"
+
+  links:
+    title: "Explore"
+    role: resources
+    why: "TODO where the reader goes next"
+    type: qr
+    size_mm: 34
+    items: "{{ brief.links }}"
+
+  supporters:
+    title: "Funding and partners"
+    role: resources
+    why: "TODO who funds and supports the work"
+    type: supporters
+    columns: 2
+    groups: "{{ brief.supporters }}"
+
+layout:
+  bands:
+    - weight: 1
+      columns:
+        - {width: 1, blocks: [question, conclusion]}
+        - {width: 1.4, blocks: [method, results]}
+    - weight: 0
+      columns:
+        - {width: 1.4, blocks: [team]}
+        - {width: 1, blocks: [links]}
+    - weight: 0
+      columns:
+        - {blocks: [supporters]}
