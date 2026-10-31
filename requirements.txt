@@ -1,0 +1,6 @@
+# Proven on Python 3.13; pins are exact so that the PDF stays byte-identical.
+reportlab==5.0.1      # draws the PDF; Canvas(invariant=1) removes dates and random ids
+PyYAML==6.0.3         # reads poster.yaml and the themes
+pypdfium2==5.13.0     # preview step only
+pillow==12.3.0        # preview step only (PNG writer)
+svglib==2.3.0         # SVG images and logos (imported lazily, only if one is used)

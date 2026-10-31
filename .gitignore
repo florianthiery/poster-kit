@@ -1,0 +1,17 @@
+# --- Python ---
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Upload bundle ---
+bundle.zip
+
+# --- Note ---
+# dist/ is NOT ignored: it holds the versioned poster PDF and its layout report.

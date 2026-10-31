@@ -1,0 +1,82 @@
+# Theme: chublets (house palette of chublets.software and chublets-visuals).
+# Reference for every key: themes/neutral/theme.yaml
+id: chublets
+name: "chublets.software"
+state: ready
+
+source:
+  name: "chublets house palette (CHUBLETS_PURPLE, CHUBLETS_GOLD)"
+  url: "https://github.com/chublets-software/chublets-visuals"
+  licence: "see the chublets-visuals repository"
+  note: "Purple and gold are the house colours; card, tint, line, link and the gold tint are derived for the poster."
+
+palette:
+  white: "#FFFFFF"
+  purple: "#3B1F4A"
+  gold: "#B8862E"
+  gold-tint: "#FAF3E3"
+  ink: "#1B1B1B"
+  muted-purple: "#5E5468"
+  card-lilac: "#F6F2F8"
+  tint-lilac: "#ECE5F0"
+  line-lilac: "#D5C9DD"
+  link-purple: "#5B2A86"
+  header-sub-lilac: "#E6DCEC"
+
+tokens:
+  primary: purple
+  on_primary: white
+  secondary: gold
+  on_secondary: ink
+  secondary_tint: gold-tint
+  ink: ink
+  muted: muted-purple
+  paper: white
+  card: card-lilac
+  tint: tint-lilac
+  line: line-lilac
+  link: link-purple
+  header_sub: header-sub-lilac
+  header_accent: gold
+  connector: primary              # gold arrows on the lilac card are only 2.9:1, purple is safe
+  on_connector: on_primary
+  highlight: gold
+  on_highlight: ink
+
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: primary}
+
+roles:
+  problem: primary
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+status:
+  done:    {fill: primary,        stroke: primary,   text: on_primary}
+  planned: {fill: paper,          stroke: primary,   text: primary, dash: true}
+  concept: {fill: secondary_tint, stroke: secondary, text: primary, dash: true}
+
+typography:
+  family: "Fira Sans"
+  fonts:
+    regular: fonts/fira-sans/FiraSans-Regular.ttf
+    bold: fonts/fira-sans/FiraSans-Bold.ttf
+    italic: fonts/fira-sans/FiraSans-Italic.ttf
+    bold_italic: fonts/fira-sans/FiraSans-BoldItalic.ttf
+    heading: fonts/fira-sans/FiraSans-Bold.ttf
+    mono: fonts/fira-sans/FiraMono-Regular.ttf
+  sizes: {heading_pt: 54, title_pt_max: 130, title_pt_min: 90, title_lines: 2, subtitle_pt: 56, authors_pt: 50, affil_pt: 36, min_pt: 24}
+  autofit: {min_pt: 28, max_pt: 46, step_pt: 0.5, max_slack_ratio: 0.12}
+
+shape:
+  header_style: band

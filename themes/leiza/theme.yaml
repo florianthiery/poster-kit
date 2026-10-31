@@ -1,0 +1,25 @@
+# Theme: LEIZA (Leibniz-Zentrum fuer Archaeologie).
+# PLACEHOLDER COLOURS: the typeface is final (Libre Franklin), the colours are inherited
+# from 'neutral' until the LEIZA values are supplied. While state is 'pending',
+# `python main.py --strict` fails, so a poster cannot be released with stand-in colours.
+# To finish: replace palette, tokens and source below (see themes/neutral/theme.yaml), set state: ready.
+id: leiza
+name: "LEIZA (colours pending)"
+state: pending
+extends: neutral
+
+source:
+  name: "none yet (placeholder colours inherited from the neutral theme)"
+  url: ""
+  licence: ""
+  note: "LEIZA colours to be added."
+
+typography:
+  family: "Libre Franklin"
+  fonts:
+    regular: fonts/libre-franklin/LibreFranklin-Regular.ttf
+    bold: fonts/libre-franklin/LibreFranklin-Bold.ttf
+    italic: fonts/libre-franklin/LibreFranklin-Italic.ttf
+    bold_italic: fonts/libre-franklin/LibreFranklin-BoldItalic.ttf
+    heading: fonts/libre-franklin/LibreFranklin-Bold.ttf
+    mono: fonts/dejavu/DejaVuSansMono.ttf            # Libre Franklin has no monospace companion

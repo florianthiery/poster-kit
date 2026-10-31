@@ -1,0 +1,1 @@
+Author, A. (2026). *An example reference with a title*. Journal of Examples 1, 1–10. doi:10.0000/example · Author, B. and Author, C. (2025). *Another example*. Example Press. · Funding and acknowledgements: replace this line.

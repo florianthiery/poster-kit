@@ -1,0 +1,78 @@
+# Theme: NFDI4Objects (N4O).
+# Reference for every key: themes/neutral/theme.yaml
+id: nfdi4objects
+name: "NFDI4Objects"
+state: ready
+
+source:
+  name: "squirrel-colours (Research Squirrel Engineers), N4O entries"
+  url: "https://github.com/Research-Squirrel-Engineers/squirrel-colours"
+  licence: "CC BY or CC0 (owner's statement 2026-10-09; no LICENSE file in the repository yet)"
+  note: "The two N4O blues come from the squirrel-colours README (retrieved 2026-10-09). Greys, bright-blue and dark-blue are the squirrel supporting colours, not official N4O colours; 'black', 'white' and the blue tint are local additions."
+
+palette:
+  n4o-dark-blue: "#043358"
+  n4o-light-blue: "#005f8e"
+  bright-blue: "#0bbbef"
+  dark-blue: "#45546b"
+  middle-grey: "#A6AAAC"
+  light-grey: "#E8EAEB"
+  white: "#FFFFFF"                # local addition
+  black: "#1B1B1B"                # local addition
+  n4o-light-blue-tint: "#E6EFF4"  # local addition: n4o-light-blue mixed 10 % with white
+
+tokens:
+  primary: n4o-dark-blue
+  on_primary: white
+  secondary: n4o-light-blue
+  on_secondary: white
+  secondary_tint: n4o-light-blue-tint
+  ink: black
+  muted: dark-blue
+  paper: white
+  card: light-grey
+  tint: white
+  line: middle-grey
+  link: n4o-light-blue
+  header_sub: light-grey
+  header_accent: bright-blue
+  highlight: bright-blue
+  on_highlight: black
+
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: primary}
+
+roles:
+  problem: primary
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+status:
+  done:    {fill: primary,        stroke: primary,   text: on_primary}
+  planned: {fill: paper,          stroke: primary,   text: primary, dash: true}
+  concept: {fill: secondary_tint, stroke: secondary, text: primary, dash: true}
+
+typography:
+  family: "PT Sans"
+  fonts:
+    regular: fonts/pt-sans/PTSans-Regular.ttf
+    bold: fonts/pt-sans/PTSans-Bold.ttf
+    italic: fonts/pt-sans/PTSans-Italic.ttf
+    bold_italic: fonts/pt-sans/PTSans-BoldItalic.ttf
+    heading: fonts/pt-sans/PTSans-Bold.ttf
+    mono: fonts/pt-sans/PTMono-Regular.ttf
+  sizes: {heading_pt: 54, title_pt_max: 130, title_pt_min: 90, title_lines: 2, subtitle_pt: 56, authors_pt: 50, affil_pt: 36, min_pt: 24}
+  autofit: {min_pt: 28, max_pt: 46, step_pt: 0.5, max_slack_ratio: 0.12}
+
+shape:
+  header_style: band

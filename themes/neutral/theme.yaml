@@ -1,0 +1,145 @@
+# Theme: neutral. This file is the commented reference for every theme key.
+# A theme answers "what does the poster look like"; poster.yaml answers "what is on it".
+# Copy a theme with:  python main.py --new-theme mylab --base neutral
+
+id: neutral                      # must equal the folder name
+name: "Neutral slate"
+state: ready                     # ready | pending (pending = placeholder colours; --strict fails)
+# extends: other-theme           # optional: inherit everything and override only what differs
+
+source:                          # where the colours come from; keep this honest
+  name: "Tailwind CSS default palette (slate, blue, amber)"
+  url: "https://tailwindcss.com/docs/colors"
+  licence: "MIT"
+  note: "Hex values as published for Tailwind CSS v3, typed in from the published scale; not re-checked against the website."
+
+# ---------------------------------------------------------------------------
+# Layer 1: palette. Raw named colours, copied 1:1 from the source above.
+# ---------------------------------------------------------------------------
+palette:
+  white: "#FFFFFF"
+  slate-50: "#F8FAFC"
+  slate-100: "#F1F5F9"
+  slate-200: "#E2E8F0"
+  slate-300: "#CBD5E1"
+  slate-600: "#475569"
+  slate-800: "#1E293B"
+  slate-900: "#0F172A"
+  blue-50: "#EFF6FF"
+  blue-700: "#1D4ED8"
+  amber-400: "#FBBF24"
+
+# ---------------------------------------------------------------------------
+# Layer 2: tokens. Semantic roles. A value is a palette name, a #RRGGBB colour or another token.
+# The renderer only knows tokens. Required tokens are listed first; add your
+# own (like highlight below) and use them from accents and status styles.
+# ---------------------------------------------------------------------------
+tokens:
+  primary: slate-800             # header band, table head, primary card bars
+  on_primary: white              # text on primary
+  secondary: blue-700            # rule under the header, arrows, number badges, secondary card bars
+  on_secondary: white
+  secondary_tint: blue-50        # fill of 'concept' flow boxes
+  ink: slate-900                 # body text
+  muted: slate-600               # captions, legends, draft line
+  paper: white                   # page and 'planned' box fill
+  card: slate-50                 # card background
+  tint: slate-100                # table stripes
+  line: slate-300                # card outline, table rules
+  link: blue-700
+  header_sub: slate-200          # subtitle and affiliations on the header band
+  header_accent: amber-400       # event line on the header band (falls back to secondary)
+  connector: secondary           # flow arrows and number badges (falls back to secondary); pick a darker
+  on_connector: on_secondary     #   colour here if secondary is too pale on the card
+  highlight: amber-400           # custom token, used by the 'highlight' accent
+  on_highlight: slate-900
+
+# ---------------------------------------------------------------------------
+# Accents: named card styles. bar = title bar colour, text = title colour,
+# bullet = bullet colour (defaults to bar). primary, secondary and neutral are required.
+# ---------------------------------------------------------------------------
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: primary}
+
+# ---------------------------------------------------------------------------
+# Roles: the tag a block carries in poster.yaml (role: method). The theme maps
+# each role to an accent, so changing the look of a whole poster is a one-file change.
+# Add your own roles freely. A block can still force a style with accent: <name>.
+# ---------------------------------------------------------------------------
+roles:
+  problem: primary
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+# ---------------------------------------------------------------------------
+# Status styles for flow boxes (status: done | planned | concept in poster.yaml).
+# dash: true draws a dashed outline, so status never depends on colour alone.
+# done, planned and concept are required; add more (blocked, external, ...) if needed.
+# ---------------------------------------------------------------------------
+status:
+  done:    {fill: primary,        stroke: primary,   text: on_primary}
+  planned: {fill: paper,          stroke: primary,   text: primary, dash: true}
+  concept: {fill: secondary_tint, stroke: secondary, text: primary, dash: true}
+
+# ---------------------------------------------------------------------------
+# Typography. Paths are relative to the repository root (fonts/ is a shared library).
+# Only TrueType (.ttf with glyf outlines) and static weights work: a variable font
+# must be cut into static instances first (see fonts/libre-franklin/SOURCES.md).
+# ---------------------------------------------------------------------------
+typography:
+  family: "DejaVu Sans Condensed"
+  fonts:
+    regular: fonts/dejavu/DejaVuSansCondensed.ttf
+    bold: fonts/dejavu/DejaVuSansCondensed-Bold.ttf
+    italic: fonts/dejavu/DejaVuSansCondensed-Oblique.ttf
+    bold_italic: fonts/dejavu/DejaVuSansCondensed-BoldOblique.ttf
+    heading: fonts/dejavu/DejaVuSans-Bold.ttf        # card titles and big numbers
+    mono: fonts/dejavu/DejaVuSansMono.ttf            # `inline code`
+  sizes:                         # points, for A0; fixed sizes of the non-body text
+    heading_pt: 54               # card titles
+    title_pt_max: 130            # the title takes the largest size up to this that fits in title_lines
+    title_pt_min: 90
+    title_lines: 2
+    subtitle_pt: 56
+    authors_pt: 50
+    affil_pt: 36
+    min_pt: 24                   # legibility floor: nothing printed is smaller (checked by the build)
+  autofit:                       # the body text size is fitted between these so that everything fits
+    min_pt: 28
+    max_pt: 46
+    step_pt: 0.5
+    max_slack_ratio: 0.12        # warn if more than this share of the body is empty at max_pt
+  scale:                         # optional: ratios relative to the fitted body size
+    small: 0.82                  # labels, legends, captions
+    table: 0.88
+    stat_value: 2.6              # big numbers
+    subheading: 1.12             # ### in Markdown
+    leading: 1.28                # line height
+
+# ---------------------------------------------------------------------------
+# Shape: radii and line widths in points, dash pattern, spacing.
+# ---------------------------------------------------------------------------
+shape:
+  header_style: band             # band = coloured band with light text; plain = dark text on the page
+  header_rule: 14                # thickness of the secondary-colour rule under the header
+  card_radius: 30
+  card_line: 3
+  card_pad_pt: 28
+  box_radius: 22                 # flow boxes
+  box_line: 5
+  dash: [22, 14]
+  arrow_line: 7
+  badge_line: 4
+  logo_radius: 20
+  logo_line: 4
+  item_gap: 0.9                  # gap between parts of one card, as a factor of the body size

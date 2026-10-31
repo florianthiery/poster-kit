@@ -1,0 +1,81 @@
+# Theme: Research Squirrel Engineers.
+# Reference for every key: themes/neutral/theme.yaml
+id: research-squirrel
+name: "Research Squirrel Engineers"
+state: ready
+
+source:
+  name: "squirrel-colours (Research Squirrel Engineers)"
+  url: "https://github.com/Research-Squirrel-Engineers/squirrel-colours"
+  licence: "CC BY or CC0 (owner's statement 2026-10-09; no LICENSE file in the repository yet)"
+  note: "Nine colours as listed in the repository README (retrieved 2026-10-09). 'black' and the light-green tint are local additions, not part of the source palette."
+
+palette:
+  dark-green: "#004c55"
+  light-green: "#0090a2"
+  dark-grey: "#6A6D71"
+  middle-grey: "#A6AAAC"
+  light-grey: "#E8EAEB"
+  dark-blue: "#45546b"
+  bright-blue: "#0bbbef"
+  n4o-dark-blue: "#043358"
+  n4o-light-blue: "#005f8e"
+  white: "#FFFFFF"                # local addition
+  black: "#1B1B1B"                # local addition: near-black for body text
+  light-green-tint: "#E0F2F4"     # local addition: light-green mixed 12 % with white
+
+tokens:
+  primary: dark-green
+  on_primary: white
+  secondary: light-green
+  on_secondary: black             # white on light-green is only 3.8:1
+  secondary_tint: light-green-tint
+  ink: black
+  muted: dark-blue
+  paper: white
+  card: light-grey
+  tint: white                     # table stripes: white rows on the grey card
+  line: middle-grey
+  link: n4o-light-blue
+  header_sub: light-grey
+  header_accent: bright-blue
+  highlight: bright-blue
+  on_highlight: black
+
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: primary}
+
+roles:
+  problem: primary
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+status:
+  done:    {fill: primary,        stroke: primary,   text: on_primary}
+  planned: {fill: paper,          stroke: primary,   text: primary, dash: true}
+  concept: {fill: secondary_tint, stroke: secondary, text: primary, dash: true}
+
+typography:
+  family: "Fira Sans"
+  fonts:
+    regular: fonts/fira-sans/FiraSans-Regular.ttf
+    bold: fonts/fira-sans/FiraSans-Bold.ttf
+    italic: fonts/fira-sans/FiraSans-Italic.ttf
+    bold_italic: fonts/fira-sans/FiraSans-BoldItalic.ttf
+    heading: fonts/fira-sans/FiraSans-Bold.ttf
+    mono: fonts/fira-sans/FiraMono-Regular.ttf
+  sizes: {heading_pt: 54, title_pt_max: 130, title_pt_min: 90, title_lines: 2, subtitle_pt: 56, authors_pt: 50, affil_pt: 36, min_pt: 24}
+  autofit: {min_pt: 28, max_pt: 46, step_pt: 0.5, max_slack_ratio: 0.12}
+
+shape:
+  header_style: band

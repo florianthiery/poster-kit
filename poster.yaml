@@ -1,0 +1,210 @@
+# poster.yaml: what is on the poster and where. How it looks is decided by the theme.
+# Every option is used somewhere below; GUIDE.md explains each of them.
+
+meta:
+  title: "Poster title goes here in one or two lines"      # PDF metadata
+  short_title: "Poster template"                           # used in the report
+  author: "Ada Example"
+  subject: "Template poster"
+  keywords: "poster, template, example"
+  status: draft                    # bookkeeping only: --strict refuses "draft", so set it to final for the release build
+
+theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza | your own
+# theme_overrides:                 # optional: change single theme values for this poster only
+#   shape: {header_style: plain}   # e.g. dark title on the page instead of a coloured band
+#   typography: {autofit: {max_pt: 40}}
+
+page:
+  size: A0                         # A0 | A1 | A2 | A3 | A4
+  orientation: portrait            # portrait | landscape
+  margin_mm: 20
+  gap_mm: 11
+
+header:
+  event: "EVENT 2026 \u00b7 Poster"
+  title: "Poster title goes here<br>in one or two lines"   # <br> breaks the line; the size is fitted
+  # title_lines: 3   # more than two lines? set these (see GUIDE.md, Header); the body text adapts
+  # title_pt_min: 70
+  subtitle: "A subtitle that says what the poster shows"
+  authors:                         # affil is the number of the affiliation below
+    - {name: "Ada Example", affil: "1"}
+    - {name: "Ben Sample", affil: "1,2"}
+    - {name: "Chris Placeholder", affil: "2"}
+  affiliations:
+    - "Example Institute, Example City"
+    - "Another Laboratory, Another City"
+  logos_w_mm: 120
+  logo_h_mm: 26
+  logos:                           # a logo with src shows the file (SVG, PNG, JPG); without it, the name is drawn
+    - {name: "Example logo", src: img/logos/example-logo.svg}
+    - {name: "Institute name"}
+    - {name: "Project name"}
+
+# ---------------------------------------------------------------------------
+# Blocks. Each one: title, role (or accent), why, and one part or a list of parts.
+# Part types: text, table, flow, stats, image, qr, logos.
+# ---------------------------------------------------------------------------
+blocks:
+  intro:
+    title: "Text and Markdown"
+    role: problem                  # the theme maps the role to a card style
+    why: "Text part from a Markdown file; shows the supported Markdown subset."
+    type: text
+    file: content/01_intro.md
+
+  numbers:
+    title: "Numbers"
+    role: context
+    why: "Two parts in one card: a short inline text and large numbers, which read from two metres away."
+    parts:
+      - type: text
+        text: "Parts are stacked in the order given. This card has a **text** part and a **stats** part."
+      - type: stats
+        items:
+          - {value: "123", label: "things counted"}
+          - {value: "45", label: "of them interesting"}
+          - {value: "6 %", label: "share that matters"}
+
+  howto:
+    title: "How you work with it"
+    role: aim
+    accent: secondary              # an explicit accent wins over the role
+    why: "Shows sub-headings in a text file and the accent override."
+    type: text
+    file: content/02_howto.md
+
+  pipeline:
+    title: "Flow with status"
+    role: method
+    why: "A flow beats prose for sequences. per_row wraps long chains with elbow arrows; status is never colour alone."
+    type: flow
+    per_row: 4                     # boxes per row
+    legend: "Solid boxes: done. Dashed boxes with a pale fill: planned or concept. Status styles are defined by the theme."
+    steps:
+      - {label: "First step", sub: "short note", status: done}
+      - {label: "Second step", sub: "short note", status: done}
+      - {label: "Third step", sub: "short note", status: done}
+      - {label: "Fourth step", sub: "planned", status: planned}
+      - {label: "Fifth step", sub: "planned", status: planned}
+      - {label: "Sixth<br>step", sub: "concept only", status: concept}
+      - {label: "Seventh step", sub: "concept only", status: concept}
+
+  mapping:
+    title: "Table"
+    role: result
+    why: "Tables show mappings and comparisons that prose hides."
+    parts:
+      - type: text
+        text: "A table has a `header`, `rows` and optional `col_widths` (relative weights). Cells accept the same inline Markdown."
+      - type: table
+        header: ["Source", "Target", "Note"]
+        col_widths: [2, 3, 3]
+        rows:
+          - ["`field_a`", "property one", "required"]
+          - ["`field_b`", "property two", "**optional**"]
+          - ["`field_c`", "property three", "derived from *field_a*"]
+          - ["`field_d`", "property four", "see [GUIDE.md](https://example.org)"]
+
+  figure:
+    title: "Images"
+    role: discussion
+    why: "An SVG figure stays vector; the caption sits underneath. max_height_mm caps tall images."
+    parts:
+      - type: text
+        file: content/03_discussion.md
+      - type: image
+        src: img/sample-figure.svg
+        caption: "Figure 1. A sample SVG chart. Replace it with your own figure."
+        max_height_mm: 75
+      - type: image
+        src: img/not-there-yet.png
+        placeholder: true          # no error while the file is missing; a dashed box is drawn
+        height_mm: 18
+        caption: "A placeholder: the file does not exist yet."
+
+  photo:
+    title: "Raster image"
+    role: result
+    why: "PNG and JPG are embedded as they are, so supply enough pixels for the printed size."
+    type: image
+    src: img/sample-photo.png
+    caption: "Figure 2. A generated PNG (1600 x 900 px)."
+    max_height_mm: 150
+
+  quote:
+    frame: false                   # no card, no title bar: for one key message
+    title: "Key message"
+    role: aim
+    why: "An unframed block keeps one sentence from disappearing among the cards."
+    type: text
+    file: content/05_quote.md
+    scale: 1.15                    # text size relative to the fitted body size
+
+  outlook:
+    title: "Next steps"
+    role: outlook
+    why: "The highlight card is for the call to action."
+    type: text
+    file: content/04_outlook.md
+
+  invite:
+    title: "Join in"
+    role: invitation
+    why: "A third accent style, defined by the theme, for the invitation."
+    type: text
+    text: |
+      Questions and contributions are welcome. Find us at the poster or scan a code.
+
+  links:
+    title: "Explore"
+    role: resources
+    why: "QR codes in one row, label underneath; partner logos as a second part."
+    parts:
+      - type: qr
+        size_mm: 34
+        items:
+          - {url: "https://example.org", label: "Project<br>page"}
+          - {url: "https://example.org/code", label: "Source<br>code"}
+          - {url: "https://example.org/data", label: "Data"}
+      - type: logos
+        height_mm: 22
+        items:
+          - {name: "Partner one"}
+          - {name: "Partner two"}
+
+  references:
+    title: "References and acknowledgements"
+    role: references
+    why: "Small type is fine here; references are for the follow-up reader."
+    type: text
+    file: content/06_references.md
+    scale: 0.8
+
+# ---------------------------------------------------------------------------
+# Layout: bands run top to bottom, columns left to right, blocks stack in a column.
+# width = relative column width. weight = share of the leftover height the band
+# absorbs (0 = keep natural height).
+# ---------------------------------------------------------------------------
+layout:
+  bands:
+    - weight: 0
+      columns:
+        - {width: 1.1, blocks: [intro]}
+        - {width: 1, blocks: [numbers]}
+        - {width: 1, blocks: [howto]}
+    - weight: 0
+      columns:
+        - {blocks: [pipeline]}
+    - weight: 1
+      columns:
+        - {width: 1.1, blocks: [mapping, quote]}
+        - {width: 1, blocks: [figure]}
+        - {width: 0.8, blocks: [photo]}
+    - weight: 0
+      columns:
+        - {width: 1, blocks: [outlook]}
+        - {width: 1, blocks: [invite]}
+        - {width: 1.4, blocks: [links]}
+    - weight: 0
+      columns:
+        - {blocks: [references]}
