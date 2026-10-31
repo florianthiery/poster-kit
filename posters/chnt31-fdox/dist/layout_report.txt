@@ -1,0 +1,56 @@
+Layout report for FDOx: From Pocket to SPARQL (build 2026-10-09)
+page: A0 portrait (841 x 1189 mm)
+base text size chosen by autofit: 28.0 pt (range 28-46)
+header title size: 60 pt
+theme: research-squirrel (Research Squirrel Engineers), state ready
+  colours from: squirrel-colours (Research Squirrel Engineers) https://github.com/Research-Squirrel-Engineers/squirrel-colours (licence CC BY or CC0 (owner's statement 2026-10-09; no LICENSE file in the repository yet))
+  typeface: Fira Sans
+  contrast: 26 pairings checked, 1 below the recommended level, lowest 3.16 (arrows and badges on card)
+body height: 968 mm available, 965 mm natural, slack 3 mm
+
+Blocks (why each one looks the way it does):
+- hook: 358 mm wide, 226 mm natural, 235 mm drawn
+    why: States the problem in three short lines and shows the one object that the whole poster follows.
+- idea: 447 mm wide, 121 mm natural, 121 mm drawn
+    why: Says what FDOx is in one sentence, states that it is our own perspective and not an official reference implementation, and makes the reproducibility claim of the abstract.
+- links: 447 mm wide, 106 mm natural, 106 mm drawn
+    why: Where the reader goes next: the registry, the code and the Ogham stone itself on Zenodo.
+- journey: 813 mm wide, 104 mm natural, 104 mm drawn
+    why: The backbone of the poster: six stations in order. A flow shows a sequence at a glance and is readable from two metres.
+- package: 257 mm wide, 213 mm natural, 218 mm drawn
+    why: Zooms into station 2: what the pipeline does, shown with the real tool and a second Irish case.
+- describe: 283 mm wide, 203 mm natural, 218 mm drawn
+    why: Zooms into station 3: the human-editable input, the RDF vocabularies and the provenance and validation steps.
+- register: 257 mm wide, 216 mm natural, 218 mm drawn
+    why: Zooms into stations 4 to 6: the registry catalogue and the hubs it connects to.
+- sparql_licence: 460 mm wide, 252 mm natural, 252 mm drawn
+    why: A real SPARQL query with its real result: shows that the models can be asked questions. Source: data/sparql/licence.rq and licence-result.csv.
+- sparql_creator: 345 mm wide, 202 mm natural, 252 mm drawn
+    why: A second real query and result, aggregated: models per creator. Source: data/sparql/creator.rq and creator-result.csv.
+- team: 146 mm wide, 110 mm natural, 128 mm drawn
+    why: Puts faces to the two names in the header; both photographs are supplied by the authors (consent of Louise Tharandt to be confirmed, PRIMER D2).
+- supporters: 213 mm wide, 112 mm natural, 128 mm drawn
+    why: Names the project and the institutions and networks behind it; boxes with names stand in until the logo files and their usage terms are in shared/logos (PRIMER D4).
+- references: 438 mm wide, 128 mm natural, 128 mm drawn
+    why: Cites the FDO concept paper, the FDOx implementation paper and the two code repositories the poster describes, as supplied by the author.
+
+Smallest size used per style (pt):
+  affiliations: 36.0
+  authors: 50.0
+  body: 24.0
+  bullet: 24.0
+  caption: 24.0
+  card-heading: 54.0
+  event: 36.0
+  flow-label-done: 28.0
+  flow-sub-done: 24.0
+  person-name: 26.6
+  person-role: 24.0
+  qr-label: 24.0
+  subheading: 26.9
+  subtitle: 56.0
+  supporter-label: 24.0
+  supporter-name: 24.0
+  table-cell: 24.6
+  table-head: 24.6
+  title: 60.0

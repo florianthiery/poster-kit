@@ -1,47 +1,45 @@
-# Patch: CI, `.gitattributes` und vier neue Bausteine
+# PATCH: Poster chnt31-fdox (CHNT31, Digital Creative Award)
 
-Enthält nur geänderte Dateien. Basis: der Stand nach dem LEIZA-Patch.
+Stand: 2026-10-31. Dieses Patch-ZIP legt **ein neues Poster** an: `posters/chnt31-fdox/`.
+Es ändert nichts am Kern (Engine, Themes, Schriften). Die `PATCH-README.md` im Repo-Root wird durch diese Datei
+überschrieben; wer die alte behalten will, kopiert sie vorher weg.
 
 ## Inhalt
 
-| Datei | Änderung |
+| Pfad | Was |
 |---|---|
-| `.github/workflows/build.yml` | neu: GitHub Action (Demo in allen Themes, Reproduzierbarkeit, strikter Check für `status: final`) |
-| `.gitattributes` | neu: stabile Zeilenenden (LF), Binärdateien markiert |
-| `py/step_render.py` | neue Bausteine `gallery`, `timeline`, `cite` und optionale Fußleiste `footer` |
-| `py/step_validate.py` | Prüfungen für die neuen Bausteine und `footer:` |
-| `tools/build_all.py` | `--check-repro`; `--strict` nur für Poster mit `status: final` |
-| `posters/demo/poster.yaml` | zeigt alle neuen Bausteine (Galerie, Zeitleiste, Zitat, Fußleiste) |
-| `posters/_template/poster.yaml` | Hinweis auf die neuen Teiltypen |
-| `posters/demo/dist/…` | neu gebautes PDF, Vorschau, Layout-Bericht |
-| `GUIDE.md`, `README.md`, `PRIMER.md`, `WORKFLOW.md`, `CITATION.cff` | Doku (S12, Beschlüsse, CI) |
+| `posters/chnt31-fdox/brief.yaml` | Fakten: Titel, Autor:innen, Personen, Logos (Namenskästchen), Links/QR, Zahlen mit Quelle, Referenzen |
+| `posters/chnt31-fdox/poster.yaml` | Struktur: Blöcke und Layout (A0 hoch, Theme research-squirrel) |
+| `posters/chnt31-fdox/content/` | Texte als Markdown (englisch) |
+| `posters/chnt31-fdox/data/sparql/` | die zwei echten SPARQL-Abfragen (`.rq`) und ihre Ergebnisse (`.csv`) |
+| `posters/chnt31-fdox/img/` | Abbildungen (aus `fdox-visuals`, zugeschnitten), Vorschau CIIC 81, Fotos in `img/people/` |
+| `posters/chnt31-fdox/PRIMER.md` | Poster-PRIMER (deutsch): Beschlüsse, Quellen, offene Punkte |
+| `posters/chnt31-fdox/dist/` | gebautes `poster.pdf`, `poster-preview.png`, Berichte (werden im Repo getrackt) |
 
-## Was ausführen (Windows cmd, im Ordner `poster-kit`, venv aktiv)
+## Was ausführen
 
-```cmd
-python main.py --poster demo
+Windows-Befehle: siehe `BEFEHLE-chnt31-fdox.md`. Kurz:
+
+```
+python main.py --poster chnt31-fdox
+python tools/build_all.py --poster chnt31-fdox --check-repro
 ```
 
-```cmd
-python tools\build_all.py --poster demo --all-themes
+## Woran man sieht, dass es stimmt
+
+- Bau endet mit `== result: ok`; Seite A0 hoch, Grundschrift 28 pt, Titel 60 pt.
+- `--check-repro` meldet „rebuild identical“ (Prüfsumme des PDFs gleich).
+- Nur erwartete Warnungen: `event.place`, `event.dates`, `event.print_deadline` sind noch TODO, daher scheitert
+  `--strict` bewusst, bis Florian sie ausfüllt und `status: final` setzt.
+- Vorschau öffnen: sechs Stationen der Journey, zwei SPARQL-Tabellen, Personen- und Logo-Karte, Referenzen unten.
+
+## Hier geprüft
+
+Patch auf frischem Klon angewendet, zweimal gebaut, Ergebnis byte-gleich zur mitgelieferten `dist/`.
+SPARQL-Ergebnisse gegen das Registry-Bundle (Commit 253aee9) am 2026-10-31 mit rdflib abgefragt.
+
+## Commit-Vorschlag
+
 ```
-
-```cmd
-python tools\build_all.py --check-repro
+chnt31-fdox: poster for CHNT31 (Digital Creative Award), A0 portrait, research-squirrel theme
 ```
-
-Einmalig, damit `.gitattributes` greift:
-
-```cmd
-git add --renormalize .
-```
-
-Dann wie gewohnt `git add .`, `git commit`, `git push`.
-
-## Prüfen
-
-- Erster Lauf endet mit `result: ok`, `base 28.0 pt`, Warnung nur zu `not-there-yet.png` (gewollter Platzhalter).
-- `--all-themes`: sieben Zeilen `… : ok` (chublets, leiza:red/blue/yellow, neutral, nfdi4objects, research-squirrel).
-- `--check-repro`: `demo: rebuild identical`.
-- In `posters\demo\dist\poster-preview.png`: Galerie oben rechts, Zeitleiste unten links, „How to cite“ unter den QR-Codes, Fußleiste mit QR und Badge „CC BY 4.0“.
-- Nach dem Push: Tab *Actions* auf GitHub, grüner Haken (die Action ist bisher nur lokal auf YAML-Syntax geprüft).

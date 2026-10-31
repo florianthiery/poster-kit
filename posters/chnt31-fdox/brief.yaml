@@ -1,0 +1,65 @@
+# brief.yaml: the facts of poster chnt31-fdox, in one place.
+# Started in a conversation (see INTERVIEW.md at the repository root), then kept up to date.
+# poster.yaml reads these values with {{ brief.<path> }}; content/*.md can do the same.
+
+status: draft                      # interview -> draft -> confirmed (the build warns until it is 'confirmed')
+
+event:
+  name: "CHNT31"
+  track: "Digital Creative Award"
+  place: "TODO city"
+  dates: "TODO dates"
+  url: "https://www.chnt.at/"
+  format: "A0 portrait"            # confirmed by the author on 2026-10-31; the organiser's rule was not found online
+  print_deadline: "TODO yyyy-mm-dd"
+
+poster:
+  title: "From Pocket to SPARQL:<br>How a Smartphone Scan of an Ogham Stone<br>Learned to Speak Linked Data"
+  title_plain: "From Pocket to SPARQL: How a Smartphone Scan of an Ogham Stone Learned to Speak Linked Data"
+  short_title: "FDOx: From Pocket to SPARQL"
+  subtitle: "FDOx: FAIR Digital Objects for 3D cultural heritage"
+  key_message: "A smartphone scan becomes a citable, preservable and queryable FAIR Digital Object."
+  audience: "Cultural heritage and digital documentation community; readers beyond the semantic web community"
+  language: "British English"
+
+authors:                           # header; affil = number(s) of the affiliation below
+  - {name: "Louise Tharandt", affil: "1"}     # order as selected in the interview; to be confirmed (PRIMER D1)
+  - {name: "Florian Thiery", affil: "2"}
+
+affiliations:
+  - "Humboldt-Universität zu Berlin, Berlin, Germany"
+  - "Leibniz-Zentrum für Archäologie (LEIZA), Mainz, Germany"
+
+people:                            # people module: photos and names, no institution; order as in the header
+  - {name: "Louise Tharandt", photo: img/people/louise-tharandt.png, focus: [0.5, 0.42], zoom: 1.15}
+  - {name: "Florian Thiery", photo: img/people/florian-thiery.png}
+
+supporters:                        # supporters module: labelled groups of logos (names only until the logo files are supplied)
+  - label: "Project, institute and networks"
+    items:
+      - {name: "FDOx-Squirrel"}
+      - {name: "LEIZA"}
+      - {name: "NFDI4Objects"}
+      - {name: "Research Squirrel Engineers"}
+
+links:                             # QR codes
+  - {url: "https://fdox-squirrel.github.io/fdo-squirrel-registry/", label: "FDOx<br>registry"}
+  - {url: "https://github.com/FDOx-squirrel", label: "Open-source<br>code"}
+  - {url: "https://doi.org/10.5281/zenodo.18724635", label: "Ogham stone<br>on Zenodo"}
+
+numbers:                           # every number on the poster, with its source
+  - {value: "8", label: "FDOxs in the registry", source: "FDOx registry bundle dist/fdo-registry.ttl, release 2026-09-03, fdo-squirrel-registry commit 253aee9; SPARQL via rdflib", queried: "2026-10-31"}
+  - {value: "7,793", label: "triples in the catalogue", source: "same bundle; rdflib graph size", queried: "2026-10-31"}
+  - {value: "6", label: "of them 3D models", source: "same bundle; resources typed fdo:3DDataFDO (see data/sparql/licence-result.csv)", queried: "2026-10-31"}
+  - {value: "3", label: "open licences on the 3D models", source: "same bundle; distinct SPDX licence IRIs of the 3D models (CC-BY-4.0, CC-BY-SA-4.0, CC-BY-NC-SA-4.0)", queried: "2026-10-31"}
+
+notes: |
+  Hero object: CIIC 81, an Ogham stone in Cork (Zenodo concept DOI 10.5281/zenodo.18724635).
+  In the registry bundle it appears under the title "CO074-148----" (version DOI 10.5281/zenodo.22675886).
+  Second, smaller case: Freshford, St Lachtain's Well (holy well), model by b-unicycling, CC BY 4.0, via Sketchfab.
+
+references:                        # printed in the references block; entries as supplied by the author on 2026-10-31
+  - "De Smedt, K., Koureas, D., & Wittenburg, P. (2020). FAIR Digital Objects for Science: From Data Pieces to Actionable Knowledge Units. Publications, 8(2), Article 2. https://doi.org/10.3390/publications8020021"
+  - "Thiery, F. (2026). FAIR Digital Object Squirrel Implementation (FDOSquirrel). Squirrel Papers, 8(2), \u00a74. https://doi.org/10.5281/zenodo.18441544"
+  - "fdo-squirrel: https://github.com/FDOx-squirrel/fdo-squirrel"
+  - "fdo-3d-packager: https://github.com/FDOx-squirrel/fdo-3d-packager"

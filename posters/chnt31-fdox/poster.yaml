@@ -1,0 +1,188 @@
+# poster.yaml of the CHNT31 FDOx poster. Facts come from brief.yaml; texts from content/*.md.
+# Narrative: one object, six stations, from the pocket to the knowledge graph.
+
+meta:
+  title: "{{ brief.poster.title_plain }}"
+  short_title: "{{ brief.poster.short_title }}"
+  author: "{{ brief.authors.0.name }}"
+  subject: "{{ brief.event.name }} {{ brief.event.track }}"
+  keywords: "FAIR Digital Objects, FDOx, 3D cultural heritage, Linked Data, SPARQL, Ogham stone, Sketchfab"
+  status: draft                    # set to final for the release build (--strict refuses draft)
+
+theme: research-squirrel
+
+page:
+  size: A0
+  orientation: portrait
+  margin_mm: 14
+  gap_mm: 8
+
+header:
+  event: "{{ brief.event.name }} · {{ brief.event.track }} · Poster"
+  title: "{{ brief.poster.title }}"
+  title_lines: 3
+  title_pt_max: 76
+  title_pt_min: 60
+  subtitle: "{{ brief.poster.subtitle }}"
+  authors: "{{ brief.authors }}"
+  affiliations: "{{ brief.affiliations }}"
+
+blocks:
+  hook:
+    title: "A scan in the pocket"
+    role: problem
+    why: "States the problem in three short lines and shows the one object that the whole poster follows."
+    parts:
+      - type: text
+        file: content/01_why.md
+      - type: image
+        src: img/ciic81-preview.png
+        caption: "Figure 1. CIIC 81, an Ogham stone in Cork: preview of the packaged 3D model."
+        max_height_mm: 100
+
+  idea:
+    title: "The idea: FDOx"
+    role: aim
+    why: "Says what FDOx is in one sentence, states that it is our own perspective and not an official reference implementation, and makes the reproducibility claim of the abstract."
+    type: text
+    file: content/02_idea.md
+
+  journey:
+    title: "The life of one model: from the pocket to the knowledge graph"
+    role: method
+    why: "The backbone of the poster: six stations in order. A flow shows a sequence at a glance and is readable from two metres."
+    type: flow
+    per_row: 6
+    steps:
+      - {label: "Capture", sub: "smartphone scan on Sketchfab", status: done}
+      - {label: "Package", sub: "Python pipeline, open formats, viewer", status: done}
+      - {label: "Describe", sub: "two files become RDF, SHACL-checked", status: done}
+      - {label: "Deposit", sub: "Zenodo with a persistent identifier", status: done}
+      - {label: "Register", sub: "harvest, DCAT catalogue, CIDOC CRM", status: done}
+      - {label: "Query", sub: "federated knowledge graph, SPARQL", status: done}
+
+  package:
+    title: "2 \u00b7 Package"
+    role: method
+    why: "Zooms into station 2: what the pipeline does, shown with the real tool and a second Irish case."
+    parts:
+      - type: text
+        file: content/03_package.md
+      - type: image
+        src: img/fdox-package.png
+        caption: "Figure 2. fdo-3d-packager v1.0.0, here with the Freshford holy well (model: b-unicycling, CC BY 4.0, via Sketchfab)."
+
+  describe:
+    title: "3 \u00b7 Describe"
+    role: method
+    why: "Zooms into station 3: the human-editable input, the RDF vocabularies and the provenance and validation steps."
+    parts:
+      - type: text
+        file: content/04_describe.md
+      - type: image
+        src: img/fdox-describe.png
+        max_height_mm: 90
+        caption: "Figure 3. fdo-squirrel: from package to RDF and bundle."
+
+  register:
+    title: "4\u20136 \u00b7 Register and query"
+    role: context
+    why: "Zooms into stations 4 to 6: the registry catalogue and the hubs it connects to."
+    parts:
+      - type: text
+        file: content/05_register.md
+      - type: image
+        src: img/fdox-register.png
+        max_height_mm: 90
+        caption: "Figure 4. The FDOx registry (release 2026-09-03) and its hubs."
+
+  sparql_licence:
+    title: "Query 1: licences (prefixes omitted)"
+    role: result
+    why: "A real SPARQL query with its real result: shows that the models can be asked questions. Source: data/sparql/licence.rq and licence-result.csv."
+    parts:
+      - type: text
+        file: content/06_sparql_licence.md
+      - type: table
+        header: ["Model", "Licence"]
+        col_widths: [3, 1.6]
+        rows:
+          - ["Beuys-Stele B 1036 (Kassel)", "CC-BY-4.0"]
+          - ["CHUIS/1", "CC-BY-SA-4.0"]
+          - ["CO074-148---- (CIIC 81)", "CC-BY-NC-SA-4.0"]
+          - ["Freshford: St Lachtain's Well (low poly)", "CC-BY-4.0"]
+          - ["GEARS/1", "CC-BY-SA-4.0"]
+          - ["Steinmännchen / Antholzer See 03.01.2026", "CC-BY-4.0"]
+
+  sparql_creator:
+    title: "Query 2: creators (prefixes omitted)"
+    role: result
+    why: "A second real query and result, aggregated: models per creator. Source: data/sparql/creator.rq and creator-result.csv."
+    parts:
+      - type: text
+        file: content/07_sparql_creator.md
+      - type: table
+        header: ["Creator", "Models"]
+        col_widths: [3, 1]
+        rows:
+          - ["Thiery, Florian", "5"]
+          - ["Distel, Anne-Karoline", "1"]
+          - ["b-unicycling", "1"]
+
+  links:
+    title: "Explore"
+    role: resources
+    why: "Where the reader goes next: the registry, the code and the Ogham stone itself on Zenodo."
+    type: qr
+    size_mm: 30
+    items: "{{ brief.links }}"
+
+  team:
+    title: "People"
+    role: context
+    why: "Puts faces to the two names in the header; both photographs are supplied by the authors (consent of Louise Tharandt to be confirmed, PRIMER D2)."
+    type: people
+    per_row: 2
+    size_mm: 32
+    items: "{{ brief.people }}"
+
+  supporters:
+    title: "Behind the work"
+    role: resources
+    why: "Names the project and the institutions and networks behind it; boxes with names stand in until the logo files and their usage terms are in shared/logos (PRIMER D4)."
+    type: supporters
+    columns: 1
+    height_mm: 20
+    groups: "{{ brief.supporters }}"
+
+  references:
+    title: "References"
+    role: references
+    why: "Cites the FDO concept paper, the FDOx implementation paper and the two code repositories the poster describes, as supplied by the author."
+    type: text
+    file: content/09_references.md
+    scale: 0.8
+
+layout:
+  bands:
+    - weight: 0
+      columns:
+        - {width: 1, blocks: [hook]}
+        - {width: 1.25, blocks: [idea, links]}
+    - weight: 0
+      columns:
+        - {blocks: [journey]}
+    - weight: 1
+      columns:
+        - {width: 1, blocks: [package]}
+        - {width: 1.1, blocks: [describe]}
+        - {width: 1, blocks: [register]}
+    - weight: 0
+      columns:
+        - {width: 1.2, blocks: [sparql_licence]}
+        - {width: 0.9, blocks: [sparql_creator]}
+    - weight: 0
+      columns:
+        - {width: 0.55, blocks: [team]}
+        - {width: 0.8, blocks: [supporters]}
+        - {width: 1.65, blocks: [references]}

@@ -1,0 +1,11 @@
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX fdo: <https://w3id.org/fdo-squirrel/>
+
+SELECT ?title (REPLACE(STR(?iri), "^.*/|\\.html$", "") AS ?licence)
+WHERE {
+  ?fdo a fdo:3DDataFDO ;
+       dct:title ?title ;
+       dct:license ?iri .
+  FILTER(STRSTARTS(STR(?iri), "https://spdx.org/licenses/"))
+}
+ORDER BY ?title

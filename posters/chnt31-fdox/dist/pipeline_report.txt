@@ -1,0 +1,11 @@
+== validate
+   NOTE: header event line: header_accent on primary = 4.33:1 (fine for large display text)
+   WARNING: brief.yaml has 3 unresolved TODO(s), first: event.place, event.dates, event.print_deadline
+   OK: theme 'research-squirrel', 12 blocks, 5 bands
+== render
+   WARNING: title reduced to fit the page (60 pt instead of up to 76 pt)
+   wrote posters\chnt31-fdox\dist\poster.pdf  base 28.0 pt, title 60 pt, slack 3 mm
+== preview
+   wrote posters\chnt31-fdox\dist\poster-preview.png (1400 x 1980 px)
+== poster: chnt31-fdox
+== result: ok

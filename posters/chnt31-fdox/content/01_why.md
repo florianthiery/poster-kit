@@ -1,0 +1,1 @@
+Citizen-generated 3D models of heritage monuments appear daily on platforms such as Sketchfab. Their metadata are thin, platform-bound and rarely machine-readable, so the models are hard to cite, preserve or link with research data.

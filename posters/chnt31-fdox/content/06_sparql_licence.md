@@ -1,0 +1,1 @@
+`SELECT ?title`<br>`(REPLACE(STR(?iri), "^.*/|\\.html$", "") AS ?licence)`<br>`WHERE { ?fdo a fdo:3DDataFDO ;`<br>`dct:title ?title ; dct:license ?iri .`<br>`FILTER(STRSTARTS(STR(?iri), "https://spdx.org/licenses/")) }`<br>`ORDER BY ?title`

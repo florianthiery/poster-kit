@@ -1,0 +1,4 @@
+- De Smedt, K., Koureas, D., & Wittenburg, P. (2020). FAIR Digital Objects for Science: From Data Pieces to Actionable Knowledge Units. *Publications*, 8(2), Article 2. [https://doi.org/10.3390/publications8020021](https://doi.org/10.3390/publications8020021)
+- Thiery, F. (2026). FAIR Digital Object Squirrel Implementation (FDOSquirrel). *Squirrel Papers*, 8(2), §4. [https://doi.org/10.5281/zenodo.18441544](https://doi.org/10.5281/zenodo.18441544)
+- fdo-squirrel: [https://github.com/FDOx-squirrel/fdo-squirrel](https://github.com/FDOx-squirrel/fdo-squirrel)
+- fdo-3d-packager: [https://github.com/FDOx-squirrel/fdo-3d-packager](https://github.com/FDOx-squirrel/fdo-3d-packager)
