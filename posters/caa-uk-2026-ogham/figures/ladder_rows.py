@@ -25,6 +25,7 @@ CSS = """
 .ph img { position: absolute; inset: 0; width: 100%%; height: 100%%; object-fit: cover; }
 .badge { position: absolute; left: 3mm; top: 3mm; width: 14mm; height: 14mm; border-radius: 50%%; background: var(--deep); color: #fff;
          font-family: BarlowSC; font-weight: 700; font-size: 34pt; display: flex; align-items: center; justify-content: center; border: 1.2mm solid #fff; }
+.deg { font-family: BarlowSC; font-weight: 700; font-size: 22pt; letter-spacing: .08em; text-transform: uppercase; color: var(--orange); }
 .mid { flex: 1; background: var(--card); border-radius: 3mm; padding: 3mm 7mm 4mm; display: flex; flex-direction: column; }
 .two { display: flex; gap: 9mm; flex: 1; align-items: center; }
 .two > div { flex: 1; }
@@ -58,7 +59,7 @@ def row(r):
     html = (f"<div class='row' style='--fs:{r['fs']}'><div class='ph'><img src='file://{IMG}/photos/{r['name']}.jpg' style='object-position:{r['pos']}'>"
             f"<div class='badge'>{r['n']}</div></div>"
             f"<div class='mid'><div class='two'><div class='og'>{og}</div><div class='tr'>{tr}</div></div><div class='bar'>{segs}</div></div>"
-            f"<div class='txt'><h3>{r['title']}</h3><div class='ref'>{r['ref']}</div><p>{r['text']}</p></div></div>")
+            f"<div class='txt'><div class='deg'>Degree {r['n']}</div><h3>{r['title']}</h3><div class='ref'>{r['ref']}</div><p>{r['text']}</p></div></div>")
     render(html, W_MM, IMG / f"row-{r['name']}.png", CSS)
     print(r["name"], [f"{w:.4f}" for w, _ in ws])
 

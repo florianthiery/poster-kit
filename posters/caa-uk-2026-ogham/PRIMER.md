@@ -43,7 +43,7 @@ Stand: 01.11.2026 (erste Runde)
 |---|---|---|
 | Wahrheit vor Glanz: Die Grenzen der Methode stehen als Tabelle „Where the method is blind“ (vier Zeilen) | Entscheidung des Autors | 01.11.2026 |
 | Aufbau: Karte, Leiter aus Steinen mit wachsendem Zweifel, ein Stein (Gigha 1) ganz durch TEI, CRM, AMT und Reasoning, dann Grenzen, Ausblick, Links, Personen | Entscheidung des Autors im Dialog | 01.11.2026 |
-| Bishop Loch ist aus Leiter und Karte gestrichen; die Leiter hat drei Steine (Garranes, Dyke, Blackwaterfoot 1), Gigha 1 ist Stein 4 | Entscheidung des Autors: mehr Platz für das Reasoning-Beispiel | 01.11.2026 |
+| Bishop Loch ist aus Leiter und Karte gestrichen; vier Grade des Zweifels: Garranes, Dyke und Blackwaterfoot 1 in der Leiter (Grad 1 bis 3), Gigha 1 als Grad 4 im Beispielband | Entscheidung des Autors: mehr Platz für das Reasoning-Beispiel | 01.11.2026 |
 | Das Reasoning wird gezeigt, mit den Axiomen im AMT-Stil (Subsumtion, Rollenkette mit Produktlogik, Disjunktion) und den abgeleiteten Gewichten je Herausgeber | `tei--epidoc-amt` hat seit 0.5.0 fünf Axiome; der frühere Beschluss „Reason als geplant“ entfällt | 01.11.2026 |
 | Grafiken entstehen aus Skripten im Poster-Ordner (`figures/`), die PNGs sind eingecheckt | Entscheidung des Autors: Skripte gehören ins Poster-Repo | 01.11.2026 |
 | Ogham-Schrift wird aus den Daten gesetzt (Noto Sans Ogham), Markup (`unclear`, `supplied`, `gap`, `choice`) bleibt sichtbar | Entscheidung des Autors | 01.11.2026 |
@@ -118,7 +118,7 @@ python main.py --poster caa-uk-2026-ogham --blocks          # Blockliste als Mar
 | D12 | Beispielstein: Gigha 1 gewählt (Stein 4), Blackwaterfoot 1 steht in der Leiter | Autor | erledigt |
 | D13 | Tabelle „Where the text lands“: Die Zeile „a reading“ und die Abbildung auf `TX7` ist eine Modellierungsentscheidung der Crosswalk-Autoren, sie soll vor dem Druck nochmals gegen die Ontologie geprüft werden | Autor | offen |
 
-| D14 | Der Titel nennt „Four Degrees of Doubt“ (Abstract), die Leiter zeigt drei Steine, Gigha 1 ist der vierte. Soll Gigha 1 ausdrücklich als vierte Stufe benannt werden (Typ `fuzziness + wobbliness`)? | Autor | offen |
+| D14 | „Four Degrees“ im Titel: die Leiter heißt „Four degrees of doubt“, Garranes, Dyke und Blackwaterfoot 1 sind Grad 1 bis 3, Gigha 1 ist Grad 4 (Zweifel an der Edition selbst, `cert="low"`, Regel v2 verschiebt die Gewichte). Der Statuszweifel des Abstracts (Bishop Loch, „purported“) steht nur noch in „Where the method is blind“ | Autor | erledigt (Option A, 01.11.2026) |
 | D15 | `--strict` ist rot, solange Datum, Adresse und Druckfrist (D1) fehlen | Autor | offen |
 
 ---
@@ -129,3 +129,4 @@ python main.py --poster caa-uk-2026-ogham --blocks          # Blockliste als Mar
 |---|---|---|
 | 01.11.2026 | Gerüst angelegt, Brief, 13 Blöcke, Texte, erste Vorschau; Zahlen aus der OG(H)AM-Edition gezählt (nur Transliteration, nicht doppelt) | Start, Entscheidungen des Autors vom 01.11.2026 |
 | 01.11.2026 | Überarbeitung mit dem Autor in mehreren Runden: Karte, Leiter, Gigha 1 durch TEI, CRM, AMT und Reasoning, Axiome im AMT-Stil; Grafikskripte in `figures/`; Bishop Loch gestrichen; Kopf mit dunklem Band und Logo ohne Platte; ein QR-Code; Referenz JOHD; kleine Engine-Erweiterungen (S16 im PRIMER des Kerns) | Wünsche des Autors vom 01.11.2026 |
+| 01.11.2026 | Titelfrage gelöst: Leiter „Four degrees of doubt“, Zeilenmarken „Degree 1“ bis „Degree 3“, Gigha-Band „Degree 4“ | Wunsch des Autors, Option A |

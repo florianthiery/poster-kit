@@ -63,7 +63,7 @@ def readings_fig(rows):
         rd = edition_html(AMT_DIR / "data" / "S-ARL-001.xml", "transliteration") if r["key"] == "KF" else r["reading"]
         out.append(f"<div><div class='ed'>{r['editor']}</div><div class='rd'>{rd}</div>"
                    f"<div class='bw'><div class='b {r['type']}' style='width:{r['w'] / mx * 100:.1f}%'>{r['w']:.4f}</div></div></div>")
-    head = "<div class='layer' style='margin-bottom:2mm'>Stone 4: Gigha 1, CIIC 506. Five editors, five readings</div>"
+    head = "<div class='layer' style='margin-bottom:2mm'>Degree 4: Gigha 1 (CIIC 506), five editors, five readings</div>"
     render(f"{head}<div class='rows'>{''.join(out)}</div>", 292, IMG / "gigha-readings.png", CSS)
 
 def graph_fig(rows):
