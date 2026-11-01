@@ -43,6 +43,7 @@ tokens:
   tint: caa-tint
   line: caa-line
   link: caa-link
+  header_bg: caa-ink              # darker than the card bars, so the logo's own blue stands out on the band
   header_sub: caa-sky
   header_accent: caa-sky
   connector: primary

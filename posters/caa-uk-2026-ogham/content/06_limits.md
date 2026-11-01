@@ -1,3 +1,0 @@
-- **One reading always weighs 1.0.** Garranes has three restored letters, yet scores 1.0: the damage shows in the type of doubt, not in the number.
-- **Doubt in prose is invisible.** Bishop Loch has two gaps and no uncertainty markup, so it also scores 1.0. Whether its marks are ogham at all is said only in words such as *purported*.
-- **Next:** read `<choice>` and `cert`; model the status of an object as a kind of doubt.

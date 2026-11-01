@@ -40,7 +40,7 @@ REQUIRED_TOKENS = [
     "ink", "muted", "paper", "card", "tint", "line", "link", "header_sub",
 ]
 # Optional tokens with their fallbacks.
-TOKEN_FALLBACKS = {"header_accent": "secondary", "connector": "secondary", "on_connector": "on_secondary"}
+TOKEN_FALLBACKS = {"header_accent": "secondary", "header_bg": "primary", "connector": "secondary", "on_connector": "on_secondary"}
 REQUIRED_ACCENTS = ["primary", "secondary", "neutral"]
 REQUIRED_STATUS = ["done", "planned", "concept"]
 REQUIRED_FONTS = ["regular", "bold", "italic", "bold_italic", "heading", "mono"]
@@ -304,9 +304,9 @@ def contrast_pairs(theme: dict) -> list[tuple[str, str, str, str]]:
     for sname, s in theme["status_styles"].items():
         pairs.append((f"flow box label, status '{sname}'", s["text"], s["fill"], "text"))
     if theme["shape"]["header_style"] == "band":
-        pairs += [("header title", "on_primary", "primary", "heading"),
-                  ("header subtitle and affiliations", "header_sub", "primary", "text"),
-                  ("header event line", "header_accent", "primary", "heading")]
+        pairs += [("header title", "on_primary", "header_bg", "heading"),
+                  ("header subtitle and affiliations", "header_sub", "header_bg", "text"),
+                  ("header event line", "header_accent", "header_bg", "heading")]
     else:
         pairs += [("header title", "primary", "paper", "heading"),
                   ("header affiliations", "muted", "paper", "text")]

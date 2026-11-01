@@ -135,7 +135,8 @@ Entfällt: das Repo veröffentlicht kein RDF.
 | S12 | CI (Action, `.gitattributes`, `--check-repro`) und Bausteine `gallery`, `timeline`, `cite`, `footer` | poster-kit | S11 | erledigt 2026-10-31 |
 | S13 | Lernen aus chnt31-fdox in den Core: `image_row`, `measure.py`, Fehlerbericht, Autofit-Hinweis, Doku, Interview, Standard-Punkte in Teil D; Aufräumen (Reste im Root, `PATCH-README.md`, `pipeline_report.txt`) | poster-kit | S12 | erledigt 2026-10-31 |
 | S14 | Theme `caa-uk` (Logoblau, Orange für Zweifel, Barlow) und `fonts/barlow/` | poster-kit | S6 | erledigt 2026-11-01 |
-| S15 | Poster `caa-uk-2026-ogham` (A0, Theme `caa-uk`): erste Blockstruktur, Brief, Texte; Logo `shared/logos/caa-uk.png` | poster-kit | S14, S11 | Entwurf 2026-11-01, Fotos offen |
+| S15 | Poster `caa-uk-2026-ogham` (A0, Theme `caa-uk`): Blockstruktur, Brief, Texte, Grafikskripte im Poster-Ordner, Logo `shared/logos/caa-uk.png` und `caa-uk-short.png` | poster-kit | S14, S11 | Entwurf 2026-11-01, in Überarbeitung |
+| S16 | Engine-Kleinigkeiten für `caa-uk`: Token `header_bg`, Kopf-Optionen `logo_plate` und `logos_offset_mm`; Schrift `fonts/noto-sans-ogham/` für die Grafikskripte | poster-kit | S15 | erledigt 2026-11-01 |
 | S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
 | S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
 | S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
@@ -199,7 +200,15 @@ Gebaut in S12: Bildraster, Zeitleiste, Fußzeile mit Lizenz-Badge/QR, Zitierbloc
 
 `themes/caa-uk/theme.yaml` und `fonts/barlow/` (Barlow Regular, Bold, Italic, BoldItalic, Barlow Semi Condensed Bold für Überschriften; statische TTFs aus dem Google-Fonts-Repository, OFL, SHA-256 in `SOURCES.md`). Basisgröße im Demo 29,0 pt, Puffer 6 mm. Kontrast: Tinte auf Logoblau 4,13:1 (Hinweis, große Schrift), Weiß auf Tiefblau 8,7:1, Weiß auf Orange 5,2:1. Das Logo-Blau trägt nie Fließtext. Fira Sans als Rückfall war nicht nötig, der Download ging durch.
 
-Das CAA-UK-Logo liegt seit 2026-11-01 in `shared/logos/caa-uk.png` (Lizenz vom Autor bestätigt, Vermerk in der README dort); der Poster-Kopf zeichnet es auf einer weißen Platte.
+Das CAA-UK-Logo liegt seit 2026-11-01 in `shared/logos/caa-uk.png` (Lizenz vom Autor bestätigt, Vermerk in der README dort); der Poster-Kopf zeichnet es ohne weiße Platte auf dem dunklen Kopfband (`logo_plate: false`, Token `header_bg`). Abgeleitet: `shared/logos/caa-uk-short.png` ohne die Zeile „Computer Applications …“.
+
+## S16 – Kleine Engine-Erweiterungen für `caa-uk`
+
+**Ziel:** Das Logo des CAA UK ist für dunklen Grund gezeichnet und braucht keine weiße Platte; der Kopf soll das dunklere Blau tragen.
+
+### Erledigt 2026-11-01
+
+Token `header_bg` (Rückfall `primary`, `py/theme.py`; der Kontrast des Kopftextes wird gegen ihn geprüft), Kopf-Optionen `logo_plate` (ohne Pille und ohne Rand) und `logos_offset_mm` (Logo nach links rücken) in `py/step_render.py`; `themes/caa-uk` setzt `header_bg: caa-ink`. Diese Änderungen reisen mit dem Poster-Patch (kein eigener Kern-Chat), sie ändern bestehende Poster nicht. `fonts/noto-sans-ogham/` (OFL, SHA-256 in `SOURCES.md`) wird nur von den Grafikskripten gebraucht.
 
 ## S7 bis S10
 

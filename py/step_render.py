@@ -441,23 +441,25 @@ class ImageItem:
             self.caption.drawOn(c, x, oy - self.ctx.base * 0.4 - self.caption.height)
 
 
-def draw_logo(c, ctx: Ctx, item: dict, x: float, y: float, w: float, h: float, style: ParagraphStyle) -> None:
-    """One logo pill: the image if a file exists, otherwise the name as text."""
-    c.saveState()
-    c.setFillColor(ctx.col["paper"]); c.setStrokeColor(ctx.col["secondary"]); c.setLineWidth(ctx.shape["logo_line"])
-    c.roundRect(x, y, w, h, ctx.shape["logo_radius"], stroke=1, fill=1)
-    c.restoreState()
+def draw_logo(c, ctx: Ctx, item: dict, x: float, y: float, w: float, h: float, style: ParagraphStyle, plate: bool = True) -> None:
+    """One logo pill: the image if a file exists, otherwise the name as text. plate=False draws the bare logo (no pill, no padding)."""
+    if plate:
+        c.saveState()
+        c.setFillColor(ctx.col["paper"]); c.setStrokeColor(ctx.col["secondary"]); c.setLineWidth(ctx.shape["logo_line"])
+        c.roundRect(x, y, w, h, ctx.shape["logo_radius"], stroke=1, fill=1)
+        c.restoreState()
+    pw, ph = (40, 30) if plate else (0, 0)
     src = item.get("src")
     if src and U.find(src).is_file() and src.lower().endswith(".svg"):
         from svglib.svglib import svg2rlg
         d = svg2rlg(str(U.find(src)))
-        s = min((w - 40) / d.width, (h - 30) / d.height)
+        s = min((w - pw) / d.width, (h - ph) / d.height)
         d.width *= s; d.height *= s; d.scale(s, s)
         renderPDF.draw(d, c, x + (w - d.width) / 2, y + (h - d.height) / 2)
     elif src and U.find(src).is_file():
         reader = ImageReader(str(U.find(src)))
         iw, ih = reader.getSize()
-        s = min((w - 40) / iw, (h - 30) / ih)
+        s = min((w - pw) / iw, (h - ph) / ih)
         c.drawImage(reader, x + (w - iw * s) / 2, y + (h - ih * s) / 2, iw * s, ih * s, mask="auto")
     else:
         p = ctx.para(item["name"], style, w - 30)
@@ -1207,7 +1209,7 @@ class Header:
         ctx, m = self.ctx, self.margin
         c.saveState()
         if self.band:
-            c.setFillColor(ctx.col["primary"]); c.rect(0, page_h - self.height, self.page_w, self.height, stroke=0, fill=1)
+            c.setFillColor(ctx.col["header_bg"]); c.rect(0, page_h - self.height, self.page_w, self.height, stroke=0, fill=1)
         c.setFillColor(ctx.col["secondary"]); c.rect(0, page_h - self.height - self.rule, self.page_w, self.rule, stroke=0, fill=1)
         c.restoreState()
         y = page_h - self.top_pad
@@ -1221,11 +1223,11 @@ class Header:
         y -= self.affil.height; self.affil.drawOn(c, m, y)
         if self.logos:
             style = ctx.style("logo-header", ctx.small, font="PosterBold", colour="primary", align=TA_CENTER, lead=1.15)
-            lx = self.page_w - m - self.logo_w
+            lx = self.page_w - m - self.logo_w - self.cfg["header"].get("logos_offset_mm", 0) * mm
             ly = page_h - self.top_pad - self.logo_dy
             for it in self.logos:
                 ly -= self.logo_h
-                draw_logo(c, ctx, it, lx, ly, self.logo_w, self.logo_h, style)
+                draw_logo(c, ctx, it, lx, ly, self.logo_w, self.logo_h, style, plate=self.cfg["header"].get("logo_plate", True))
                 ly -= self.logo_gap
 
 

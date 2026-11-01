@@ -186,6 +186,8 @@ header:
   # authors_pt: 36                       # sizes of the author line and of the affiliations
   # affil_pt: 26
   # logos_valign: center                 # logo stack centred against the text (default: top)
+  # logo_plate: false                    # logos without the pill (for a logo made for a dark ground); default: true
+  # logos_offset_mm: 40                  # moves the logo stack to the left of the right margin; default: 0
   authors:
     - {name: "Ada Example", affil: "1"}  # affil: the number(s) of the affiliation(s) below
   affiliations:
@@ -197,7 +199,7 @@ header:
     - {name: "Institute name"}                                  # without src: the name in a pill
 ```
 
-The title takes the largest size between `title_pt_min` and `title_pt_max` that fits in `title_lines` lines. `title_lines` is a preference: if the title still needs more lines at the minimum size, it simply wraps further, the header grows, the body text gets less room and the build warns. If the page is full even with the smallest body size, the title is reduced in steps (down to `title_pt_min`) and the body sizes are tried again; the build says so. The three keys can be set under `header:` in `poster.yaml` for one poster, without touching the theme. Logos are stacked on the right, each in a pill with the theme's secondary colour as outline; `logos_valign: center` centres the stack against the text, which looks better when one large logo sits next to a tall text column. `authors_pt`, `affil_pt` and `subtitle_pt` replace the theme's sizes for one poster (the themes are quite prominent; 36 and 26 pt are calmer on a crowded poster). Affiliation numbers are set as small raised numerals.
+The title takes the largest size between `title_pt_min` and `title_pt_max` that fits in `title_lines` lines. `title_lines` is a preference: if the title still needs more lines at the minimum size, it simply wraps further, the header grows, the body text gets less room and the build warns. If the page is full even with the smallest body size, the title is reduced in steps (down to `title_pt_min`) and the body sizes are tried again; the build says so. The three keys can be set under `header:` in `poster.yaml` for one poster, without touching the theme. Logos are stacked on the right, each in a pill with the theme's secondary colour as outline (`logo_plate: false` draws them bare, `logos_offset_mm` moves the stack to the left); `logos_valign: center` centres the stack against the text, which looks better when one large logo sits next to a tall text column. `authors_pt`, `affil_pt` and `subtitle_pt` replace the theme's sizes for one poster (the themes are quite prominent; 36 and 26 pt are calmer on a crowded poster). Affiliation numbers are set as small raised numerals.
 
 A long abstract title does not belong in the title line: a short title in one large line plus the long one as a bold subtitle (`subtitle_pt: 52`, `subtitle_bold: true`) reads better and leaves the page more room than three title lines.
 
@@ -471,7 +473,7 @@ tokens:                        # semantic roles; the engine only ever asks for t
 
 Why two layers: the palette can be copied 1:1 from a brand guide (and checked against it), while the tokens decide where each colour is used. Swapping a brand means editing tokens, not code.
 
-Required tokens: `primary`, `on_primary`, `secondary`, `on_secondary`, `secondary_tint`, `ink`, `muted`, `paper`, `card`, `tint`, `line`, `link`, `header_sub`. Optional with a fallback: `header_accent` (event line, falls back to `secondary`), `connector` and `on_connector` (flow arrows and number badges, fall back to `secondary` and `on_secondary`). Add any token you like and use it from accents and status styles.
+Required tokens: `primary`, `on_primary`, `secondary`, `on_secondary`, `secondary_tint`, `ink`, `muted`, `paper`, `card`, `tint`, `line`, `link`, `header_sub`. Optional with a fallback: `header_accent` (event line, falls back to `secondary`), `header_bg` (fill of the header band, falls back to `primary`), `connector` and `on_connector` (flow arrows and number badges, fall back to `secondary` and `on_secondary`). Add any token you like and use it from accents and status styles.
 
 | Token | Where it is used |
 |---|---|
@@ -483,6 +485,7 @@ Required tokens: `primary`, `on_primary`, `secondary`, `on_secondary`, `secondar
 | `card` / `tint` / `line` | Card background / table stripes / card outlines and table rules |
 | `link` | Links in text |
 | `header_sub`, `header_accent` | Subtitle and affiliations, event line on the header band |
+| `header_bg` | Fill of the header band (default: `primary`); the header text is checked against it |
 | `connector` / `on_connector` | Flow arrows and badges / the number in a badge |
 
 ### Roles and accents

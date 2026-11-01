@@ -1,40 +1,46 @@
 Layout report for Four Degrees of Doubt in the Ogham Corpus (build 2026-10-09)
 page: A0 portrait (841 x 1189 mm)
-base text size chosen by autofit: 29.0 pt (range 28-30)
+base text size chosen by autofit: 29.5 pt (range 28-34)
 header title size: 90 pt
 theme: caa-uk (CAA United Kingdom), state ready
   colours from: CAA UK logo (CAAUK-Logo_fulltitle_bluewhite.png)  (licence Logo colour measured from the logo file; the logo itself belongs to CAA UK, check its usage terms before publishing it)
   typeface: Barlow
   contrast: 26 pairings checked, 1 below the recommended level, lowest 4.13 (card title, accent 'secondary')
-body height: 1031 mm available, 1025 mm natural, slack 7 mm
-note: autofit grew the body text to 29.0 pt because there was room. To keep it smaller and give figures the room instead, lower the cap (theme_overrides: typography: autofit: max_pt) or raise max_height_mm of the figures.
+body height: 1043 mm available, 1043 mm natural, slack 0 mm
+note: autofit grew the body text to 29.5 pt because there was room. To keep it smaller and give figures the room instead, lower the cap (theme_overrides: typography: autofit: max_pt) or raise max_height_mm of the figures.
 
 Blocks (why each one looks the way it does):
-- hook: 358 mm wide, 105 mm natural, 133 mm drawn
+- map: 169 mm wide, 244 mm natural, 244 mm drawn
+    why: Opens with the whole corpus so a reader without background sees what is at stake: 486 findspots, the doubtful and lost records set apart, the stones of the poster named.
+- hook: 323 mm wide, 112 mm natural, 127 mm drawn
     why: States the problem in two sentences: editions mark doubt precisely, graphs flatten it. The orange card is the poster's one warm colour, used for doubt.
-- idea: 447 mm wide, 133 mm natural, 133 mm drawn
+- idea: 323 mm wide, 98 mm natural, 112 mm drawn
     why: Says in one paragraph and two bullets what the two open pipelines do with the same editions.
-- ladder: 813 mm wide, 171 mm natural, 171 mm drawn
-    why: The backbone of the poster: four stones from secure to doubtful, with the doubt each edition actually carries, counted in the transliteration edition. Photographs follow once the repositories are extended; dashed boxes hold their place.
-- journey: 813 mm wide, 105 mm natural, 105 mm drawn
-    why: The method as four stations. Reasoning is planned, not done: the AMT graphs hold no axioms yet, so the engine validates and exports but derives nothing.
-- markup: 257 mm wide, 243 mm natural, 250 mm drawn
-    why: Zooms into station 1: the markup signals and the certainty the rule gives each. Choice and cert are marked as to do because the converter does not read them yet.
-- crosswalk: 283 mm wide, 239 mm natural, 250 mm drawn
-    why: Zooms into station 2: a short mapping table, and the coordinate statuses that axis 1 hands over to axis 2.
-- weigh: 257 mm wide, 216 mm natural, 250 mm drawn
-    why: Zooms into station 3 with the repository's worked example, Gigha 1 (CIIC 506). To be replaced by Blackwaterfoot 1 once the repository holds it.
-- limits: 362 mm wide, 153 mm natural, 178 mm drawn
-    why: The honest block. Two limits that the four stones expose: one reading always weighs 1.0, and doubt that lives in prose is not in the markup.
-- question: 217 mm wide, 178 mm natural, 178 mm drawn
-    why: Closes with the question of the abstract and the two numbers behind it.
-- links: 217 mm wide, 105 mm natural, 178 mm drawn
+- question: 315 mm wide, 214 mm natural, 244 mm drawn
+    why: The question of the abstract with the three numbers behind it: 34 doubtful records, 21 of them British, 20 stones that cannot be mapped.
+- ladder: 819 mm wide, 254 mm natural, 254 mm drawn
+    why: The backbone: three stones from secure to doubtful. Each row shows the photograph, the inscription in Ogham and transliteration with the editors' markup, the weights of its readings and the problem in one sentence.
+- gigha_photo: 97 mm wide, 104 mm natural, 121 mm drawn
+    why: Anchors the worked example in the real stone (CIIC 506, Argyll). Photograph rights to be confirmed (PRIMER D2).
+- gigha_readings: 323 mm wide, 121 mm natural, 121 mm drawn
+    why: Five editors read the same stone differently. The bars are the shares the weighting rule gives them; the edition's reading carries its own markup.
+- gigha_graph: 387 mm wide, 110 mm natural, 121 mm drawn
+    why: One reading travels through axis 1 (CIDOC CRM and CRMtex) and becomes a weighted statement in axis 2 (AMT).
+- gigha_reasoning: 406 mm wide, 114 mm natural, 114 mm drawn
+    why: The new axioms in use: the engine derives which editor read the stone and with what weight. Derived edges are dashed, because they are never written down.
+- gigha_rules: 406 mm wide, 98 mm natural, 114 mm drawn
+    why: Rule v2 reads cert on the edition. Only Gigha 1 changes its weights among the stones shown, which makes it the clearest example.
+- limits: 327 mm wide, 139 mm natural, 149 mm drawn
+    why: The honest block, one line per limit: one reading always weighs 1.0, weights are shares, doubt in prose is not in the markup, anonymous readings cannot be traced.
+- outlook: 327 mm wide, 148 mm natural, 149 mm drawn
+    why: One sentence on where the work goes, as the author asked.
+- links: 153 mm wide, 148 mm natural, 149 mm drawn
     why: Where the reader goes next: both pipelines, the engine and the editions.
-- team: 117 mm wide, 121 mm natural, 154 mm drawn
+- team: 99 mm wide, 109 mm natural, 132 mm drawn
     why: Puts a face to the one name in the header.
-- supporters: 211 mm wide, 154 mm natural, 154 mm drawn
+- supporters: 199 mm wide, 99 mm natural, 132 mm drawn
     why: Names funders, infrastructure and networks with their logos (draft: logo set of chnt31-fdox, to be confirmed, PRIMER D3).
-- references: 469 mm wide, 132 mm natural, 154 mm drawn
+- references: 509 mm wide, 132 mm natural, 132 mm drawn
     why: Cites the methods papers and the editions this poster builds on, taken from the author's DHd abstract.
 
 Smallest size used per style (pt):
@@ -44,20 +50,15 @@ Smallest size used per style (pt):
   bullet: 24.0
   card-heading: 56.0
   event: 36.0
-  flow-label-done: 29.0
-  flow-label-planned: 29.0
-  flow-sub-done: 24.0
-  flow-sub-planned: 24.0
-  gallery-caption: 24.0
-  logo-header: 24.0
-  person-name: 27.5
-  person-role: 24.0
-  qr-label: 24.0
-  stat-label: 24.0
-  stat-value: 75.4
+  logo-header: 24.2
+  person-name: 28.0
+  person-role: 24.2
+  qr-label: 24.2
+  stat-label: 24.2
+  stat-value: 76.7
   subheading: 26.9
   subtitle: 52.0
-  supporter-name: 24.0
-  table-cell: 25.5
-  table-head: 25.5
+  supporter-name: 24.2
+  table-cell: 26.0
+  table-head: 26.0
   title: 90.0

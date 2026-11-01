@@ -11,3 +11,4 @@ of their owners: check the usage terms before you commit them to a public reposi
 |---|---|---|
 | `example-logo.svg`, `example-funder.svg`, `example-network.svg`, `example-institute.svg` | Placeholders | Generated for this template, no rights |
 | `caa-uk.png` | Logo of CAA United Kingdom (blue with white edges, transparent background; 1017 x 674 px) | Supplied by the author on 2026-11-01, who confirmed the licence. Source file `CAAUK-Logo_fulltitle_bluewhite.png`. The header of a poster draws it on a white plate, which is how it reads on the deep blue of the `caa-uk` theme. |
+| `caa-uk-short.png` | Derivative of `caa-uk.png` without the line "Computer Applications & Quantitative Methods in Archaeology" (cropped at pixel row 511, trimmed to the content; 1005 x 507 px) | Made on 2026-11-01 from the supplied file; the graphic itself is unchanged. Used in the header of the CAA UK poster. |

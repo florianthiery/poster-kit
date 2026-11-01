@@ -1,5 +1,6 @@
 # poster.yaml of the CAA UK 2026 poster. Facts come from brief.yaml; texts from content/*.md.
-# Narrative: four stones form a ladder of doubt; one pipeline keeps the doubt from TEI/EpiDoc to AMT; where it fails.
+# Narrative: the corpus on a map; four stones as a ladder of doubt; one stone (Gigha 1) all the way from TEI to the engine; where the method fails.
+# Figures are drawn by figures/*.py into img/ (see figures/README.md).
 # Header, people and supporters follow posters/chnt31-fdox.
 
 meta:
@@ -14,14 +15,15 @@ theme: caa-uk
 
 theme_overrides:
   typography:
+    heading_pt: 44
     autofit:
-      max_pt: 30
+      max_pt: 34
 
 page:
   size: A0
   orientation: portrait
-  margin_mm: 14
-  gap_mm: 8
+  margin_mm: 11
+  gap_mm: 6
 
 header:
   event: "{{ brief.event.name }} · {{ brief.event.place }} · Poster"
@@ -34,192 +36,195 @@ header:
   subtitle_pt: 52
   subtitle_bold: true
   logos:
-    - {name: "CAA UK", src: shared/logos/caa-uk.png}
+    - {name: "CAA UK", src: shared/logos/caa-uk-short.png}
   logos_valign: center
+  logo_plate: false             # the logo is made for a dark ground: no white pill around it
   logos_w_mm: 150
-  logo_h_mm: 100
+  logo_h_mm: 76
+  logos_offset_mm: 40           # shifts the logo to the left of the right margin
   subtitle: "{{ brief.poster.subtitle }}"
   authors: "{{ brief.authors }}"
   affiliations: "{{ brief.affiliations }}"
 
 blocks:
+  map:
+    title: "The corpus"
+    role: context
+    valign: center
+    why: "Opens with the whole corpus so a reader without background sees what is at stake: 486 findspots, the doubtful and lost records set apart, the stones of the poster named."
+    type: image
+    src: img/map-corpus.png
+    max_height_mm: 192
+
   hook:
-    title: "1 · Doubt is written down, then lost"
+    title: "Doubt is written, then lost"
     role: problem
+    valign: center
     why: "States the problem in two sentences: editions mark doubt precisely, graphs flatten it. The orange card is the poster's one warm colour, used for doubt."
     type: text
     file: content/01_hook.md
-
-  idea:
-    title: "The idea: one pipeline, two axes"
-    role: aim
-    why: "Says in one paragraph and two bullets what the two open pipelines do with the same editions."
-    type: text
-    file: content/02_idea.md
-
-  ladder:
-    title: "Four degrees of doubt: one ladder of Ogham stones"
-    role: result
-    why: "The backbone of the poster: four stones from secure to doubtful, with the doubt each edition actually carries, counted in the transliteration edition. Photographs follow once the repositories are extended; dashed boxes hold their place."
-    parts:
-      - type: gallery
-        columns: 4
-        cell_height_mm: 95
-        fit: cover
-        items:
-          - {src: img/garranes-ciic81.jpg, caption: "**Garranes (CIIC 81).** 3 supplied letters; the editor writes the reading is not really in doubt."}
-          - {src: img/dyke.jpg, caption: "**Dyke.** 12 unclear, 9 gaps, 3 pairs of alternative letters; edition and date marked low certainty."}
-          - {src: img/blackwaterfoot-1.jpg, caption: "**Blackwaterfoot 1.** 9 apparatus notes, 6 competing readings; date marked low precision."}
-          - {src: img/bishop-loch.jpg, caption: "**Bishop Loch.** 2 gaps, no uncertainty markup: the doubt is in the prose."}
-
-  journey:
-    title: "How the doubt travels: from the stone's edition to a weighted graph"
-    role: method
-    why: "The method as four stations. Reasoning is planned, not done: the AMT graphs hold no axioms yet, so the engine validates and exports but derives nothing."
-    type: flow
-    per_row: 4
-    steps:
-      - {label: "Mark up", sub: "TEI/EpiDoc: unclear, supplied, gap, choice, app, cert", status: done}
-      - {label: "Crosswalk", sub: "Linked Ogham ontology to CIDOC CRM and CRMtex", status: done}
-      - {label: "Weigh", sub: "each reading a reified statement with amt:weight", status: done}
-      - {label: "Reason", sub: "AMT engine over weighted statements; axioms still to write", status: planned}
-
-  markup:
-    center_last: true
-    title: "1 · How TEI says 'not sure'"
-    role: method
-    why: "Zooms into station 1: the markup signals and the certainty the rule gives each. Choice and cert are marked as to do because the converter does not read them yet."
-    parts:
-      - type: text
-        file: content/03_markup.md
-      - type: table
-        header: ["EpiDoc", "Means", "Certainty"]
-        col_widths: [1.5, 2.1, 1.1]
-        rows:
-          - ["`<unclear>`", "not clearly legible", "0.5"]
-          - ["`<supplied>`", "restored by the editor", "0.3"]
-          - ["`<gap>`", "lost, not restored", "0.0"]
-          - ["`<choice>`", "two letters possible", "to do"]
-          - ["`cert`, `precision`", "the editor hedges", "to do"]
-          - ["`<app>`, `<rdg>`", "another editor read otherwise", "agreement"]
-
-  crosswalk:
-    center_last: true
-    title: "2 · Into CIDOC CRM"
-    role: method
-    why: "Zooms into station 2: a short mapping table, and the coordinate statuses that axis 1 hands over to axis 2."
-    parts:
-      - type: text
-        file: content/04_crosswalk.md
-      - type: table
-        header: ["EpiDoc", "CIDOC CRM / CRMtex"]
-        col_widths: [1.5, 2.6]
-        rows:
-          - ["`<support>`", "`E22` Human-Made Object"]
-          - ["edition `<div>`", "`TX1` Written Text"]
-          - ["a reading", "`TX7` segment, attributed to its editor (PROV-O)"]
-          - ["`<origPlace>`, `<geo>`", "`E53` Place with a coordinate status"]
-          - ["`<persName>`", "`E21` Person"]
-
-  weigh:
-    center_last: true
-    title: "3 · Weighing readings"
-    role: method
-    why: "Zooms into station 3 with the repository's worked example, Gigha 1 (CIIC 506). To be replaced by Blackwaterfoot 1 once the repository holds it."
-    parts:
-      - type: text
-        file: content/05_weigh.md
-      - type: table
-        header: ["Reading", "Editor", "Weight"]
-        col_widths: [2.2, 1.7, 0.9]
-        rows:
-          - ["VICULA MAQ COMGINI", "Macalister 1902", "0.2727"]
-          - ["VICULA MAQ CUGINI", "Macalister 1945", "0.2727"]
-          - ["[---]MAQ[---]COGIN[---]", "OG(H)AM edition", "0.1818"]
-          - ["MAQICAGILEB", "Rhys 1899", "0.1818"]
-          - ["OGMA MAQI TIGERNI", "Rhys 1901", "0.0909"]
-
-  limits:
-    title: "Where the method does not see the doubt"
-    role: discussion
-    accent: highlight
-    why: "The honest block. Two limits that the four stones expose: one reading always weighs 1.0, and doubt that lives in prose is not in the markup."
-    type: text
-    file: content/06_limits.md
+    scale: 1.12
 
   question:
-    title: "Material fact, or editorial history?"
+    title: "Fact or editorial history?"
     role: result
-    why: "Closes with the question of the abstract and the two numbers behind it."
+    valign: center
+    why: "The question of the abstract with the three numbers behind it: 34 doubtful records, 21 of them British, 20 stones that cannot be mapped."
     parts:
       - type: stats
         items:
           - {value: "34", label: "records marked doubtful"}
           - {value: "21", label: "of them British"}
+          - {value: "20", label: "stones with no coordinate"}
       - type: text
         file: content/07_question.md
+
+  idea:
+    title: "One pipeline, two axes"
+    role: aim
+    valign: center
+    why: "Says in one paragraph and two bullets what the two open pipelines do with the same editions."
+    type: text
+    file: content/02_idea.md
+    scale: 1.12
+
+  ladder:
+    title: "Three stones, three kinds of doubt"
+    role: result
+    valign: center
+    why: "The backbone: three stones from secure to doubtful. Each row shows the photograph, the inscription in Ogham and transliteration with the editors' markup, the weights of its readings and the problem in one sentence."
+    type: image
+    src: img/ladder-all.png
+
+  gigha_photo:
+    role: method
+    valign: center
+    why: "Anchors the worked example in the real stone (CIIC 506, Argyll). Photograph rights to be confirmed (PRIMER D2)."
+    type: image
+    src: img/gigha-photo.png
+    max_height_mm: 84
+
+  gigha_readings:
+    role: method
+    valign: center
+    why: "Five editors read the same stone differently. The bars are the shares the weighting rule gives them; the edition's reading carries its own markup."
+    type: image
+    src: img/gigha-readings.png
+
+  gigha_graph:
+    role: method
+    valign: center
+    why: "One reading travels through axis 1 (CIDOC CRM and CRMtex) and becomes a weighted statement in axis 2 (AMT)."
+    type: image
+    src: img/gigha-graph.png
+
+  gigha_reasoning:
+    role: method
+    valign: center
+    why: "The new axioms in use: the engine derives which editor read the stone and with what weight. Derived edges are dashed, because they are never written down."
+    type: image
+    src: img/gigha-reasoning.png
+
+  gigha_rules:
+    role: method
+    valign: center
+    why: "Rule v2 reads cert on the edition. Only Gigha 1 changes its weights among the stones shown, which makes it the clearest example."
+    parts:
+      - type: stats
+        items:
+          - {value: "0.18 to 0.13", label: "the edition's own reading"}
+          - {value: "0.27 to 0.29", label: "each Macalister reading"}
+      - type: text
+        text: "**A second rule.** The edition of Gigha 1 is marked `cert=\"low\"`. Rule v2 reads that mark: the edition's share falls and its rivals gain. Rule v1 ignored it."
+
+  limits:
+    title: "Where the method is blind"
+    role: discussion
+    valign: center
+    accent: highlight
+    why: "The honest block, one line per limit: one reading always weighs 1.0, weights are shares, doubt in prose is not in the markup, anonymous readings cannot be traced."
+    type: table
+    header: ["Blind spot", "What the stones show"]
+    col_widths: [2, 3]
+    rows:
+      - ["**One reading weighs 1.0**", "Garranes: three restored letters"]
+      - ["**Weights are shares**", "0.18 ranks readings, no probability"]
+      - ["**Doubt in prose is invisible**", "*purported*, *alleged* are prose"]
+      - ["**Anonymous readings**", "Blackwaterfoot 1: no editor named"]
+
+  outlook:
+    title: "Where next"
+    role: outlook
+    valign: center
+    why: "One sentence on where the work goes, as the author asked."
+    type: text
+    file: content/08_outlook.md
 
   links:
     title: "Explore"
     role: resources
+    valign: center
     why: "Where the reader goes next: both pipelines, the engine and the editions."
     type: qr
-    size_mm: 28
+    size_mm: 92
     items: "{{ brief.links }}"
 
   team:
     title: "People"
     role: context
+    valign: center
     why: "Puts a face to the one name in the header."
     type: people
-    valign: center
     per_row: 1
-    size_mm: 52
+    size_mm: 40
     items: "{{ brief.people }}"
 
   supporters:
     title: "Behind the work"
     role: resources
+    valign: center
     why: "Names funders, infrastructure and networks with their logos (draft: logo set of chnt31-fdox, to be confirmed, PRIMER D3)."
     type: supporters
-    valign: center
     columns: 1
-    height_mm: 34
+    height_mm: 19
     style: plain
     groups: "{{ brief.supporters }}"
 
   references:
     title: "References"
     role: references
+    valign: center
     why: "Cites the methods papers and the editions this poster builds on, taken from the author's DHd abstract."
     type: text
     file: content/09_references.md
-    scale: 0.8
+    scale: 0.68
 
 layout:
   bands:
     - weight: 0
       columns:
-        - {width: 1, blocks: [hook]}
-        - {width: 1.25, blocks: [idea]}
+        - {width: 0.21, blocks: [map]}
+        - {width: 0.40, blocks: [hook, idea]}
+        - {width: 0.39, blocks: [question]}
     - weight: 0
       columns:
         - {blocks: [ladder]}
     - weight: 0
       columns:
-        - {blocks: [journey]}
+        - {width: 0.12, blocks: [gigha_photo]}
+        - {width: 0.40, blocks: [gigha_readings]}
+        - {width: 0.48, blocks: [gigha_graph]}
+    - weight: 0
+      columns:
+        - {width: 0.5, blocks: [gigha_reasoning]}
+        - {width: 0.5, blocks: [gigha_rules]}
     - weight: 1
       columns:
-        - {width: 1, blocks: [markup]}
-        - {width: 1.1, blocks: [crosswalk]}
-        - {width: 1, blocks: [weigh]}
-    - weight: 0
-      columns:
         - {width: 1.5, blocks: [limits]}
-        - {width: 0.9, blocks: [question]}
-        - {width: 0.9, blocks: [links]}
+        - {width: 1.5, blocks: [outlook]}
+        - {width: 0.7, blocks: [links]}
     - weight: 0
       columns:
-        - {width: 0.5, blocks: [team]}
+        - {width: 0.45, blocks: [team]}
         - {width: 0.9, blocks: [supporters]}
-        - {width: 2.0, blocks: [references]}
+        - {width: 2.3, blocks: [references]}
