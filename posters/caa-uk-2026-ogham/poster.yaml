@@ -1,0 +1,225 @@
+# poster.yaml of the CAA UK 2026 poster. Facts come from brief.yaml; texts from content/*.md.
+# Narrative: four stones form a ladder of doubt; one pipeline keeps the doubt from TEI/EpiDoc to AMT; where it fails.
+# Header, people and supporters follow posters/chnt31-fdox.
+
+meta:
+  title: "{{ brief.poster.title_plain }}"
+  short_title: "{{ brief.poster.short_title }}"
+  author: "{{ brief.authors.0.name }}"
+  subject: "{{ brief.event.name }} Poster"
+  keywords: "Ogham, TEI/EpiDoc, CIDOC CRM, Academic Meta Tool, vagueness, uncertainty, Linked Open Data, epigraphy"
+  status: draft                    # set to final for the release build (--strict refuses draft)
+
+theme: caa-uk
+
+theme_overrides:
+  typography:
+    autofit:
+      max_pt: 30
+
+page:
+  size: A0
+  orientation: portrait
+  margin_mm: 14
+  gap_mm: 8
+
+header:
+  event: "{{ brief.event.name }} · {{ brief.event.place }} · Poster"
+  title: "{{ brief.poster.title }}"
+  title_lines: 1
+  title_pt_max: 90
+  title_pt_min: 60
+  authors_pt: 36
+  affil_pt: 26
+  subtitle_pt: 52
+  subtitle_bold: true
+  logos:
+    - {name: "CAA UK", src: shared/logos/caa-uk.png}
+  logos_valign: center
+  logos_w_mm: 150
+  logo_h_mm: 100
+  subtitle: "{{ brief.poster.subtitle }}"
+  authors: "{{ brief.authors }}"
+  affiliations: "{{ brief.affiliations }}"
+
+blocks:
+  hook:
+    title: "1 · Doubt is written down, then lost"
+    role: problem
+    why: "States the problem in two sentences: editions mark doubt precisely, graphs flatten it. The orange card is the poster's one warm colour, used for doubt."
+    type: text
+    file: content/01_hook.md
+
+  idea:
+    title: "The idea: one pipeline, two axes"
+    role: aim
+    why: "Says in one paragraph and two bullets what the two open pipelines do with the same editions."
+    type: text
+    file: content/02_idea.md
+
+  ladder:
+    title: "Four degrees of doubt: one ladder of Ogham stones"
+    role: result
+    why: "The backbone of the poster: four stones from secure to doubtful, with the doubt each edition actually carries, counted in the transliteration edition. Photographs follow once the repositories are extended; dashed boxes hold their place."
+    parts:
+      - type: gallery
+        columns: 4
+        cell_height_mm: 95
+        fit: cover
+        items:
+          - {src: img/garranes-ciic81.jpg, caption: "**Garranes (CIIC 81).** 3 supplied letters; the editor writes the reading is not really in doubt."}
+          - {src: img/dyke.jpg, caption: "**Dyke.** 12 unclear, 9 gaps, 3 pairs of alternative letters; edition and date marked low certainty."}
+          - {src: img/blackwaterfoot-1.jpg, caption: "**Blackwaterfoot 1.** 9 apparatus notes, 6 competing readings; date marked low precision."}
+          - {src: img/bishop-loch.jpg, caption: "**Bishop Loch.** 2 gaps, no uncertainty markup: the doubt is in the prose."}
+
+  journey:
+    title: "How the doubt travels: from the stone's edition to a weighted graph"
+    role: method
+    why: "The method as four stations. Reasoning is planned, not done: the AMT graphs hold no axioms yet, so the engine validates and exports but derives nothing."
+    type: flow
+    per_row: 4
+    steps:
+      - {label: "Mark up", sub: "TEI/EpiDoc: unclear, supplied, gap, choice, app, cert", status: done}
+      - {label: "Crosswalk", sub: "Linked Ogham ontology to CIDOC CRM and CRMtex", status: done}
+      - {label: "Weigh", sub: "each reading a reified statement with amt:weight", status: done}
+      - {label: "Reason", sub: "AMT engine over weighted statements; axioms still to write", status: planned}
+
+  markup:
+    center_last: true
+    title: "1 · How TEI says 'not sure'"
+    role: method
+    why: "Zooms into station 1: the markup signals and the certainty the rule gives each. Choice and cert are marked as to do because the converter does not read them yet."
+    parts:
+      - type: text
+        file: content/03_markup.md
+      - type: table
+        header: ["EpiDoc", "Means", "Certainty"]
+        col_widths: [1.5, 2.1, 1.1]
+        rows:
+          - ["`<unclear>`", "not clearly legible", "0.5"]
+          - ["`<supplied>`", "restored by the editor", "0.3"]
+          - ["`<gap>`", "lost, not restored", "0.0"]
+          - ["`<choice>`", "two letters possible", "to do"]
+          - ["`cert`, `precision`", "the editor hedges", "to do"]
+          - ["`<app>`, `<rdg>`", "another editor read otherwise", "agreement"]
+
+  crosswalk:
+    center_last: true
+    title: "2 · Into CIDOC CRM"
+    role: method
+    why: "Zooms into station 2: a short mapping table, and the coordinate statuses that axis 1 hands over to axis 2."
+    parts:
+      - type: text
+        file: content/04_crosswalk.md
+      - type: table
+        header: ["EpiDoc", "CIDOC CRM / CRMtex"]
+        col_widths: [1.5, 2.6]
+        rows:
+          - ["`<support>`", "`E22` Human-Made Object"]
+          - ["edition `<div>`", "`TX1` Written Text"]
+          - ["a reading", "`TX7` segment, attributed to its editor (PROV-O)"]
+          - ["`<origPlace>`, `<geo>`", "`E53` Place with a coordinate status"]
+          - ["`<persName>`", "`E21` Person"]
+
+  weigh:
+    center_last: true
+    title: "3 · Weighing readings"
+    role: method
+    why: "Zooms into station 3 with the repository's worked example, Gigha 1 (CIIC 506). To be replaced by Blackwaterfoot 1 once the repository holds it."
+    parts:
+      - type: text
+        file: content/05_weigh.md
+      - type: table
+        header: ["Reading", "Editor", "Weight"]
+        col_widths: [2.2, 1.7, 0.9]
+        rows:
+          - ["VICULA MAQ COMGINI", "Macalister 1902", "0.2727"]
+          - ["VICULA MAQ CUGINI", "Macalister 1945", "0.2727"]
+          - ["[---]MAQ[---]COGIN[---]", "OG(H)AM edition", "0.1818"]
+          - ["MAQICAGILEB", "Rhys 1899", "0.1818"]
+          - ["OGMA MAQI TIGERNI", "Rhys 1901", "0.0909"]
+
+  limits:
+    title: "Where the method does not see the doubt"
+    role: discussion
+    accent: highlight
+    why: "The honest block. Two limits that the four stones expose: one reading always weighs 1.0, and doubt that lives in prose is not in the markup."
+    type: text
+    file: content/06_limits.md
+
+  question:
+    title: "Material fact, or editorial history?"
+    role: result
+    why: "Closes with the question of the abstract and the two numbers behind it."
+    parts:
+      - type: stats
+        items:
+          - {value: "34", label: "records marked doubtful"}
+          - {value: "21", label: "of them British"}
+      - type: text
+        file: content/07_question.md
+
+  links:
+    title: "Explore"
+    role: resources
+    why: "Where the reader goes next: both pipelines, the engine and the editions."
+    type: qr
+    size_mm: 28
+    items: "{{ brief.links }}"
+
+  team:
+    title: "People"
+    role: context
+    why: "Puts a face to the one name in the header."
+    type: people
+    valign: center
+    per_row: 1
+    size_mm: 52
+    items: "{{ brief.people }}"
+
+  supporters:
+    title: "Behind the work"
+    role: resources
+    why: "Names funders, infrastructure and networks with their logos (draft: logo set of chnt31-fdox, to be confirmed, PRIMER D3)."
+    type: supporters
+    valign: center
+    columns: 1
+    height_mm: 34
+    style: plain
+    groups: "{{ brief.supporters }}"
+
+  references:
+    title: "References"
+    role: references
+    why: "Cites the methods papers and the editions this poster builds on, taken from the author's DHd abstract."
+    type: text
+    file: content/09_references.md
+    scale: 0.8
+
+layout:
+  bands:
+    - weight: 0
+      columns:
+        - {width: 1, blocks: [hook]}
+        - {width: 1.25, blocks: [idea]}
+    - weight: 0
+      columns:
+        - {blocks: [ladder]}
+    - weight: 0
+      columns:
+        - {blocks: [journey]}
+    - weight: 1
+      columns:
+        - {width: 1, blocks: [markup]}
+        - {width: 1.1, blocks: [crosswalk]}
+        - {width: 1, blocks: [weigh]}
+    - weight: 0
+      columns:
+        - {width: 1.5, blocks: [limits]}
+        - {width: 0.9, blocks: [question]}
+        - {width: 0.9, blocks: [links]}
+    - weight: 0
+      columns:
+        - {width: 0.5, blocks: [team]}
+        - {width: 0.9, blocks: [supporters]}
+        - {width: 2.0, blocks: [references]}

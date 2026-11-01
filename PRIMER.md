@@ -77,13 +77,14 @@ Eigenschaften, die das Ergebnis haben muss (jede ist prüfbar):
 | Werkzeug | Python + reportlab, Vektor-PDF; kein Browser, kein LaTeX | 2026-10-09 |
 | Eingabeformat | `poster.yaml` + `content/*.md` + `img/` + `themes/` | 2026-10-09 |
 | Themes | Ordner `themes/<id>/theme.yaml`, Ablage im Repo, Basis-Themes im Template | 2026-10-09 |
-| Mitgelieferte Themes | `neutral`, `chublets`, `research-squirrel`, `nfdi4objects`, `leiza`; weitere über `--new-theme` | 2026-10-09 |
+| Mitgelieferte Themes | `neutral`, `chublets`, `research-squirrel`, `nfdi4objects`, `leiza`, `caa-uk`; weitere über `--new-theme` | 2026-10-09 (`caa-uk` ergänzt 2026-11-01) |
 | Farbschichten | `palette` (Rohfarben wie in der Quelle) → `tokens` (Rollen) → `accents` (Kartenstile) → `roles` (Tag pro Block) | 2026-10-09 |
 | Block-Tags | `role:` je Block; das Theme bildet Rollen auf Akzente ab; `accent:` erzwingt einen Stil | 2026-10-09 |
 | Schriftbibliothek | `fonts/<familie>/` im Repo-Wurzelverzeichnis statt Schriften im Theme-Ordner (Fira Sans wird von zwei Themes genutzt, DejaVu Mono als Rückfall) | 2026-10-09 |
 | Schriften je Theme | squirrel: Fira Sans; N4O: PT Sans; LEIZA: Libre Franklin; chublets: Fira Sans; neutral: DejaVu | 2026-10-09 (chublets: Vorschlag, passt zu chublets-visuals) |
 | LEIZA-Farben | Styleguide „Basiselemente 4. Farben“: Rot `#E84248` (allgemein), Blau `#4E628B` (Forschung), Gelb `#FAB600` (Transfer), jeweils mit Abstufungen D1–D4 und 90–10 %; Hex-Werte aus den Farbflächen gemessen (Tabelle weicht bei Blau und Gelb ab) | 2026-10-31 (Blau bestätigt) |
 | Theme-Varianten | Ein Theme kann `variants:` haben; `theme: leiza:blue`, `theme_variant:` oder `--theme leiza:blue`; LEIZA: Rot, Blau, Gelb als je eigene Leitfarbe, nicht gemischt; Gelb mit schlichtem Titel und schwarzen Balken, weil Weiß auf Gelb nicht lesbar ist | 2026-10-31 |
+| CAA-UK-Farben | Logoblau `#1998D8` (aus der Logodatei gemessen, Weiß darauf nur 3,2:1: nur für Balken, Linien, Pfeile); abgeleitet: Tiefblau `#0B4F7A` (Kopfband, Weiß 8,7:1), Tinte `#12324A`, Himmel `#8FD0F2` (Ereigniszeile), Kartenfläche `#E8F4FB`; Orange `#C2410C` ist die einzige Warmfarbe und steht für Zweifel (Rolle `problem`, `invitation`, Status `concept`); Schrift Barlow, Überschriften Barlow Semi Condensed Bold, Mono DejaVu | 2026-11-01 (Palette und Schrift von Florian bestätigt) |
 | N4O-Farben | `#043358`, `#005f8e` aus squirrel-colours | 2026-10-09 |
 | squirrel-colours | Repository gehört Florian; Lizenz CC BY oder CC0, noch nicht festgelegt | Vorschlag 2026-10-09 |
 | Kontrast | unter 3:1 Fehler; Text unter 4,5:1 Warnung; große Überschriften zwischen 3 und 4,5 Hinweis; Formen ab 3:1 in Ordnung | 2026-10-09 |
@@ -133,6 +134,8 @@ Entfällt: das Repo veröffentlicht kein RDF.
 | S6 | LEIZA-Farben eintragen, Theme auf `ready`; Theme-Varianten | poster-kit | – | erledigt 2026-10-31 |
 | S12 | CI (Action, `.gitattributes`, `--check-repro`) und Bausteine `gallery`, `timeline`, `cite`, `footer` | poster-kit | S11 | erledigt 2026-10-31 |
 | S13 | Lernen aus chnt31-fdox in den Core: `image_row`, `measure.py`, Fehlerbericht, Autofit-Hinweis, Doku, Interview, Standard-Punkte in Teil D; Aufräumen (Reste im Root, `PATCH-README.md`, `pipeline_report.txt`) | poster-kit | S12 | erledigt 2026-10-31 |
+| S14 | Theme `caa-uk` (Logoblau, Orange für Zweifel, Barlow) und `fonts/barlow/` | poster-kit | S6 | erledigt 2026-11-01 |
+| S15 | Poster `caa-uk-2026-ogham` (A0, Theme `caa-uk`): erste Blockstruktur, Brief, Texte; Logo `shared/logos/caa-uk.png` | poster-kit | S14, S11 | Entwurf 2026-11-01, Fotos offen |
 | S7 | Zahlen und Autoren: der Brief ist da (S11); offen: Daten aus Dateien (CSV/JSON), Autoren aus `CITATION.cff` | poster-kit | S11 | teilweise |
 | S8 | Provenienz je Block (`source`, `verified`) und weitere Linter (Bild-DPI, Wortbudget, überlaufender Block) | poster-kit | S4 | offen |
 | S9 | Varianten: A4-Handout, Querformat, A1 aus einer Quelle | poster-kit | S4 | offen |
@@ -186,6 +189,18 @@ Palette mit allen 30 Stufen (Rot, Blau, Gelb je D4–D1, Basis, 90–10 %) aus d
 
 Gebaut in S12: Bildraster, Zeitleiste, Fußzeile mit Lizenz-Badge/QR, Zitierblock aus `CITATION.cff`; in S13 `image_row`. Offen: Zitat-/Aussagebox mit Hervorhebung, Vorher/Nachher-Bildpaar, Legende/Glossar.
 
+## S14 – Theme `caa-uk`
+
+**Ziel:** Ein Theme für Poster der CAA United Kingdom, abgeleitet vom Logo, mit Barlow als Schrift.
+
+**Abnahme:** Demo baut mit `--theme caa-uk` ohne Fehler; alle Themes bauen weiter; zweimal bauen ergibt identische Bytes; Vorschau angesehen.
+
+### Erledigt 2026-11-01
+
+`themes/caa-uk/theme.yaml` und `fonts/barlow/` (Barlow Regular, Bold, Italic, BoldItalic, Barlow Semi Condensed Bold für Überschriften; statische TTFs aus dem Google-Fonts-Repository, OFL, SHA-256 in `SOURCES.md`). Basisgröße im Demo 29,0 pt, Puffer 6 mm. Kontrast: Tinte auf Logoblau 4,13:1 (Hinweis, große Schrift), Weiß auf Tiefblau 8,7:1, Weiß auf Orange 5,2:1. Das Logo-Blau trägt nie Fließtext. Fira Sans als Rückfall war nicht nötig, der Download ging durch.
+
+Das CAA-UK-Logo liegt seit 2026-11-01 in `shared/logos/caa-uk.png` (Lizenz vom Autor bestätigt, Vermerk in der README dort); der Poster-Kopf zeichnet es auf einer weißen Platte.
+
 ## S7 bis S10
 
 Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt bekommt beim Start Ziel, Uploads und Abnahme.
@@ -208,4 +223,5 @@ Ideen aus dem Konzept vom 2026-10-09, noch nicht ausgearbeitet. Jeder Schritt be
 - **D9** Fotos von Personen: Einwilligung klären, bevor ein Poster mit Porträts veröffentlicht wird.
 - **D10** Logos von Förderern und Instituten: Nutzungsregeln prüfen; Vermerk in `shared/logos/README.md`.
 - **D11** Soll es zusätzlich eine Kommandozeilen-Version des Interviews geben (`--interview`), falls ohne Claude gearbeitet wird?
+- **D16** erledigt 2026-11-01: CAA-UK-Logo liegt in `shared/logos/caa-uk.png`, Lizenz vom Autor bestätigt.
 - **D8** Die squirrel-Palette gegen die PDF `Squirrles Colors.pdf` abgleichen; bisher nur die README-Werte.

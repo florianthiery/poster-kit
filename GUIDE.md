@@ -456,6 +456,7 @@ A theme says how the poster looks. It lives in `themes/<id>/theme.yaml`. `themes
 | `research-squirrel` | squirrel-colours | Fira Sans | ready |
 | `nfdi4objects` | N4O blues from squirrel-colours | PT Sans | ready |
 | `leiza` | LEIZA corporate design, three variants: `red` (general), `blue` (research), `yellow` (transfer) | Libre Franklin | ready |
+| `caa-uk` | CAA UK logo blue (#1998D8) with a derived deep blue; orange is the one warm colour, kept for doubt and invitations | Barlow, Barlow Semi Condensed for headings | ready |
 
 `python main.py --list-themes` prints them.
 
@@ -564,6 +565,7 @@ All fonts are in the shared library `fonts/`, one folder per family with its lic
 | `fonts/fira-sans/` | Fira Sans, Fira Mono | `chublets`, `research-squirrel` |
 | `fonts/pt-sans/` | PT Sans, PT Mono | `nfdi4objects` |
 | `fonts/libre-franklin/` | Libre Franklin | `leiza` |
+| `fonts/barlow/` | Barlow, Barlow Semi Condensed (Bold) | `caa-uk` |
 
 Rules for adding a font:
 

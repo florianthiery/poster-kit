@@ -40,6 +40,7 @@ Commands for Windows `cmd` (build, push to GitHub, work on a poster): [WORKFLOW.
 | `research-squirrel` | [squirrel-colours](https://github.com/Research-Squirrel-Engineers/squirrel-colours) | Fira Sans |
 | `nfdi4objects` | N4O blues | PT Sans |
 | `leiza` | LEIZA corporate design; variants `leiza:red` (general), `leiza:blue` (research), `leiza:yellow` (transfer) | Libre Franklin |
+| `caa-uk` | CAA United Kingdom: logo blue, deep blue, one orange for doubt | Barlow |
 
 `python main.py --list-themes` lists them; `python main.py --new-theme mylab` creates one.
 
@@ -55,6 +56,7 @@ poster-kit/
 ├── posters/
 │   ├── demo/          the demo poster: every option in place
 │   ├── chnt31-fdox/   a real poster (A0): one journey as a flow, zoom cards, real SPARQL queries and results
+│   ├── caa-uk-2026-ogham/  a poster for CAA UK 2026 (A0, theme caa-uk): a ladder of four Ogham stones and how doubt is kept
 │   ├── _template/     skeleton for --new-poster (not built unless asked)
 │   └── <id>/          one folder per poster: brief.yaml, poster.yaml, content/, img/, PRIMER.md, dist/
 ├── shared/logos/      logos several posters use (institutes, funders, networks)

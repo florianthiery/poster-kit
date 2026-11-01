@@ -1,0 +1,90 @@
+# Theme: CAA United Kingdom (Computer Applications and Quantitative Methods in Archaeology, UK chapter).
+# Reference for every key: themes/neutral/theme.yaml
+#
+# Idea: blue stands for what is secure and for the ladder of the story; the one warm colour (burnt orange) is kept
+# for doubt, so that it means something wherever it appears. Do not use it for decoration.
+id: caa-uk
+name: "CAA United Kingdom"
+state: ready
+
+source:
+  name: "CAA UK logo (CAAUK-Logo_fulltitle_bluewhite.png)"
+  url: ""
+  licence: "Logo colour measured from the logo file; the logo itself belongs to CAA UK, check its usage terms before publishing it"
+  note: >-
+    The logo blue #1998D8 is the dominant colour of the logo file (measured, 85,697 pixels). It reaches only 3.2:1 on
+    white, so it is used for bars, rules and arrows and never for running text. Deep blue, ink, the light tints and the
+    orange are derived for the poster and are not part of any CAA UK style guide.
+
+palette:
+  white: "#FFFFFF"
+  caa-blue: "#1998D8"            # the logo blue
+  caa-deep: "#0B4F7A"            # derived: dark enough for a header band and for white text (8.7:1)
+  caa-ink: "#12324A"             # derived: running text (13.3:1 on white)
+  caa-muted: "#47627A"           # derived: captions
+  caa-sky: "#8FD0F2"             # derived: event line and subtitle on the deep band
+  caa-card: "#E8F4FB"            # derived: card surface
+  caa-tint: "#D2EAF7"            # derived: table stripes, number tiles
+  caa-line: "#A9D3EA"            # derived: hairlines
+  caa-link: "#0A6AA6"            # derived: links
+  doubt-orange: "#C2410C"        # derived: the one warm colour, for doubt (5.2:1 on white)
+  doubt-tint: "#FDEBDD"          # derived: light surface for concepts and hedged things
+
+tokens:
+  primary: caa-deep
+  on_primary: white
+  secondary: caa-blue
+  on_secondary: caa-ink          # ink on the logo blue is 4.0:1; white would be only 3.2:1
+  secondary_tint: caa-card
+  ink: caa-ink
+  muted: caa-muted
+  paper: white
+  card: caa-card
+  tint: caa-tint
+  line: caa-line
+  link: caa-link
+  header_sub: caa-sky
+  header_accent: caa-sky
+  connector: primary
+  on_connector: on_primary
+  highlight: doubt-orange
+  on_highlight: white
+  highlight_tint: doubt-tint     # custom token: fill of 'concept' flow boxes
+
+accents:
+  primary:   {bar: primary,   text: on_primary}
+  secondary: {bar: secondary, text: on_secondary, bullet: primary}
+  neutral:   {bar: line,      text: ink,          bullet: muted}
+  highlight: {bar: highlight, text: on_highlight, bullet: highlight}
+
+roles:
+  problem: highlight             # the doubt that gets lost is the problem
+  context: primary
+  aim: primary
+  method: secondary
+  result: primary
+  discussion: primary
+  outlook: secondary
+  invitation: highlight
+  resources: primary
+  references: neutral
+
+status:
+  done:    {fill: primary,        stroke: primary,   text: on_primary}
+  planned: {fill: paper,          stroke: primary,   text: primary, dash: true}
+  concept: {fill: highlight_tint, stroke: highlight, text: primary, dash: true}
+
+typography:
+  family: "Barlow"
+  fonts:
+    regular: fonts/barlow/Barlow-Regular.ttf
+    bold: fonts/barlow/Barlow-Bold.ttf
+    italic: fonts/barlow/Barlow-Italic.ttf
+    bold_italic: fonts/barlow/Barlow-BoldItalic.ttf
+    heading: fonts/barlow/BarlowSemiCondensed-Bold.ttf
+    mono: fonts/dejavu/DejaVuSansMono.ttf
+  sizes: {heading_pt: 56, title_pt_max: 130, title_pt_min: 90, title_lines: 2, subtitle_pt: 56, authors_pt: 50, affil_pt: 36, min_pt: 24}
+  autofit: {min_pt: 28, max_pt: 46, step_pt: 0.5, max_slack_ratio: 0.12}
+
+shape:
+  header_style: band

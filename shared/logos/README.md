@@ -10,3 +10,4 @@ of their owners: check the usage terms before you commit them to a public reposi
 | File | What | Source and terms |
 |---|---|---|
 | `example-logo.svg`, `example-funder.svg`, `example-network.svg`, `example-institute.svg` | Placeholders | Generated for this template, no rights |
+| `caa-uk.png` | Logo of CAA United Kingdom (blue with white edges, transparent background; 1017 x 674 px) | Supplied by the author on 2026-11-01, who confirmed the licence. Source file `CAAUK-Logo_fulltitle_bluewhite.png`. The header of a poster draws it on a white plate, which is how it reads on the deep blue of the `caa-uk` theme. |

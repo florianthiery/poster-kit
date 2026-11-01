@@ -9,7 +9,7 @@ meta:
   keywords: "TODO, keywords"
   status: draft                    # set to final for the release build (--strict refuses draft)
 
-theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza:red | leiza:blue | leiza:yellow | your own
+theme: neutral                     # neutral | chublets | research-squirrel | nfdi4objects | leiza:red | leiza:blue | leiza:yellow | caa-uk | your own
 
 page:
   size: A0

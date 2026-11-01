@@ -1,0 +1,69 @@
+# brief.yaml: the facts of poster caa-uk-2026-ogham, in one place.
+# poster.yaml reads these values with {{ brief.<path> }}; content/*.md can do the same.
+
+status: draft                      # interview -> draft -> confirmed (the build warns until it is 'confirmed')
+
+event:
+  name: "CAA UK 2026"
+  place: "Glasgow"
+  dates: "TODO dates"
+  url: "TODO https://..."
+  format: "A0 portrait"            # confirmed by the author on 2026-11-01; the organiser's rule is not checked yet
+  print_deadline: "TODO yyyy-mm-dd"
+
+poster:
+  title: "Purported, Alleged, Undetermined"
+  title_plain: "Purported, Alleged, Undetermined: Four Degrees of Doubt in the Ogham Corpus"
+  short_title: "Four Degrees of Doubt in the Ogham Corpus"
+  subtitle: "Four Degrees of Doubt in the Ogham Corpus"
+  key_message: "Editors mark doubt precisely in TEI/EpiDoc; a knowledge graph can keep it as weighted, traceable statements, and we show where that still fails."
+  audience: "CAA UK delegates: archaeologists and heritage data people, not only semantic web specialists"
+  language: "British English"
+
+authors:                           # header; affil = number(s) of the affiliation below
+  - {name: "Florian Thiery", affil: "1"}    # sole author (confirmed by the author 2026-11-01)
+
+affiliations:
+  - "Research Squirrel Engineers Network"   # as given by the author on 2026-11-01; LEIZA not listed (see PRIMER D8)
+
+people:                            # people module: photos and names, no institution
+  - {name: "Florian Thiery", photo: img/people/florian-thiery.png}
+
+supporters:                        # supporters module; draft: same logo set as chnt31-fdox, to be confirmed (PRIMER D3)
+  - align: center
+    height_mm: 36
+    items:
+      - {name: "LEIZA", src: img/logos/leiza.png}
+      - {name: "Research Squirrel Engineers", src: img/logos/research-squirrel-engineers.png}
+  - align: center
+    height_mm: 24
+    items:
+      - {name: "DFG", src: img/logos/dfg.png}
+      - {name: "NFDI", src: img/logos/nfdi.png}
+      - {name: "NFDI4Objects", src: img/logos/nfdi4objects.png}
+
+links:                             # QR codes
+  - {url: "https://github.com/LinkedOpenOgham/tei--epidoc-crosswalk", label: "Axis 1<br>Crosswalk"}
+  - {url: "https://github.com/LinkedOpenOgham/tei--epidoc-amt", label: "Axis 2<br>AMT"}
+  - {url: "https://github.com/n4o-rse/amt-engine", label: "AMT.engine"}
+  - {url: "https://github.com/lguariento/og-h-am", label: "OG(H)AM<br>editions"}
+
+numbers:                           # every number on the poster, with its source
+  - {value: "34", label: "records marked doubtful (X series)", source: "OG(H)AM XML, file names ending in -X<nn>, repository lguariento/og-h-am commit 9a68afd (2026-10-29): 13 Irish (I), 12 Welsh (W), 5 English (E), 4 Scottish (S); count by file name, 506 files", queried: "2026-11-01"}
+  - {value: "21", label: "of them British", source: "same count: 12 W + 5 E + 4 S", queried: "2026-11-01"}
+  - {value: "3", label: "letters restored on Garranes (CIIC 81)", source: "I-COR-030, transliteration edition, three <supplied>; matches tei--epidoc-amt out/README.md", queried: "2026-11-01"}
+  - {value: "12 / 9 / 3", label: "unclear / gaps / alternatives on Dyke", source: "S-MOR-001, transliteration edition only (the ogham-script edition repeats them); counted with lxml", queried: "2026-11-01"}
+  - {value: "9 / 6", label: "apparatus notes / competing readings on Blackwaterfoot 1", source: "S-BUT-001, <app> and <app>/<rdg>; counted with lxml", queried: "2026-11-01"}
+
+notes: |
+  Abstract: "Purported, Alleged, Undetermined: Four Degrees of Doubt in the Ogham Corpus" (CAA UK 2026, Glasgow).
+  Four OG(H)AM records form the ladder: CIIC 81 Garranes (I-COR-030), Dyke (S-MOR-001), Blackwaterfoot 1 (S-BUT-001),
+  Bishop Loch (S-LKS-X01). Photographs follow once the repositories are extended (PRIMER step P3).
+  Bishop Loch: CIIC field empty and CISP field "x" in the edition, which supports "absent from CIIC and CISP" in the abstract.
+
+references:                        # printed in the references block; entries taken from the author's DHd abstract of 2026
+  - "Unold, M., Thiery, F., & Mees, A. (2019). Academic Meta Tool. Ein Web-Tool zur Modellierung von Vagheit. *ZfdG*, Sonderband 4. https://doi.org/10.17175/SB004_004"
+  - "Eide, Ø., Gampe, S., Girotto, C. G. M., Köster, J., Mees, A., Thiery, F., thor Straten, M., & Tolle, K. (2026). Definitions of vagueness, uncertainty and their combination in the Cultural Heritage Domain. https://doi.org/10.5281/ZENODO.19877824"
+  - "Thiery, F. (2022). SPARQLing Ogham: Irische Ogham-Steine als Linked Open Data. *ZfdG*, Sonderband 5. https://doi.org/10.17175/SB005_010"
+  - "Kasten, M., & Forsyth, K. (2023). Report on OG(H)AM: Harnessing digital technologies to transform understanding of ogham writing. *runes:et:al.*, 1, 28–40. https://doi.org/10.17904/ku.edoc.33410"
+  - "O'Connor, P., & Guariento, L. (2026). og-h-am (TEI/EpiDoc editions). https://github.com/lguariento/og-h-am"

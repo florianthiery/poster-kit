@@ -1,0 +1,5 @@
+- Unold, M., Thiery, F., & Mees, A. (2019). Academic Meta Tool. *ZfdG*, Sonderband 4. [https://doi.org/10.17175/SB004_004](https://doi.org/10.17175/SB004_004)
+- Eide, Ø., et al. (2026). Definitions of vagueness, uncertainty and their combination in the Cultural Heritage Domain. [https://doi.org/10.5281/ZENODO.19877824](https://doi.org/10.5281/ZENODO.19877824)
+- Thiery, F. (2022). SPARQLing Ogham. *ZfdG*, Sonderband 5. [https://doi.org/10.17175/SB005_010](https://doi.org/10.17175/SB005_010)
+- Kasten, M., & Forsyth, K. (2023). Report on OG(H)AM. *runes:et:al.*, 1. [https://doi.org/10.17904/ku.edoc.33410](https://doi.org/10.17904/ku.edoc.33410)
+- O'Connor, P., & Guariento, L. (2026). og-h-am. [https://github.com/lguariento/og-h-am](https://github.com/lguariento/og-h-am)

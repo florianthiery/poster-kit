@@ -8,6 +8,7 @@ Shared by all themes. A theme refers to files here by repository-relative path i
 | `fira-sans/` | Fira Sans, Fira Mono | SIL OFL 1.1 | `chublets`, `research-squirrel` |
 | `pt-sans/` | PT Sans, PT Mono | SIL OFL 1.1 | `nfdi4objects` |
 | `libre-franklin/` | Libre Franklin (static instances) | SIL OFL 1.1 | `leiza` |
+| `barlow/` | Barlow, Barlow Semi Condensed Bold | SIL OFL 1.1 | `caa-uk` |
 
 Each folder has a `SOURCES.md` with origin, retrieval date and SHA-256 of every file. The licence texts stay next to the fonts and must travel with them.
 
