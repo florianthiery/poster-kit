@@ -25,7 +25,7 @@ page:
 header:
   event: "{{ brief.event.name }} · {{ brief.event.track }} · Poster"
   title: "{{ brief.poster.title }}"
-  title_lines: 1
+  title_lines: 2
   title_pt_max: 90
   title_pt_min: 60
   authors_pt: 36
@@ -75,17 +75,17 @@ blocks:
     role: method
     parts:
       - type: image_row
-        max_height_mm: 260
+        max_height_mm: 259
         items:
           - {src: img/chublet-item.png}
           - {src: img/class-tree.png}
       - type: image_row
-        max_height_mm: 190
+        max_height_mm: 189
         items:
           - {src: img/chublets-wikibase-datamodel.png}
           - {src: img/model-evidence-base.png}
       - type: image_row
-        max_height_mm: 140
+        max_height_mm: 139
         items:
           - {src: img/static-vs-federation.png}
           - {src: img/chublets-four-step-pattern.png}

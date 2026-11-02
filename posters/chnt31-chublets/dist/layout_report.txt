@@ -1,12 +1,12 @@
 Layout report for chublets.software (build 2026-10-09)
 page: A0 portrait (841 x 1189 mm)
 base text size chosen by autofit: 30.0 pt (range 28-30)
-header title size: 90 pt
+header title size: 70 pt
 theme: chublets (chublets.software), state ready
   colours from: chublets house palette (CHUBLETS_PURPLE, CHUBLETS_GOLD) https://github.com/chublets-software/chublets-visuals (licence see the chublets-visuals repository)
   typeface: Fira Sans
   contrast: 26 pairings checked, 1 below the recommended level, lowest 4.38 (header event line)
-body height: 974 mm available, 973 mm natural, slack 1 mm
+body height: 976 mm available, 972 mm natural, slack 4 mm
 note: autofit grew the body text to 30.0 pt because there was room. To keep it smaller and give figures the room instead, lower the cap (theme_overrides: typography: autofit: max_pt) or raise max_height_mm of the figures.
 
 Blocks (why each one looks the way it does):
@@ -16,7 +16,7 @@ Blocks (why each one looks the way it does):
     why: Defines a chublet in one sentence and says what chublets.software is: the hub (author: it exists).
 - journey: 813 mm wide, 106 mm natural, 106 mm drawn
     why: The backbone of the poster: six stations in order; all exist, the Federation Wikibase as a prototype.
-- figures: 813 mm wide, 596 mm natural, 597 mm drawn
+- figures: 813 mm wide, 595 mm natural, 599 mm drawn
     why: One card for the six graphics from chublets-visuals: how it is modelled, the crosswalk behind it, the architecture.
 - team: 180 mm wide, 154 mm natural, 154 mm drawn
     why: Puts names to faces once the photographs and consent are in (until then initials).
@@ -44,4 +44,4 @@ Smallest size used per style (pt):
   subheading: 26.9
   subtitle: 52.0
   supporter-name: 24.6
-  title: 90.0
+  title: 70.0

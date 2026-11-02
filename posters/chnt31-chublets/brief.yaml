@@ -14,10 +14,10 @@ event:
   print_deadline: "not needed"     # author, 2026-10-31: "that does not matter"
 
 poster:
-  title: "Code is Data, Too"       # WORKING TITLE, the submitted title follows
-  title_plain: "Code is Data, Too: From open-archaeo via Wikidata to chublets.software"
+  title: "From open-archaeo to chublets.software:<br>A Wikidata Pipeline for Archaeological Research Software"   # submitted title (author, 2026-11-02), unchanged; <br> only for the line break
+  title_plain: "From open-archaeo to chublets.software: A Wikidata Pipeline for Archaeological Research Software"
   short_title: "chublets.software"
-  subtitle: "From open-archaeo via Wikidata to chublets.software: a FAIR software marketplace for cultural heritage"
+  subtitle: "Chublets: from a curated list to a FAIR software marketplace, with Wikibase"   # one line; names what the title does not: chublets, marketplace, Wikibase
   key_message: "Open research software for cultural heritage would become findable, citable and queryable as Linked Data in a chublets Wikibase."   # proposal by Claude, accepted by the author 2026-10-31
   audience: "Cultural heritage and archaeoinformatics community and semantic-web-minded readers, also readers without semantic web background"
   call_to_action: "Browse the chublets; add or improve your own software; talk to us at the poster"

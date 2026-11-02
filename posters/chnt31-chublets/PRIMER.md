@@ -53,6 +53,9 @@ Das Poster ist fertig, wenn:
 | Das Poster folgt formal `chnt31-fdox` | Autor: „nimm dir generell ein Beispiel an chnt31-fdox“ | 2026-10-31 |
 | Track „Digital Creative Award“ | Autor bestätigt, gleicher Track | 2026-10-31 |
 | Arbeitstitel „Code is Data, Too“, eine Zeile, Untertitel fett | Autor (Runde F, „wie fdox“); der eingereichte Titel folgt | 2026-10-31 |
+| Titel = eingereichter Titel „From open-archaeo to chublets.software: A Wikidata Pipeline for Archaeological Research Software“, unverändert, zwei Zeilen (Umbruch nach dem Doppelpunkt, `title_lines: 2`, Titel 70 pt); ersetzt den Arbeitstitel „Code is Data, Too“ | Autor nennt den Titel 2026-11-02; der Titel deckt nur Wikidata ab, das Poster zeigt auch statische Demo, Federation Wikibase und Hub; Vorschlag von Claude, den Titel nicht zu ändern (Programm und Poster bleiben gleich) | 2026-11-02 |
+| Untertitel (eine Zeile, fett): „Chublets: from a curated list to a FAIR software marketplace, with Wikibase“ | Vorschlag von Claude: trägt, was der Titel nicht nennt (Chublets, Marktplatz, Wikibase); eine Zeile statt zwei spart rund 22 mm Kopfhöhe, dadurch bleibt der Titel bei 70 pt statt am Minimum von 60 pt | 2026-11-02 |
+| Grafikstreifen `max_height_mm` 259 / 189 / 139 (vorher 260 / 190 / 140) | Die zweite Titelzeile kostet Höhe; die Streifen geben je 1 mm ab, Basisschrift bleibt bei 30 pt | 2026-11-02 |
 | Rückgrat als `flow` mit sechs Stationen: open-archaeo, Prepare, Wikidata, Static demo, Federation Wikibase, chublets.software | Beschluss der Übergabe; Station „Prepare“ trägt OpenRefine und Python (Abbildung `open-archaeo-two-routes` aus chublets-visuals) | 2026-10-31 |
 | Federation Wikibase (`chublets-wikibase.de`) als **Prototyp, durchgezogen** (Übergabe sagte `planned`) | Autor entscheidet nach Hinweis: PRIMER von wikibase-static führt sie als befüllt (980 Einträge, Push 2026-10-25). Live nicht geprüft; keine Zahl aus dem Push auf dem Poster | 2026-10-31 |
 | chublets.software als Marktplatz: **existiert**, Station 6 durchgezogen, kein Konditional (ersetzt `planned`) | Autor, Runde 2: „da existiert ja!!!“ | 2026-10-31 |
@@ -119,7 +122,7 @@ python tools/build_all.py --poster chnt31-chublets --check-repro   # zweimal bau
 | D3 | Fotos aller vier Personen sind drin (vom Autor geliefert, Zuordnung vom Autor bestätigt 2026-10-31); Einwilligung von Gey, Lobinsky, Schubert noch zu bestätigen | Autor, Abgebildete | Einwilligung offen |
 | D4 | Logos: Nutzungsregeln (DFG, NFDI, NFDI4Objects, LEIZA, RSE, chublets-Rabe, CAA Germany, Wikimedia Deutschland; die beiden letzten vom Autor am 2026-10-31 geliefert, Wikimedia-Logo schwarz, Beschnitt auf den Inhalt); Förderhinweis DFG bestätigen | Autor | offen |
 | D5 | Schriftgröße der Grafiken auf A0 (Runde 3: Streifen höher, Basisschrift 28 pt): `class-tree`, `model-evidence-base`, `chublets-wikibase-datamodel`, `chublet-item` haben kleine Schrift (Näherung 9 bis 11 pt, kleinste Beschriftungen darunter); Entscheidung: eine Grafik streichen, `class-tree` auf volle Breite, oder so lassen | Autor | offen |
-| D6 | Eingereichter Titel und Abstract (nicht in der Übergabe); `hook` und `idea` gegen den Abstract prüfen | Autor | offen |
+| D6 | Eingereichter Titel steht seit 2026-11-02 im Poster (siehe A4); Abstract liegt weiter nicht vor: `hook` und `idea` gegen den Abstract prüfen | Autor | Titel erledigt, Abstract offen |
 | D7 | Formatvorgabe der Tagung (A0 hoch) | Autor | offen |
 | D8 | Live-Seiten: Demo (GitHub Pages), chublets-wikibase.de, Repos prüfen; aus der Sandbox kein Zugriff (HTTP 403 des Proxys). Auch die Frage, ob `chublets-wikibase.de` öffentlich lesbar ist | Autor | offen |
 | D9 | Grafik `chublets-four-step-pattern` und `model-evidence-base` nennen 826 Items und 6873 Aussagen; Abgleich mit dem Demo-Stand (6 852 Zeilen in `statements.csv`, 2026-10-31) offen. Zahlen des Wikibase-Pushs (980 Einträge, 7 012 Aussagen, Lauf 2026-10-25) stehen nur im PRIMER von wikibase-static; nicht auf dem Poster, solange kein Livewert mit Datum vorliegt | Autor | offen |
@@ -143,3 +146,4 @@ python tools/build_all.py --poster chnt31-chublets --check-repro   # zweimal bau
 | 31.10.2026 | Runde 4: Fotos der vier Personen, Logos CAA Germany und Wikimedia Deutschland, Explore vertikal zentriert | Rückmeldung des Autors |
 | 31.10.2026 | Runde 5: Logos in Zeilen 2 + 2 + 3, Grafik-Zeile aus den References | Rückmeldung des Autors |
 | 31.10.2026 | Runde 6: Reference find.software (https://find-software.org/) ergänzt | Rückmeldung des Autors |
+| 02.11.2026 | Runde 7: eingereichter Titel auf zwei Zeilen (70 pt), neuer einzeiliger Untertitel, Grafikstreifen je 1 mm niedriger | Rückmeldung des Autors |
